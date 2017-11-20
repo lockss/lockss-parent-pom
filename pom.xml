@@ -36,7 +36,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.lockss</groupId>
-  <artifactId>lockss-parent</artifactId>
+  <artifactId>lockss-parent-pom</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
