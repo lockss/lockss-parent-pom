@@ -41,7 +41,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <packaging>pom</packaging>
   
   <name>LOCKSS Generic Parent POM File Project</name>
-  <description>A POM-only project for Maven infrastructure common to most LOCKSS projects</description>
+  <description>Maven infrastructure common to most LOCKSS projects</description>
   <url>https://www.lockss.org/</url>
   
   <properties>
