@@ -45,8 +45,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <url>https://www.lockss.org/</url>
   
   <properties>
+
+    <!-- Java related -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <maven.compiler.source>${java.version}</maven.compiler.source>
+    <maven.compiler.target>${java.version}</maven.compiler.target>
+    
+    <!-- Git related -->
+    <gitSshUsername>git</gitSshUsername>
     <gitHost>github.com</gitHost>
     <gitGroupId>lockss</gitGroupId>
+    <gitProjectId>${project.artifactId}</gitProjectId>
+    <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitProjectId}.git</scmConnection>
+    <scmDeveloperConnection>scm:git:${gitSshUsername}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
+    <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
+
   </properties>
   
   <licenses>
@@ -65,10 +80,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
+  <!-- This stanza needs to be repeated in every child. -->
   <scm>
-    <connection>scm:git:git://${gitHost}/${gitGroupId}/${project.artifactId}.git</connection>
-    <developerConnection>scm:git:git@${gitHost}:${gitGroupId}/${project.artifactId}.git</developerConnection>
-    <url>https://${gitHost}/${gitGroupId}/${project.artifactId}</url>
+    <connection>${scmConnection}</connection>
+    <developerConnection>${scmDeveloperConnection}</developerConnection>
+    <url>${scmUrl}</url>
   </scm>
   
   <profiles>
