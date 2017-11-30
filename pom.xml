@@ -62,6 +62,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <scmDeveloperConnection>scm:git:${gitSshUsername}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
 
+    <!-- Our own -->
+    <skip.integration.tests>true</skip.integration.tests>
+    <skip.unit.tests>false</skip.unit.tests>
+    <loglevel>info</loglevel>
+    <outputtofile>true</outputtofile>
+    <trimstack>false</trimstack>
+
   </properties>
   
   <licenses>
@@ -86,6 +93,41 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <developerConnection>${scmDeveloperConnection}</developerConnection>
     <url>${scmUrl}</url>
   </scm>
+  
+  <build>
+  
+    <plugins>
+    
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.20.1</version>
+        <configuration>
+          <includes>
+            <include>**/Test*.java</include>
+            <include>**/Func*.java</include>
+          </includes>
+          <excludes>
+	    <!-- SOAP tests waiting for Jetty upgrade -->
+            <exclude>**/ws/*/Func*.java</exclude>
+	    <!-- Default excludes -->
+	    <exclude>**/*$*</exclude>
+          </excludes>
+          <redirectTestOutputToFile>${outputtofile}</redirectTestOutputToFile>
+          <forkCount>1.0C</forkCount>
+          <reuseForks>false</reuseForks>
+	  <trimStackTrace>${trimstack}</trimStackTrace>
+          <systemPropertyVariables>
+            <org.lockss.unitTesting>true</org.lockss.unitTesting>
+            <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
+            <org.lockss.defaultLogTarget>org.lockss.util.StdErrTarget</org.lockss.defaultLogTarget>
+          </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+    </plugins>
+  
+  </build>
   
   <profiles>
   
