@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 
 Copyright (c) 2000, Board of Trustees of Leland Stanford Jr. University
@@ -29,7 +30,6 @@ ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -40,10 +40,56 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <version>1.2.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   
-  <name>LOCKSS Generic Parent POM File Project</name>
+  <name>lockss-parent-pom</name>
   <description>Maven infrastructure common to most LOCKSS projects</description>
   <url>https://www.lockss.org/</url>
+  <inceptionYear>2000</inceptionYear>
   
+  <organization>
+    <name>LOCKSS Program</name>
+    <url>https://www.lockss.org/</url>
+  </organization>
+  
+  <licenses>
+    <license>
+      <name>3-Clause BSD License</name>
+      <url>https://opensource.org/licenses/BSD-3-Clause</url>
+    </license>
+  </licenses>
+  
+  <!--
+      For each developer:
+      - <id> is the GitHub username
+      - <email> is the GPG e-mail address
+      There is also a parallel <contributors> stanza
+  -->
+  <developers>
+    <developer>
+      <id>thibgc</id>
+      <name>Thib Guicherd-Callin</name>
+      <email>thib@cs.stanford.edu</email>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+    </developer>
+  </developers>
+
+  <!-- This stanza needs to be repeated in every child -->
+  <scm>
+    <connection>${scmConnection}</connection>
+    <developerConnection>${scmDeveloperConnection}</developerConnection>
+    <url>${scmUrl}</url>
+  </scm>
+  
+  <distributionManagement>
+
+    <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+
+  </distributionManagement>
+
   <properties>
 
     <!-- Java related -->
@@ -70,30 +116,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <trimstack>false</trimstack>
 
   </properties>
-  
-  <licenses>
-    <license>
-      <name>3-Clause BSD License</name>
-      <url>https://opensource.org/licenses/BSD-3-Clause</url>
-    </license>
-  </licenses>
-  
-  <developers>
-    <developer>
-      <name>Thib Guicherd-Callin</name>
-      <email>thib@cs.stanford.edu</email>
-      <organization>LOCKSS Program</organization>
-      <organizationUrl>https://www.lockss.org/</organizationUrl>
-    </developer>
-  </developers>
 
-  <!-- This stanza needs to be repeated in every child. -->
-  <scm>
-    <connection>${scmConnection}</connection>
-    <developerConnection>${scmDeveloperConnection}</developerConnection>
-    <url>${scmUrl}</url>
-  </scm>
-  
   <build>
   
     <plugins>
@@ -122,6 +145,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
             <org.lockss.defaultLogTarget>org.lockss.util.StdErrTarget</org.lockss.defaultLogTarget>
           </systemPropertyVariables>
+        </configuration>
+      </plugin>
+
+      <!-- For useIncrementalCompilation=false -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.7.0</version>
+        <configuration>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
+          <!-- put your configurations here -->
         </configuration>
       </plugin>
 
@@ -205,14 +239,4 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   </profiles>
   
-  <distributionManagement>
-
-    <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-
-  </distributionManagement>
-
 </project>
