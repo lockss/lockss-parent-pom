@@ -65,9 +65,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   -->
   <developers>
     <developer>
+      <id>fergaloy</id>
+      <name>Fernando García-Loygorri</name>
+      <email>fergaloy@stanford.edu</email>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+    </developer>
+    <developer>
+      <id>clairegriffin</id>
+      <name>Claire Griffin</name>
+      <email>clairegriffin</email>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+    </developer>
+    <developer>
       <id>thibgc</id>
       <name>Thib Guicherd-Callin</name>
       <email>thib@cs.stanford.edu</email>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+    </developer>
+    <developer>
+      <id>dlvargas</id>
+      <name>Daniel Vargas</name>
+      <email>dlvargas@stanford.edu</email>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
     </developer>
@@ -155,7 +176,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>3.7.0</version>
         <configuration>
           <useIncrementalCompilation>false</useIncrementalCompilation>
-          <!-- put your configurations here -->
         </configuration>
       </plugin>
 
