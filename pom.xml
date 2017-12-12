@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- 
 
-Copyright (c) 2000, Board of Trustees of Leland Stanford Jr. University
+Copyright (c) 2000-2017, Board of Trustees of Leland Stanford Jr. University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification,
@@ -58,7 +58,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   </licenses>
   
   <!--
-      For each developer:
+      For each developer alphabetically by last name:
       - <id> is the GitHub username
       - <email> is the GPG e-mail address
       There is also a parallel <contributors> stanza
@@ -67,14 +67,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <developer>
       <id>fergaloy</id>
       <name>Fernando García-Loygorri</name>
-      <email>fergaloy@stanford.edu</email>
+      <email>fergaloy@lockss.org</email>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
     </developer>
     <developer>
       <id>clairegriffin</id>
       <name>Claire Griffin</name>
-      <email>clairegriffin</email>
+      <email>clairetg@stanford.edu</email>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
     </developer>
@@ -82,6 +82,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <id>thibgc</id>
       <name>Thib Guicherd-Callin</name>
       <email>thib@cs.stanford.edu</email>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+    </developer>
+    <developer>
+      <id>tlipkis</id>
+      <name>Tom Lipkis</name>
+      <email>tal@lockss.org</email>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
     </developer>
