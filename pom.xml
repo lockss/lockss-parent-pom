@@ -193,7 +193,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   <profiles>
   
     <profile>
-      <id>release</id>
+      <id>lockss-release</id>
 
       <build>
       
