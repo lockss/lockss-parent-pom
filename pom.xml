@@ -251,7 +251,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -260,6 +260,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 </goals>
               </execution>
             </executions>
+	    <configuration>
+	      <doclint>none</doclint>
+	    </configuration>
           </plugin>
 
         </plugins>
