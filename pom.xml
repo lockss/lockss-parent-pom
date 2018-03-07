@@ -130,6 +130,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <java.version>1.8</java.version>
     <maven.compiler.source>${java.version}</maven.compiler.source>
     <maven.compiler.target>${java.version}</maven.compiler.target>
+    <test.fork.count>1.0C</test.fork.count>
     
     <!-- Git related -->
     <gitSshUsername>git</gitSshUsername>
@@ -141,8 +142,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
 
     <!-- Our own -->
-    <skip.integration.tests>true</skip.integration.tests>
-    <skip.unit.tests>false</skip.unit.tests>
+    <skipTests>false</skipTests>
+    <skipIntegrationTests>true</skipIntegrationTests>
     <loglevel>info</loglevel>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
@@ -156,8 +157,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.20.1</version>
+        <version>2.21.0</version>
         <configuration>
+          <skipTests>${skipTests}</skipTests>
           <includes>
             <include>**/Test*.java</include>
             <include>**/Func*.java</include>
@@ -169,7 +171,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 	    <exclude>**/*$*</exclude>
           </excludes>
           <redirectTestOutputToFile>${outputtofile}</redirectTestOutputToFile>
-          <forkCount>1.0C</forkCount>
+          <forkCount>${test.fork.count}</forkCount>
           <reuseForks>false</reuseForks>
 	  <trimStackTrace>${trimstack}</trimStackTrace>
           <systemPropertyVariables>
