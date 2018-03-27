@@ -146,11 +146,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipSources>true</skipSources>
     <skipGpg>true</skipGpg>
     <skipDockerfile>true</skipDockerfile><!-- set to false in child that requires Dockerfile processing -->
+    <skipDockerFileBuild>true</skipDockerFileBuild>
     <skipDockerfilePush>true</skipDockerfilePush>
 
     <!--  Docker related -->
     <docker.image.prefix>lockss</docker.image.prefix>
-    <dockerfile.build.skip>${skipDockerfile}</dockerfile.build.skip>
+    <dockerfile.skip>${skipDockerfile}</dockerfile.skip>
+    <dockerfile.build.skip>${skipDockerfileBuild}</dockerfile.build.skip>
     <dockerfile.tag.skip>${skipDockerfilePush}</dockerfile.tag.skip>
     <dockerfile.push.skip>${skipDockerfilePush}</dockerfile.push.skip>
 
@@ -295,7 +297,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <skipJavadoc>false</skipJavadoc>
         <skipSources>false</skipSources>
         <skipGpg>false</skipGpg>
-        <skipDockerfile>false</skipDockerfile>
+        <!-- skipDockerfile remains true unless Dockerfile processing enabled in child -->
+        <skipDockerfileBuild>false</skipDockerfileBuild>
         <skipDockerfilePush>false</skipDockerfilePush>
       </properties>
     
