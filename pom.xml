@@ -37,11 +37,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.4.0</version>
+  <version>1.5.0</version>
   <packaging>pom</packaging>
   
   <name>lockss-parent-pom</name>
-  <description>Maven infrastructure common to most LOCKSS projects</description>
+  <description>Maven infrastructure common to LOCKSS projects</description>
   <url>https://www.lockss.org/</url>
   <inceptionYear>2000</inceptionYear>
   
@@ -101,7 +101,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
-  <!-- This stanza needs to be repeated in every child -->
+  <!-- Must be in every lockss-parent-pom/lockss-spring-parent-pom descendant -->
   <scm>
     <connection>${scmConnection}</connection>
     <developerConnection>${scmDeveloperConnection}</developerConnection>
@@ -140,6 +140,21 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitProjectId}.git</scmConnection>
     <scmDeveloperConnection>scm:git:${gitSshUsername}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
+
+    <!-- Release related -->
+    <skipJavadoc>true</skipJavadoc>
+    <skipSources>true</skipSources>
+    <skipGpg>true</skipGpg>
+    <skipDockerfile>true</skipDockerfile><!-- set to false in child that requires Dockerfile processing -->
+    <skipDockerFileBuild>true</skipDockerFileBuild>
+    <skipDockerfilePush>true</skipDockerfilePush>
+
+    <!--  Docker related -->
+    <docker.image.prefix>lockss</docker.image.prefix>
+    <dockerfile.skip>${skipDockerfile}</dockerfile.skip>
+    <dockerfile.build.skip>${skipDockerfileBuild}</dockerfile.build.skip>
+    <dockerfile.tag.skip>${skipDockerfilePush}</dockerfile.tag.skip>
+    <dockerfile.push.skip>${skipDockerfilePush}</dockerfile.push.skip>
 
     <!-- Our own -->
     <skipTests>false</skipTests>
@@ -192,6 +207,83 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
 
+          <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>3.0.1</version>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+	    <configuration>
+	      <skipSource>${skipSources}</skipSource>
+	    </configuration>
+          </plugin>
+        
+          <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.0.0</version>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+	    <configuration>
+	      <skip>${skipJavadoc}</skip>
+	      <doclint>none</doclint>
+	    </configuration>
+          </plugin>
+
+          <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+	    <configuration>
+	      <skip>${skipGpg}</skip>
+	    </configuration>
+          </plugin>
+        
+          <plugin>
+            <groupId>com.spotify</groupId>
+            <artifactId>dockerfile-maven-plugin</artifactId>
+            <version>1.4.0</version>
+            <executions>
+              <execution>
+                <id>default</id>
+                <goals>
+                  <goal>build</goal>
+                  <goal>push</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <repository>${docker.image.prefix}/${project.artifactId}</repository>
+	      <buildArgs>
+                <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+	      </buildArgs>
+            </configuration>
+          </plugin>
+
     </plugins>
   
   </build>
@@ -201,6 +293,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <profile>
       <id>lockss-release</id>
 
+      <properties>
+        <skipJavadoc>false</skipJavadoc>
+        <skipSources>false</skipSources>
+        <skipGpg>false</skipGpg>
+        <!-- skipDockerfile remains true unless Dockerfile processing enabled in child -->
+        <skipDockerfileBuild>false</skipDockerfileBuild>
+        <skipDockerfilePush>false</skipDockerfilePush>
+      </properties>
+    
       <build>
       
         <plugins>
@@ -218,59 +319,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </plugin>
           
-          <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        
-          <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        
-          <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <doclint>none</doclint>
-	    </configuration>
-          </plugin>
-
         </plugins>
     
       </build>
-    
+      
     </profile>
   
   </profiles>
