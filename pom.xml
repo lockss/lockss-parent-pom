@@ -149,6 +149,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipDockerFileBuild>true</skipDockerFileBuild>
     <skipDockerfilePush>true</skipDockerfilePush>
 
+    <!-- Spring Boot related -->
+    <skipSpringBootRepackage>true</skipSpringBootRepackage>
+
     <!--  Docker related -->
     <docker.image.prefix>lockss</docker.image.prefix>
     <dockerfile.skip>${skipDockerfile}</dockerfile.skip>
@@ -163,6 +166,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
 
+    <!-- Versions and bundle versions -->
+    <lockss.core.version>1.1.1</lockss.core.version>
+    <lockss.core.snapshotVersion>1.2.0-SNAPSHOT</lockss.core.snapshotVersion>
+    <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
+    <lockss.spring.version>1.5.9.RELEASE</lockss.spring.version>
+    <lockss.springfox.version>2.6.1</lockss.springfox.version>
+    <lockss.spring.bundleVersion>1.7.0-SNAPSHOT</lockss.spring.bundleVersion>
+    <lockss.hamcrest.version>1.3</lockss.hamcrest.version>
+    <lockss.junit4.version>4.12</lockss.junit4.version>
+    <lockss.junit4.bundleVersion>1.0.0-SNAPSHOT</lockss.junit4.bundleVersion>
+    <lockss.junit5Jupiter.version>5.1.0</lockss.junit5Jupiter.version>
+    <lockss.junit5Platform.version>1.1.0</lockss.junit5Platform.version>
+    <lockss.junit5.bundleVersion>1.0.0-SNAPSHOT</lockss.junit5.bundleVersion>
   </properties>
 
   <build>
@@ -172,7 +188,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.21.0</version>
+        <version>2.21.0</version><!-- FIXME -->
         <configuration>
           <skipTests>${skipTests}</skipTests>
           <includes>
@@ -284,6 +300,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </plugin>
 
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${lockss.spring.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <skip>${skipSpringBootRepackage}</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
     </plugins>
   
   </build>
@@ -325,6 +357,37 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       
     </profile>
   
+    <profile>
+      <id>lockss-apis</id>
+
+      <build>
+      
+        <plugins>
+        
+          <!-- To create a pretty REST API diagram from docs/swagger.yaml -->
+          <plugin>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>2.2.3</version>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputSpec>docs/swagger.yaml</inputSpec>
+                  <language>html</language>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+    
+        </plugins>
+        
+      </build>
+      
+    </profile>
+      
   </profiles>
   
 </project>
