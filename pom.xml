@@ -181,6 +181,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.junit5.bundleVersion>1.1.0</lockss.junit5.bundleVersion>
   </properties>
 
+  <repositories>
+  
+    <repository>
+      <id>ossrh-snapshots</id>
+      <name>Sonatype OSSRH Snapshots</name>
+      <url>https://oss.sonatype.org/service/local/repositories/snapshots/content</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  
+  </repositories>
+
   <build>
   
     <plugins>
