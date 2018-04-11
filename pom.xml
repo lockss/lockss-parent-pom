@@ -157,7 +157,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <dockerPrefix>lockss</dockerPrefix>
     <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
     <dockerTag>${project.version}</dockerTag>
-    <dockerJarFile>${project.build.directory}/${project.build.finalName}.jar</dockerJarFile>
+    <dockerJarFile>target/${project.build.finalName}.jar</dockerJarFile>
 
     <!-- Our own -->
     <skipTests>false</skipTests>
