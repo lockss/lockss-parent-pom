@@ -145,13 +145,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipJavadoc>true</skipJavadoc>
     <skipSources>true</skipSources>
     <skipGpg>true</skipGpg>
+    <skipDeploy>true</skipDeploy>
     <skipDocker>true</skipDocker><!-- set to false in child that requires Dockerfile processing -->
     <skipDockerBuild>true</skipDockerBuild>
     <skipDockerTag>${skipDockerBuild}</skipDockerTag><!-- if build then tag -->
     <skipDockerPush>true</skipDockerPush>
 
     <!-- Spring Boot related -->
-    <skipSpringBootRepackage>true</skipSpringBootRepackage>
+    <skipSpringBootRepackage>true</skipSpringBootRepackage><!-- set to false in child that requires Spring Boot processing -->
 
     <!--  Docker related -->
     <dockerPrefix>lockss</dockerPrefix>
@@ -165,6 +166,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <loglevel>info</loglevel>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
+    <run.classpath.file>${basedir}/target/run-classpath</run.classpath.file>
+    <test.classpath.file>${basedir}/target/test-classpath</test.classpath.file>
 
     <!-- Versions and bundle versions -->
     <lockss.core.version>1.1.1</lockss.core.version>
@@ -212,15 +215,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <include>**/Func*.java</include>
           </includes>
           <excludes>
-	    <!-- SOAP tests waiting for Jetty upgrade -->
+            <!-- SOAP tests waiting for Jetty upgrade -->
             <exclude>**/ws/*/Func*.java</exclude>
-	    <!-- Default excludes -->
-	    <exclude>**/*$*</exclude>
+            <!-- Default excludes -->
+            <exclude>**/*$*</exclude>
           </excludes>
           <redirectTestOutputToFile>${outputtofile}</redirectTestOutputToFile>
           <forkCount>${test.fork.count}</forkCount>
           <reuseForks>false</reuseForks>
-	  <trimStackTrace>${trimstack}</trimStackTrace>
+          <trimStackTrace>${trimstack}</trimStackTrace>
           <systemPropertyVariables>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
@@ -239,87 +242,160 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
 
-          <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skipSource>${skipSources}</skipSource>
-	    </configuration>
-          </plugin>
-        
-          <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skip>${skipJavadoc}</skip>
-	      <doclint>none</doclint>
-	    </configuration>
-          </plugin>
-
-          <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skip>${skipGpg}</skip>
-	    </configuration>
-          </plugin>
-        
-          <plugin>
-            <groupId>com.spotify</groupId>
-            <artifactId>dockerfile-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>default</id>
-                <goals>
-                  <goal>build</goal>
-                  <goal>push</goal>
-                </goals>
-              </execution>
-            </executions>
+      <!-- To output classpath files -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          <execution>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
             <configuration>
-              <skip>${skipDocker}</skip>
-              <skipBuild>${skipDockerBuild}</skipBuild>
-              <skipTag>${skipDockerTag}</skipTag>
-              <skipPush>${skipDockerPush}</skipPush>
-              <repository>${dockerRepository}</repository>
-              <tag>${dockerTag}</tag>
-	      <buildArgs>
-                <JAR_FILE>${dockerJarFile}</JAR_FILE>
-	      </buildArgs>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <tstamp>
+                  <format property="build.timestamp" pattern="dd-MMM-yy HH:mm:ss zzz"/>
+                </tstamp>
+                <tstamp>
+                  <format property="build.date" pattern="yyyy-MM-dd hh:mm:ss"/>
+                </tstamp>
+                <tstamp>
+                  <format property="build.time" pattern="kk:mm:ss"/>
+                </tstamp>
+                <exec executable="hostname" outputproperty="build.host"
+                      failifexecutionfails="false"/>
+              </target>
             </configuration>
-          </plugin>
+          </execution>
+          <execution>
+            <id>compile</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <target>
+                <property name="runtime_classpath"
+                          refid="maven.runtime.classpath" />
+                <echo message="${runtime_classpath}"
+                      file="${run.classpath.file}"/>
+                <property name="test_classpath"
+                          refid="maven.test.classpath" />
+                <echo message="${test_classpath}"
+                      file="${test.classpath.file}"/>
+              </target>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skipSource>${skipSources}</skipSource>
+        </configuration>
+      </plugin>
+        
+      <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipJavadoc}</skip>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
+
+      <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipGpg}</skip>
+        </configuration>
+      </plugin>
+
+      <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
+      <plugin>
+        <!-- see https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <!-- Added by us to parameterize the build -->
+          <skipStaging>${skipDeploy}</skipStaging>
+        </configuration>
+      </plugin>
+          
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <goals>
+              <goal>build</goal>
+              <goal>push</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipDocker}</skip>
+          <skipBuild>${skipDockerBuild}</skipBuild>
+          <skipTag>${skipDockerTag}</skipTag>
+          <skipPush>${skipDockerPush}</skipPush>
+          <repository>${dockerRepository}</repository>
+          <tag>${dockerTag}</tag>
+          <buildArgs>
+            <JAR_FILE>${dockerJarFile}</JAR_FILE>
+          </buildArgs>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -350,33 +426,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <skipJavadoc>false</skipJavadoc>
         <skipSources>false</skipSources>
         <skipGpg>false</skipGpg>
+        <skipDeploy>false</skipDeploy>
         <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
         <skipDockerBuild>false</skipDockerBuild>
         <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
         <skipDockerPush>false</skipDockerPush>
       </properties>
     
-      <build>
-      
-        <plugins>
-      
-          <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.8</version>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-          
-        </plugins>
-    
-      </build>
-      
     </profile>
   
     <profile>
@@ -387,8 +443,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <skipJavadoc>true</skipJavadoc>
         <skipSources>true</skipSources>
         <skipGpg>true</skipGpg>
+        <skipDeploy>true</skipDeploy>
         <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
-        <skipDockerBuild>true</skipDockerBuild>
+        <skipDockerBuild>false</skipDockerBuild>
         <skipDockerTag>false</skipDockerTag>
         <skipDockerPush>false</skipDockerPush>
         <dockerTag>latest</dockerTag>
