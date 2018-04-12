@@ -145,19 +145,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipJavadoc>true</skipJavadoc>
     <skipSources>true</skipSources>
     <skipGpg>true</skipGpg>
-    <skipDockerfile>true</skipDockerfile><!-- set to false in child that requires Dockerfile processing -->
-    <skipDockerFileBuild>true</skipDockerFileBuild>
-    <skipDockerfilePush>true</skipDockerfilePush>
+    <skipDocker>true</skipDocker><!-- set to false in child that requires Dockerfile processing -->
+    <skipDockerBuild>true</skipDockerBuild>
+    <skipDockerTag>${skipDockerBuild}</skipDockerTag><!-- if build then tag -->
+    <skipDockerPush>true</skipDockerPush>
 
     <!-- Spring Boot related -->
     <skipSpringBootRepackage>true</skipSpringBootRepackage>
 
     <!--  Docker related -->
-    <docker.image.prefix>lockss</docker.image.prefix>
-    <dockerfile.skip>${skipDockerfile}</dockerfile.skip>
-    <dockerfile.build.skip>${skipDockerfileBuild}</dockerfile.build.skip>
-    <dockerfile.tag.skip>${skipDockerfilePush}</dockerfile.tag.skip>
-    <dockerfile.push.skip>${skipDockerfilePush}</dockerfile.push.skip>
+    <dockerPrefix>lockss</dockerPrefix>
+    <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
+    <dockerTag>${project.version}</dockerTag>
+    <dockerJarFile>target/${project.build.finalName}.jar</dockerJarFile>
 
     <!-- Our own -->
     <skipTests>false</skipTests>
@@ -309,9 +309,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               </execution>
             </executions>
             <configuration>
-              <repository>${docker.image.prefix}/${project.artifactId}</repository>
+              <skip>${skipDocker}</skip>
+              <skipBuild>${skipDockerBuild}</skipBuild>
+              <skipTag>${skipDockerTag}</skipTag>
+              <skipPush>${skipDockerPush}</skipPush>
+              <repository>${dockerRepository}</repository>
+              <tag>${dockerTag}</tag>
 	      <buildArgs>
-                <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
+                <JAR_FILE>${dockerJarFile}</JAR_FILE>
 	      </buildArgs>
             </configuration>
           </plugin>
@@ -345,9 +350,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <skipJavadoc>false</skipJavadoc>
         <skipSources>false</skipSources>
         <skipGpg>false</skipGpg>
-        <!-- skipDockerfile remains true unless Dockerfile processing enabled in child -->
-        <skipDockerfileBuild>false</skipDockerfileBuild>
-        <skipDockerfilePush>false</skipDockerfilePush>
+        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
+        <skipDockerPush>false</skipDockerPush>
       </properties>
     
       <build>
@@ -373,6 +379,23 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       
     </profile>
   
+    <profile>
+      <id>lockss-docker-latest</id>
+
+      <properties>
+        <skipTests>true</skipTests>
+        <skipJavadoc>true</skipJavadoc>
+        <skipSources>true</skipSources>
+        <skipGpg>true</skipGpg>
+        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
+        <skipDockerBuild>true</skipDockerBuild>
+        <skipDockerTag>false</skipDockerTag>
+        <skipDockerPush>false</skipDockerPush>
+        <dockerTag>latest</dockerTag>
+      </properties>
+
+    </profile>
+    
     <profile>
       <id>lockss-apis</id>
 
