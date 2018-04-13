@@ -166,11 +166,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <loglevel>info</loglevel>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
+    <file.buildinfo>${basedir}/target/build-info</file.buildinfo>
     <file.classpath.compile>${basedir}/target/compile-classpath</file.classpath.compile>
     <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
     <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
 
     <!-- Versions and bundle versions -->
+    <build.releasename>1.74.0</build.releasename>
     <lockss.core.version>1.1.1</lockss.core.version>
     <lockss.core.snapshotVersion>1.2.0-SNAPSHOT</lockss.core.snapshotVersion>
     <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
@@ -250,25 +252,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>1.8</version>
         <executions>
           
+          <!-- Create a build info file -->
           <execution>
+            <id>build-info</id>
             <phase>generate-resources</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <exportAntProperties>true</exportAntProperties>
               <target>
-                <tstamp>
-                  <format property="build.timestamp" pattern="dd-MMM-yy HH:mm:ss zzz"/>
-                </tstamp>
-                <tstamp>
-                  <format property="build.date" pattern="yyyy-MM-dd hh:mm:ss"/>
-                </tstamp>
-                <tstamp>
-                  <format property="build.time" pattern="kk:mm:ss"/>
-                </tstamp>
-                <exec executable="hostname" outputproperty="build.host"
-                      failifexecutionfails="false"/>
+                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
+                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
+                  <isset property="env.HOSTNAME" />
+                </condition>
+                <propertyfile comment="Build information" file="${file.buildinfo}">
+                  <entry key="build.groupId" value="${project.groupId}" />
+                  <entry key="build.artifactId" value="${project.artifactId}" />
+                  <entry key="build.version" value="${project.version}" />
+                  <entry key="build.packaging" value="${project.packaging}" />
+                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
+                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
+                  <entry key="build.parent.version" value="${project.parent.version}" />
+                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
+                  <entry key="build.date" type="date" pattern="EEEE MMM dd, yyyy" value="now" />
+                  <entry key="build.time" type="date" pattern="kk:mm:ss" value="now" />
+                  <entry key="build.timestamp" type="date" pattern="dd-MMM-yy' 'HH:mm:ss' 'zzz" value="now" />
+                  <entry key="build.releasename" value="${build.releasename}" />
+                  <entry key="build.host" value="${hostname}" />
+                  <entry key="build.user.name" value="${user.name}" />
+                  <entry key="build.os.name" value="${os.name}" />
+                  <entry key="build.os.arch" value="${os.arch}" />
+                  <entry key="build.os.version" value="${os.version}" />
+                  <entry key="build.java.version" value="${java.version}" />
+                  <entry key="build.java.class.version" value="${java.class.version}" />
+                  <entry key="build.java.vendor" value="${java.vendor}" />
+                  <entry key="build.java.home" value="${java.home}" />
+                  <entry key="build.java.specification.version" value="${java.specification.version}" />
+                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
+                  <entry key="build.java.specification.name" value="${java.specification.name}" />
+                  <entry key="build.java.vm.version" value="${java.vm.version}" />
+                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
+                  <entry key="build.java.vm.name" value="${java.vm.name}" />
+                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
+                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
+                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
+                </propertyfile>
               </target>
             </configuration>
           </execution>
@@ -276,14 +304,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <!-- Creates classpath files (and exports Maven properties) -->
           <execution>
             <id>classpath-files</id>
-            <phase>compile</phase>
+            <phase>generate-resources</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
               <exportAntProperties>true</exportAntProperties>
               <target>
-              <exportAntProperties>true</exportAntProperties>
                 <property name="compile_classpath"
                           refid="maven.compile.classpath" />
                 <echo message="${compile_classpath}"
