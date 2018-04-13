@@ -166,8 +166,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <loglevel>info</loglevel>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
-    <run.classpath.file>${basedir}/target/run-classpath</run.classpath.file>
-    <test.classpath.file>${basedir}/target/test-classpath</test.classpath.file>
+    <file.classpath.compile>${basedir}/target/compile-classpath</file.classpath.compile>
+    <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
+    <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
 
     <!-- Versions and bundle versions -->
     <lockss.core.version>1.1.1</lockss.core.version>
@@ -248,6 +249,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-antrun-plugin</artifactId>
         <version>1.8</version>
         <executions>
+          
           <execution>
             <phase>generate-resources</phase>
             <goals>
@@ -270,25 +272,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               </target>
             </configuration>
           </execution>
+          
+          <!-- Creates classpath files (and exports Maven properties) -->
           <execution>
-            <id>compile</id>
+            <id>classpath-files</id>
             <phase>compile</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
+              <exportAntProperties>true</exportAntProperties>
               <target>
+              <exportAntProperties>true</exportAntProperties>
+                <property name="compile_classpath"
+                          refid="maven.compile.classpath" />
+                <echo message="${compile_classpath}"
+                      file="${file.classpath.compile}"/>
                 <property name="runtime_classpath"
                           refid="maven.runtime.classpath" />
                 <echo message="${runtime_classpath}"
-                      file="${run.classpath.file}"/>
+                      file="${file.classpath.runtime}"/>
                 <property name="test_classpath"
                           refid="maven.test.classpath" />
                 <echo message="${test_classpath}"
-                      file="${test.classpath.file}"/>
+                      file="${file.classpath.test}"/>
               </target>
             </configuration>
           </execution>
+          
         </executions>
       </plugin>
 
