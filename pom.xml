@@ -37,7 +37,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.7.0</version>
+  <version>1.8.0</version>
   <packaging>pom</packaging>
   
   <name>lockss-parent-pom</name>
@@ -145,19 +145,25 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipJavadoc>true</skipJavadoc>
     <skipSources>true</skipSources>
     <skipGpg>true</skipGpg>
-    <skipDockerfile>true</skipDockerfile><!-- set to false in child that requires Dockerfile processing -->
-    <skipDockerFileBuild>true</skipDockerFileBuild>
-    <skipDockerfilePush>true</skipDockerfilePush>
+    <skipDeploy>true</skipDeploy>
+    <skipDocker>true</skipDocker><!-- set to false in child that requires Dockerfile processing -->
+    <skipDockerBuild>true</skipDockerBuild>
+    <skipDockerTag>${skipDockerBuild}</skipDockerTag><!-- if build then tag -->
+    <skipDockerPush>true</skipDockerPush>
 
     <!-- Spring Boot related -->
-    <skipSpringBootRepackage>true</skipSpringBootRepackage>
+    <skipSpringBootRepackage>true</skipSpringBootRepackage><!-- set to false in child that requires Spring Boot processing -->
 
     <!--  Docker related -->
-    <docker.image.prefix>lockss</docker.image.prefix>
-    <dockerfile.skip>${skipDockerfile}</dockerfile.skip>
-    <dockerfile.build.skip>${skipDockerfileBuild}</dockerfile.build.skip>
-    <dockerfile.tag.skip>${skipDockerfilePush}</dockerfile.tag.skip>
-    <dockerfile.push.skip>${skipDockerfilePush}</dockerfile.push.skip>
+    <dockerPrefix>lockss</dockerPrefix>
+    <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
+    <dockerTag>${project.version}</dockerTag>
+    <dockerJarFile>target/${project.build.finalName}.jar</dockerJarFile>
+
+    <!-- Ant related -->
+    <ant.datetime.iso8601Date>yyyy-MM-dd</ant.datetime.iso8601Date>
+    <ant.datetime.iso8601Time>HH:mm:ss</ant.datetime.iso8601Time>
+    <ant.datetime.iso8601Timestamp>${ant.datetime.iso8601Date}'T'${ant.datetime.iso8601Time}XXX</ant.datetime.iso8601Timestamp>
 
     <!-- Our own -->
     <skipTests>false</skipTests>
@@ -165,8 +171,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <loglevel>info</loglevel>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
+    <file.buildinfo>${basedir}/target/build-info</file.buildinfo>
+    <file.classpath.compile>${basedir}/target/compile-classpath</file.classpath.compile>
+    <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
+    <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
 
     <!-- Versions and bundle versions -->
+    <build.releasename>1.74.0</build.releasename>
     <lockss.core.version>1.1.1</lockss.core.version>
     <lockss.core.snapshotVersion>1.2.0-SNAPSHOT</lockss.core.snapshotVersion>
     <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
@@ -180,6 +191,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.junit5Platform.version>1.1.0</lockss.junit5Platform.version>
     <lockss.junit5.bundleVersion>1.1.0</lockss.junit5.bundleVersion>
   </properties>
+
+  <repositories>
+  
+    <repository>
+      <id>ossrh-snapshots</id>
+      <name>Sonatype OSSRH Snapshots</name>
+      <url>https://oss.sonatype.org/service/local/repositories/snapshots/content</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  
+  </repositories>
 
   <build>
   
@@ -196,15 +223,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <include>**/Func*.java</include>
           </includes>
           <excludes>
-	    <!-- SOAP tests waiting for Jetty upgrade -->
+            <!-- SOAP tests waiting for Jetty upgrade -->
             <exclude>**/ws/*/Func*.java</exclude>
-	    <!-- Default excludes -->
-	    <exclude>**/*$*</exclude>
+            <!-- Default excludes -->
+            <exclude>**/*$*</exclude>
           </excludes>
           <redirectTestOutputToFile>${outputtofile}</redirectTestOutputToFile>
           <forkCount>${test.fork.count}</forkCount>
           <reuseForks>false</reuseForks>
-	  <trimStackTrace>${trimstack}</trimStackTrace>
+          <trimStackTrace>${trimstack}</trimStackTrace>
           <systemPropertyVariables>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
@@ -223,82 +250,195 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
 
-          <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <version>3.0.1</version>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar-no-fork</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skipSource>${skipSources}</skipSource>
-	    </configuration>
-          </plugin>
-        
-          <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <version>3.0.0</version>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skip>${skipJavadoc}</skip>
-	      <doclint>none</doclint>
-	    </configuration>
-          </plugin>
-
-          <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-	    <configuration>
-	      <skip>${skipGpg}</skip>
-	    </configuration>
-          </plugin>
-        
-          <plugin>
-            <groupId>com.spotify</groupId>
-            <artifactId>dockerfile-maven-plugin</artifactId>
-            <version>1.4.0</version>
-            <executions>
-              <execution>
-                <id>default</id>
-                <goals>
-                  <goal>build</goal>
-                  <goal>push</goal>
-                </goals>
-              </execution>
-            </executions>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <executions>
+          
+          <!-- Creates a build info file -->
+          <execution>
+            <id>build-info</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
             <configuration>
-              <repository>${docker.image.prefix}/${project.artifactId}</repository>
-	      <buildArgs>
-                <JAR_FILE>target/${project.build.finalName}.jar</JAR_FILE>
-	      </buildArgs>
+              <target>
+                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
+                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
+                  <isset property="env.HOSTNAME" />
+                </condition>
+                <propertyfile comment="Build information" file="${file.buildinfo}">
+                  <entry key="build.groupId" value="${project.groupId}" />
+                  <entry key="build.artifactId" value="${project.artifactId}" />
+                  <entry key="build.version" value="${project.version}" />
+                  <entry key="build.packaging" value="${project.packaging}" />
+                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
+                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
+                  <entry key="build.parent.version" value="${project.parent.version}" />
+                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
+                  <entry key="build.date" type="date" pattern="${ant.datetime.iso8601Date}" value="now" />
+                  <entry key="build.time" type="date" pattern="${ant.datetime.iso8601Time}" value="now" />
+                  <entry key="build.timestamp" type="date" pattern="${ant.datetime.iso8601Timestamp}" value="now" />
+                  <entry key="build.releasename" value="${build.releasename}" />
+                  <entry key="build.host" value="${hostname}" />
+                  <entry key="build.user.name" value="${user.name}" />
+                  <entry key="build.os.name" value="${os.name}" />
+                  <entry key="build.os.arch" value="${os.arch}" />
+                  <entry key="build.os.version" value="${os.version}" />
+                  <entry key="build.java.version" value="${java.version}" />
+                  <entry key="build.java.class.version" value="${java.class.version}" />
+                  <entry key="build.java.vendor" value="${java.vendor}" />
+                  <entry key="build.java.home" value="${java.home}" />
+                  <entry key="build.java.specification.version" value="${java.specification.version}" />
+                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
+                  <entry key="build.java.specification.name" value="${java.specification.name}" />
+                  <entry key="build.java.vm.version" value="${java.vm.version}" />
+                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
+                  <entry key="build.java.vm.name" value="${java.vm.name}" />
+                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
+                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
+                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
+                </propertyfile>
+              </target>
             </configuration>
-          </plugin>
+          </execution>
+          
+          <!-- Creates classpath files (and exports Maven properties) -->
+          <execution>
+            <id>classpath-files</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property name="compile_classpath"
+                          refid="maven.compile.classpath" />
+                <echo message="${compile_classpath}"
+                      file="${file.classpath.compile}"/>
+                <property name="test_classpath"
+                          refid="maven.test.classpath" />
+                <echo message="${test_classpath}"
+                      file="${file.classpath.test}"/>
+                <property name="runtime_classpath"
+                          refid="maven.runtime.classpath" />
+                <echo message="${runtime_classpath}"
+                      file="${file.classpath.runtime}"/>
+              </target>
+            </configuration>
+          </execution>
+          
+        </executions>
+      </plugin>
+
+      <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.0.1</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skipSource>${skipSources}</skipSource>
+        </configuration>
+      </plugin>
+        
+      <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipJavadoc}</skip>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
+
+      <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.6</version>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipGpg}</skip>
+        </configuration>
+      </plugin>
+
+      <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
+      <plugin>
+        <!-- see https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>1.3</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.8</version>
+        <extensions>true</extensions>
+        <configuration>
+          <serverId>ossrh</serverId>
+          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+          <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <!-- Added by us to parameterize the build -->
+          <skipStaging>${skipDeploy}</skipStaging>
+        </configuration>
+      </plugin>
+          
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+          <execution>
+            <id>default</id>
+            <goals>
+              <goal>build</goal>
+              <goal>push</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <skip>${skipDocker}</skip>
+          <skipBuild>${skipDockerBuild}</skipBuild>
+          <skipTag>${skipDockerTag}</skipTag>
+          <skipPush>${skipDockerPush}</skipPush>
+          <repository>${dockerRepository}</repository>
+          <tag>${dockerTag}</tag>
+          <buildArgs>
+            <JAR_FILE>${dockerJarFile}</JAR_FILE>
+          </buildArgs>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.springframework.boot</groupId>
@@ -329,34 +469,33 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <skipJavadoc>false</skipJavadoc>
         <skipSources>false</skipSources>
         <skipGpg>false</skipGpg>
-        <!-- skipDockerfile remains true unless Dockerfile processing enabled in child -->
-        <skipDockerfileBuild>false</skipDockerfileBuild>
-        <skipDockerfilePush>false</skipDockerfilePush>
+        <skipDeploy>false</skipDeploy>
+        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
+        <skipDockerPush>false</skipDockerPush>
       </properties>
     
-      <build>
-      
-        <plugins>
-      
-          <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.8</version>
-            <extensions>true</extensions>
-            <configuration>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </plugin>
-          
-        </plugins>
-    
-      </build>
-      
     </profile>
   
+    <profile>
+      <id>lockss-docker-latest</id>
+
+      <properties>
+        <skipTests>true</skipTests>
+        <skipJavadoc>true</skipJavadoc>
+        <skipSources>true</skipSources>
+        <skipGpg>true</skipGpg>
+        <skipDeploy>true</skipDeploy>
+        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerTag>false</skipDockerTag>
+        <skipDockerPush>false</skipDockerPush>
+        <dockerTag>latest</dockerTag>
+      </properties>
+
+    </profile>
+    
     <profile>
       <id>lockss-apis</id>
 
