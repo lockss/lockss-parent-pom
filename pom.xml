@@ -101,7 +101,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
-  <!-- Must be in every lockss-parent-pom/lockss-spring-parent-pom descendant -->
+  <!-- Must be in every lockss-parent-pom descendant -->
   <scm>
     <connection>${scmConnection}</connection>
     <developerConnection>${scmDeveloperConnection}</developerConnection>
@@ -176,7 +176,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
     <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
 
-    <!-- Versions and bundle versions -->
+    <!-- Bundle versions -->
     <build.releasename>1.74.0</build.releasename>
     <lockss.core.version>1.2.0-SNAPSHOT</lockss.core.version>
     <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
@@ -186,9 +186,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.hamcrest.version>1.3</lockss.hamcrest.version>
     <lockss.junit4.version>4.12</lockss.junit4.version>
     <lockss.junit4.bundleVersion>1.2.0-SNAPSHOT</lockss.junit4.bundleVersion>
-    <lockss.junit5Jupiter.version>5.1.0</lockss.junit5Jupiter.version>
-    <lockss.junit5Platform.version>1.1.0</lockss.junit5Platform.version>
+    <lockss.junit5-jupiter.version>5.1.0</lockss.junit5-jupiter.version>
+    <lockss.junit5-platform.version>1.1.0</lockss.junit5-platform.version>
     <lockss.junit5.bundleVersion>1.2.0-SNAPSHOT</lockss.junit5.bundleVersion>
+
+    <!-- Versions -->
+    <lockss.repository-client.version>1.6.0-SNAPSHOT</lockss.repository-client.version>
+    <lockss.repository-core.version>1.12.0-SNAPSHOT</lockss.repository-core.version>
+    <lockss.repository-service.version>1.8.0-SNAPSHOT</lockss.repository-service.version>
+    <lockss.tdb-tools.version>1.2.0-SNAPSHOT</lockss.tdb-tools.version>
+    <lockss.tdbxml-maven-plugin.version>1.2.0-SNAPSHOT</lockss.tdbxml-maven-plugin.version>
+    <lockss.util.version>1.7.0-SNAPSHOT</lockss.util.version>
   </properties>
 
   <repositories>
@@ -394,7 +402,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- see https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>1.3</version>
+        <version>2.8.2</version>
         <configuration>
           <skip>true</skip>
         </configuration>
