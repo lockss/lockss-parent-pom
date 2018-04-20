@@ -191,6 +191,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.junit5.bundleVersion>1.2.0-SNAPSHOT</lockss.junit5.bundleVersion>
 
     <!-- Versions -->
+    <lockss.configuration-service.version>1.1.0-SNAPSHOT</lockss.configuration-service.version>
+    <lockss.metadataextractor-common.version>1.3.0-SNAPSHOT</lockss.metadataextractor-common.version>
+    <lockss.metadata-extraction-service.version>1.1.0-SNAPSHOT</lockss.metadata-extraction-service.version>
+    <lockss.metadata-service.version>1.0.0-SNAPSHOT</lockss.metadata-service.version>
     <lockss.plugins.version>20180327</lockss.plugins.version>
     <lockss.repository-client.version>1.6.0-SNAPSHOT</lockss.repository-client.version>
     <lockss.repository-core.version>1.12.0-SNAPSHOT</lockss.repository-core.version>
@@ -256,6 +260,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <configuration>
           <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <!-- Fail if Docker is needed but daemon is not running -->
+          <execution>
+            <id>check-docker</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>docker</executable>
+              <arguments>
+                <argument>info</argument>
+              </arguments>
+              <outputFile>/dev/null</outputFile>
+              <skip>${skipDocker}</skip>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
       <plugin>
