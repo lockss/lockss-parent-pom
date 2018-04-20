@@ -280,7 +280,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <argument>info</argument>
               </arguments>
               <outputFile>/dev/null</outputFile>
-              <skip>${skipDockerBuild}</skip>
+              <skip>true</skip><!-- FIXME -->
             </configuration>
           </execution>
         </executions>
