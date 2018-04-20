@@ -263,34 +263,51 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>1.8</version>
+        <dependencies>
+          <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>20020829</version>
+          </dependency>  
+        </dependencies>
         <executions>
-          <!-- Fail if Docker build is needed but daemon is not running -->
+          
+          <!-- If Docker build needed, check early that Docker is running -->
           <execution>
             <id>check-docker</id>
             <phase>validate</phase>
             <goals>
-              <goal>exec</goal>
+              <goal>run</goal>
             </goals>
             <configuration>
-              <executable>docker</executable>
-              <arguments>
-                <argument>info</argument>
-              </arguments>
-              <outputFile>/dev/null</outputFile>
-              <skip>true</skip><!-- FIXME -->
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <isfalse value="${skipDocker}" />
+                    <or>
+                      <isfalse value="${skipDockerBuild}" />
+                      <isfalse value="${skipDockerTag}" />
+                      <isfalse value="${skipDockerPush}" />
+                    </or>
+                  </and>
+                  <then>
+                    <echo message="Checking that Docker daemon is running..." />
+                    <exec executable="docker" output="/dev/null"
+                          failonerror="true" failifexecutionfails="true">
+                      <arg value="info" />
+                    </exec>                  
+                  </then>
+                  <else>
+                    <echo message="Not checking that Docker daemon is running." />
+                  </else>
+                </if>
+              </target>
             </configuration>
           </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
-        <executions>
           
           <!-- Creates a build info file -->
           <execution>
