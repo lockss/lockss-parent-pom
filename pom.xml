@@ -267,7 +267,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.6.0</version>
         <executions>
-          <!-- Fail if Docker is needed but daemon is not running -->
+          <!-- Fail if Docker build is needed but daemon is not running -->
           <execution>
             <id>check-docker</id>
             <phase>validate</phase>
@@ -280,7 +280,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                 <argument>info</argument>
               </arguments>
               <outputFile>/dev/null</outputFile>
-              <skip>${skipDocker}</skip>
+              <skip>${skipDockerBuild}</skip>
             </configuration>
           </execution>
         </executions>
