@@ -142,14 +142,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
 
     <!-- Release related -->
+    <skipTestJar>true</skipTestJar>
     <skipJavadoc>true</skipJavadoc>
     <skipSources>true</skipSources>
     <skipGpg>true</skipGpg>
-    <skipDeploy>true</skipDeploy>
     <skipDocker>true</skipDocker><!-- set to false in child that requires Dockerfile processing -->
     <skipDockerBuild>true</skipDockerBuild>
     <skipDockerTag>${skipDockerBuild}</skipDockerTag><!-- if build then tag -->
     <skipDockerPush>true</skipDockerPush>
+    <skipDeploy>true</skipDeploy>
 
     <!-- Spring Boot related -->
     <skipSpringBootRepackage>true</skipSpringBootRepackage><!-- set to false in child that requires Spring Boot processing -->
@@ -385,6 +386,62 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
           
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>3.1.0</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+            <configuration>
+              <skip>${skipTestJar}</skip>
+              <skipIfEmpty>true</skipIfEmpty>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+            <id>symlink-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}.${project.packaging}</argument>
+                <argument>${basedir}/target/current.${project.packaging}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>symlink-test-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}-tests.jar</argument>
+                <argument>${basedir}/target/current-tests.jar</argument>
+              </arguments>
+              <skip>${skipTestJar}</skip>
+            </configuration>
+          </execution>
         </executions>
       </plugin>
 
