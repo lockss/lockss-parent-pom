@@ -456,7 +456,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <!-- Creates classpath files (and exports Maven properties) -->
           <execution>
             <id>classpath-files</id>
-            <phase>generate-resources</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>run</goal>
             </goals>
@@ -564,10 +564,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <executions>
           <execution>
             <id>attach-javadocs</id>
+            <phase>package</phase>
             <goals>
               <goal>jar</goal>
             </goals>
             <configuration>
+              <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
               <skip>${skipJavadoc}</skip>
             </configuration>
           </execution>
