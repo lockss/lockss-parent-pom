@@ -724,6 +724,55 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
     </profile>
     
+    <!-- 
+    
+        travis-maven-central profile
+        
+        Assumes that the code has been cleaned, built and tested successfully,
+        and is only concerned with doing the Maven Central/OSSRH deploy.
+    
+    -->
+    <profile>
+      <id>travis-maven-central</id>
+
+      <properties>
+        <skipTests>true</skipTests>
+        <!-- skipTestJar remains true unless set to false in child -->
+        <skipJavadoc>false</skipJavadoc>
+        <skipSources>false</skipSources>
+        <skipGpg>false</skipGpg>
+        <skipDeploy>false</skipDeploy>
+        <skipDocker>true</skipDocker>
+      </properties>
+    
+    </profile>
+  
+    <!-- 
+    
+        travis-docker-hub profile
+        
+        Assumes that the code has been cleaned, built and tested successfully,
+        and is only concerned with doing the Docker Hub deploy.
+    
+    -->
+    <profile>
+      <id>travis-docker-hub</id>
+
+      <properties>
+        <skipTests>true</skipTests>
+        <skipTestJar>true</skipTestJar>
+        <skipJavadoc>true</skipJavadoc>
+        <skipSources>true</skipSources>
+        <skipGpg>true</skipGpg>
+        <skipDeploy>true</skipDeploy>
+        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
+        <skipDockerPush>false</skipDockerPush>
+      </properties>
+    
+    </profile>
+  
     <profile>
       <id>lockss-apis</id>
 
