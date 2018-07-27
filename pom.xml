@@ -234,7 +234,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipDeploy>true</skipDeploy>
 
     <!--
-        Spring Boot related
+        Spring / Spring Boot related
     -->
     
     <!--
@@ -248,11 +248,20 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     -->
     <skipSpringBootRepackage>true</skipSpringBootRepackage><!-- set to false in child that requires Spring Boot processing -->
 
+    <!-- 
+        springServicePort
+        
+        If this is a Spring Boot app with a service port, set the port in this
+        variable. (Needed to parameterize the Docker image, ARG SVC_PORT.)
+    -->
+    <springServicePort>UNDEFINED</springServicePort> <!-- set in child -->
+
     <!--  Docker related -->
     <dockerPrefix>lockss</dockerPrefix>
     <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
     <dockerTag>${project.version}</dockerTag>
     <dockerJarFile>target/${project.build.finalName}.jar</dockerJarFile>
+    <dockerServicePort>${springServicePort}</dockerServicePort>
 
     <!-- Ant related -->
     <ant.datetime.iso8601Date>yyyy-MM-dd</ant.datetime.iso8601Date>
@@ -678,6 +687,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <tag>${dockerTag}</tag>
           <buildArgs>
             <JAR_FILE>${dockerJarFile}</JAR_FILE>
+            <SVC_PORT>${dockerServicePort}</SVC_PORT>
           </buildArgs>
         </configuration>
       </plugin>
