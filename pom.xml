@@ -303,10 +303,17 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.repository-client.version>1.6.0-SNAPSHOT</lockss.repository-client.version>
     <lockss.repository-core.version>1.12.0-SNAPSHOT</lockss.repository-core.version>
     <lockss.repository-service.version>1.8.0-SNAPSHOT</lockss.repository-service.version>
-    <lockss.slf4j.version>1.7.25</lockss.slf4j.version>
     <lockss.tdb-tools.version>1.2.0-SNAPSHOT</lockss.tdb-tools.version>
     <lockss.tdbxml-maven-plugin.version>1.2.0-SNAPSHOT</lockss.tdbxml-maven-plugin.version>
     <lockss.util.version>1.7.0-SNAPSHOT</lockss.util.version>
+
+    <!-- 3rd party library versions -->
+    <!-- If the slfj4 version is changed to 1.8.x or later,
+         lockss.log4j.slf4j.binding should be changed to log4j-slf4j18-impl -->
+    <lockss.slf4j.version>1.7.25</lockss.slf4j.version>
+    <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding>
+    <lockss.activemq.version>5.15.3</lockss.activemq.version>
+
   </properties>
 
   <repositories>
@@ -352,7 +359,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <systemPropertyVariables>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
-            <org.lockss.defaultLogTarget>org.lockss.util.StdErrTarget</org.lockss.defaultLogTarget>
           </systemPropertyVariables>
         </configuration>
         <dependencies>
