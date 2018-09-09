@@ -272,6 +272,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipTests>false</skipTests>
     <skipIntegrationTests>true</skipIntegrationTests>
     <loglevel>info</loglevel>
+    <keeptempfiles>false</keeptempfiles>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
     <file.buildinfo>${basedir}/target/build-info</file.buildinfo>
@@ -357,6 +358,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <reuseForks>false</reuseForks>
           <trimStackTrace>${trimstack}</trimStackTrace>
           <systemPropertyVariables>
+            <org.lockss.keepTempFiles>${keeptempfiles}</org.lockss.keepTempFiles>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
           </systemPropertyVariables>
