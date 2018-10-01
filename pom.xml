@@ -272,6 +272,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipTests>false</skipTests>
     <skipIntegrationTests>true</skipIntegrationTests>
     <loglevel>info</loglevel>
+    <rootloglevel></rootloglevel>
     <keeptempfiles>false</keeptempfiles>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
@@ -361,6 +362,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             <org.lockss.keepTempFiles>${keeptempfiles}</org.lockss.keepTempFiles>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
+            <org.lockss.defaultRootLogLevel>${rootloglevel}</org.lockss.defaultRootLogLevel>
+            <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
           </systemPropertyVariables>
         </configuration>
         <dependencies>
