@@ -256,6 +256,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     -->
     <springServicePort>UNDEFINED</springServicePort> <!-- set in child -->
 
+    <!-- Maven related: Maven internals -->
+    <plugin.version.maven-antrun-plugin>1.8</plugin.version.maven-antrun-plugin>
+    <plugin.version.maven-compiler-plugin>3.7.0</plugin.version.maven-compiler-plugin>
+    <plugin.version.maven-deploy-plugin>2.8.2</plugin.version.maven-deploy-plugin>
+    <plugin.version.maven-gpg-plugin>1.6</plugin.version.maven-gpg-plugin>
+    <plugin.version.maven-jar-plugin>3.1.0</plugin.version.maven-jar-plugin>
+    <plugin.version.maven-javadoc-plugin>3.0.0</plugin.version.maven-javadoc-plugin>
+    <plugin.version.maven-source-plugin>3.0.1</plugin.version.maven-source-plugin>
+    <plugin.version.maven-surefire-plugin>2.19.1</plugin.version.maven-surefire-plugin>
+
+    <!-- Maven related: key plugins -->
+    <plugin.version.dockerfile-maven-plugin>1.4.0</plugin.version.dockerfile-maven-plugin>
+    <plugin.version.exec-maven-plugin>1.6.0</plugin.version.exec-maven-plugin>
+    <plugin.version.nexus-staging-maven-plugin>1.6.8</plugin.version.nexus-staging-maven-plugin>
+    <plugin.version.swagger-codegen-maven-plugin>2.3.1</plugin.version.swagger-codegen-maven-plugin>
+
     <!--  Docker related -->
     <dockerPrefix>lockss</dockerPrefix>
     <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
@@ -282,7 +298,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
 
     <!-- Bundle versions -->
-    <build.releasename>1.74.0</build.releasename>
+    <build.releasename>1.75.0</build.releasename>
     <lockss.core.version>1.2.0-SNAPSHOT</lockss.core.version>
     <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
     <lockss.spring-boot.version>1.5.17.RELEASE</lockss.spring-boot.version>
@@ -316,6 +332,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding>
     <lockss.activemq.version>5.15.3</lockss.activemq.version>
 
+    <lockss.version.jackson>2.9.7</lockss.version.jackson>
+
   </properties>
 
   <repositories>
@@ -341,7 +359,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.19.1</version><!-- FIXME -->
+        <version>${plugin.version.maven-surefire-plugin}</version>
         <configuration>
           <skipTests>${skipTests}</skipTests>
           <includes>
@@ -388,7 +406,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.7.0</version>
+        <version>${plugin.version.maven-compiler-plugin}</version>
         <configuration>
           <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
@@ -397,7 +415,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>1.8</version>
+        <version>${plugin.version.maven-antrun-plugin}</version>
         <dependencies>
           <dependency>
             <groupId>ant-contrib</groupId>
@@ -522,7 +540,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>${plugin.version.maven-jar-plugin}</version>
         <executions>
           <execution>
             <goals>
@@ -539,7 +557,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>${plugin.version.exec-maven-plugin}</version>
         <executions>
           <execution>
             <id>symlink-jar</id>
@@ -579,7 +597,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.0.1</version>
+        <version>${plugin.version.maven-source-plugin}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -597,7 +615,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.0.0</version>
+        <version>${plugin.version.maven-javadoc-plugin}</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -620,7 +638,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-gpg-plugin</artifactId>
-        <version>1.6</version>
+        <version>${plugin.version.maven-gpg-plugin}</version>
         <executions>
           <execution>
             <id>sign-artifacts</id>
@@ -640,7 +658,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <!-- see https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
-        <version>2.8.2</version>
+        <version>${plugin.version.maven-deploy-plugin}</version>
         <configuration>
           <skip>true</skip>
         </configuration>
@@ -648,7 +666,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.8</version>
+        <version>${plugin.version.nexus-staging-maven-plugin}</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
@@ -678,7 +696,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       <plugin>
         <groupId>com.spotify</groupId>
         <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>1.4.0</version>
+        <version>${plugin.version.dockerfile-maven-plugin}</version>
         <executions>
           <execution>
             <id>default</id>
@@ -804,7 +822,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
-            <version>2.3.1</version>
+            <version>${plugin.version.swagger-codegen-maven-plugin}</version>
             <executions>
               <execution>
                 <goals>
