@@ -289,6 +289,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipIntegrationTests>true</skipIntegrationTests>
     <loglevel>info</loglevel>
     <rootloglevel></rootloglevel>
+    <tmpdir>${java.io.tmpdir}</tmpdir>
     <keeptempfiles>false</keeptempfiles>
     <outputtofile>true</outputtofile>
     <trimstack>false</trimstack>
@@ -377,6 +378,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <reuseForks>false</reuseForks>
           <trimStackTrace>${trimstack}</trimStackTrace>
           <systemPropertyVariables>
+            <java.io.tmpdir>${tmpdir}</java.io.tmpdir>$>
             <org.lockss.keepTempFiles>${keeptempfiles}</org.lockss.keepTempFiles>
             <org.lockss.unitTesting>true</org.lockss.unitTesting>
             <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
