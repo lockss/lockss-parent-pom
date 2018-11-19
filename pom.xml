@@ -256,6 +256,13 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     -->
     <springServicePort>UNDEFINED</springServicePort> <!-- set in child -->
 
+    <!--
+        skipEtags
+
+        Set to false to generate emacs TAGS file in generate-resources phase
+    -->
+    <skipEtags>true</skipEtags>
+
     <!-- Maven related: Maven internals -->
     <plugin.version.maven-antrun-plugin>1.8</plugin.version.maven-antrun-plugin>
     <plugin.version.maven-compiler-plugin>3.7.0</plugin.version.maven-compiler-plugin>
@@ -536,6 +543,27 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
           
+          <execution>
+            <id>build-etags</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${skipEtags}</skip>
+              <target>
+		<apply executable="etags" dir="${basedir}"
+		       relative="true"
+		       parallel="true">
+		  <arg value="-S"/>
+		  <!--        <arg value="-o"/> -->
+		  <!--        <arg file="${etags.filename}"/> -->
+		  <fileset dir="${basedir}" includes="src/**/*.java"/>
+		</apply>
+              </target>
+            </configuration>
+          </execution>
+
         </executions>
       </plugin>
 
