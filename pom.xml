@@ -283,7 +283,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <dockerPrefix>lockss</dockerPrefix>
     <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
     <dockerTag>${project.version}</dockerTag>
-    <dockerJarFile>target/${project.build.finalName}.jar</dockerJarFile>
     <dockerServicePort>${springServicePort}</dockerServicePort>
 
     <!-- Ant related -->
@@ -304,6 +303,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <file.classpath.compile>${basedir}/target/compile-classpath</file.classpath.compile>
     <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
     <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
+    <fatJarClassifier>with-deps</fatJarClassifier>
 
     <!-- Bundle versions -->
     <build.releasename>1.75.0</build.releasename>
@@ -611,13 +611,30 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               <goal>exec</goal>
             </goals>
             <configuration>
+              <skip>${skipTestJar}</skip>
               <executable>ln</executable>
               <arguments>
                 <argument>-fnsv</argument>
-                <argument>${project.build.finalName}-tests.jar</argument>
-                <argument>${basedir}/target/current-tests.jar</argument>
+                <argument>${project.build.finalName}-tests.${project.packaging}</argument>
+                <argument>${basedir}/target/current-tests.${project.packaging}</argument>
               </arguments>
               <skip>${skipTestJar}</skip>
+            </configuration>
+          </execution>
+          <execution>
+            <id>symlink-with-deps-jar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${skipSpringBootRepackage}</skip>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}-${fatJarClassifier}.${project.packaging}</argument>
+                <argument>${basedir}/target/current-${fatJarClassifier}.${project.packaging}</argument>
+              </arguments>
             </configuration>
           </execution>
         </executions>
@@ -714,10 +731,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <executions>
           <execution>
             <goals>
-              <goal>repackage</goal>
+              <goal>repackage</goal><!-- package phase -->
             </goals>
             <configuration>
               <skip>${skipSpringBootRepackage}</skip>
+              <classifier>${fatJarClassifier}</classifier>
             </configuration>
           </execution>
         </executions>
@@ -729,10 +747,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         <version>${plugin.version.dockerfile-maven-plugin}</version>
         <executions>
           <execution>
-            <id>default</id>
+            <id>docker-build-and-push</id>
             <goals>
-              <goal>build</goal>
-              <goal>push</goal>
+              <goal>build</goal><!-- package phase -->
+              <goal>push</goal><!-- deploy phase -->
             </goals>
           </execution>
         </executions>
@@ -744,7 +762,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <repository>${dockerRepository}</repository>
           <tag>${dockerTag}</tag>
           <buildArgs>
-            <JAR_FILE>${dockerJarFile}</JAR_FILE>
             <SVC_PORT>${dockerServicePort}</SVC_PORT>
           </buildArgs>
         </configuration>
