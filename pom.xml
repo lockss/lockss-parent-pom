@@ -139,12 +139,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <test.fork.count>1.0C</test.fork.count>
     
     <!-- Git related -->
-    <gitSshUsername>git</gitSshUsername>
+    <gitSshUser>git</gitSshUser>
     <gitHost>github.com</gitHost>
     <gitGroupId>lockss</gitGroupId>
     <gitProjectId>${project.artifactId}</gitProjectId>
     <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitProjectId}.git</scmConnection>
-    <scmDeveloperConnection>scm:git:${gitSshUsername}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
+    <scmDeveloperConnection>scm:git:${gitSshUser}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
 
     <!--
@@ -234,6 +234,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <skipDeploy>true</skipDeploy>
 
     <!--
+        skipDeployEmail
+        
+        If set to false, an e-mail is sent from ${deployEmailFrom} to
+        ${deployEmailTo} at the end of the deploy phase. By default, this has
+        the same value as ${skipDeploy}. See also deployEmailFailOnError.
+    -->
+    <skipDeployEmail>${skipDeploy}</skipDeployEmail>
+
+    <!--
         Spring / Spring Boot related
     -->
     
@@ -276,7 +285,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <!-- Maven related: key plugins -->
     <plugin.version.dockerfile-maven-plugin>1.4.0</plugin.version.dockerfile-maven-plugin>
     <plugin.version.exec-maven-plugin>1.6.0</plugin.version.exec-maven-plugin>
+    <plugin.version.maven-postman-plugin>0.1.6</plugin.version.maven-postman-plugin>
     <plugin.version.nexus-staging-maven-plugin>1.6.8</plugin.version.nexus-staging-maven-plugin>
+    <plugin.version.git-commit-id-plugin>2.2.5</plugin.version.git-commit-id-plugin>
     <plugin.version.swagger-codegen-maven-plugin>2.3.1</plugin.version.swagger-codegen-maven-plugin>
 
     <!--  Docker related -->
@@ -304,6 +315,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
     <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
     <fatJarClassifier>with-deps</fatJarClassifier>
+    
+    <!-- Mail related -->
+    <deployEmailFrom>"LOCKSS Buildmaster" &lt;buildmaster@lockss.org&gt;</deployEmailFrom>
+    <deployEmailTo>dev-notify@lockss.org</deployEmailTo>
+    <deployEmailFailOnError>true</deployEmailFailOnError>
 
     <!-- Bundle versions -->
     <build.releasename>1.75.0</build.releasename>
@@ -360,9 +376,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
   
   </repositories>
 
+  <!-- BEGIN build -->
+
   <build>
   
+    <!-- BEGIN plugins -->
+
     <plugins>
+
+      <!-- BEGIN plugin maven-surefire-plugin -->
     
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -411,6 +433,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </dependencies>
       </plugin>
 
+      <!-- END plugin maven-surefire-plugin -->
+
+      <!-- BEGIN plugin maven-compiler-plugin -->
+
       <!-- For useIncrementalCompilation=false -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -420,6 +446,40 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           <useIncrementalCompilation>false</useIncrementalCompilation>
         </configuration>
       </plugin>
+
+      <!-- END plugin maven-compiler-plugin -->
+
+      <!-- BEGIN plugin git-commit-id-plugin -->
+
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <version>${plugin.version.git-commit-id-plugin}</version>
+        <executions>
+
+          <!-- BEGIN execution generate-git-properties -->
+
+          <execution>
+            <id>generate-git-properties</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>revision</goal>
+            </goals>   
+            <configuration>
+              <generateGitPropertiesFile>true</generateGitPropertiesFile>
+              <skipPoms>false</skipPoms>
+            </configuration>
+
+          </execution>
+
+          <!-- END execution generate-git-properties -->
+
+        </executions>
+      </plugin>
+      
+      <!-- END plugin git-commit-id-plugin -->
+
+      <!-- BEGIN plugin maven-antrun-plugin -->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -433,6 +493,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </dependency>  
         </dependencies>
         <executions>
+
+          <!-- BEGIN execution check-docker -->
           
           <!-- If Docker build needed, check early that Docker is running -->
           <execution>
@@ -467,10 +529,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               </target>
             </configuration>
           </execution>
+
+          <!-- END execution check-docker -->
+          
+          <!-- BEGIN execution generate-build-info -->
           
           <!-- Creates a build info file -->
           <execution>
-            <id>build-info</id>
+            <id>generate-build-info</id>
             <phase>generate-resources</phase>
             <goals>
               <goal>run</goal>
@@ -512,14 +578,22 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                   <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
                   <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
                   <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
+                  <entry key="build.git.origin" value="${git.remote.origin.url}" />
+                  <entry key="build.git.branch" value="${git.branch}" />
+                  <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
+                  <entry key="build.git.dirty" value="${git.dirty}" />
                 </propertyfile>
               </target>
             </configuration>
           </execution>
           
+          <!-- END execution generate-build-info -->
+          
+          <!-- BEGIN execution generate-classpath-files -->
+          
           <!-- Creates classpath files (and exports Maven properties) -->
           <execution>
-            <id>classpath-files</id>
+            <id>generate-classpath-files</id>
             <phase>generate-sources</phase>
             <goals>
               <goal>run</goal>
@@ -543,6 +617,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
           
+          <!-- END execution generate-classpath-files -->
+          
+          <!-- BEGIN execution build-etags -->
+          
           <execution>
             <id>build-etags</id>
             <phase>generate-resources</phase>
@@ -564,8 +642,14 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
 
+          <!-- END execution build-etags -->
+          
         </executions>
       </plugin>
+
+      <!-- END plugin maven-antrun-plugin -->
+
+      <!-- BEGIN plugin maven-jar-plugin -->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -584,11 +668,18 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </executions>
       </plugin>
 
+      <!-- END plugin maven-jar-plugin -->
+
+      <!-- BEGIN plugin exec-maven-plugin -->
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
         <version>${plugin.version.exec-maven-plugin}</version>
         <executions>
+        
+          <!-- BEGIN execution symlink-jar -->
+        
           <execution>
             <id>symlink-jar</id>
             <phase>package</phase>
@@ -604,6 +695,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               </arguments>
             </configuration>
           </execution>
+
+          <!-- END execution symlink-jar -->
+        
+          <!-- BEGIN execution symlink-test-jar -->
+        
           <execution>
             <id>symlink-test-jar</id>
             <phase>package</phase>
@@ -621,6 +717,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               <skip>${skipTestJar}</skip>
             </configuration>
           </execution>
+
+          <!-- END execution symlink-test-jar -->
+        
+          <!-- BEGIN execution symlink-with-deps-jar -->
+        
           <execution>
             <id>symlink-with-deps-jar</id>
             <phase>package</phase>
@@ -637,8 +738,15 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
               </arguments>
             </configuration>
           </execution>
+
+          <!-- END execution symlink-with-deps-jar -->        
+
         </executions>
       </plugin>
+
+      <!-- END plugin exec-maven-plugin -->
+
+      <!-- BEGIN plugin maven-source-plugin -->
 
       <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
       <plugin>
@@ -658,6 +766,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </executions>
       </plugin>
         
+      <!-- END plugin maven-source-plugin -->
+
+      <!-- BEGIN plugin maven-javadoc-plugin -->
+
       <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -681,6 +793,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
 
+      <!-- END plugin maven-javadoc-plugin -->
+
+      <!-- BEGIN plugin maven-gpg-plugin -->
+
       <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -699,6 +815,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
         </executions>
       </plugin>
+
+      <!-- END plugin maven-gpg-plugin -->
+
+      <!-- BEGIN plugin maven-deploy-plugin -->
 
       <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
       <plugin>
@@ -724,6 +844,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
           
+      <!-- END plugin maven-deploy-plugin -->
+
+      <!-- BEGIN plugin spring-boot-maven-plugin -->
+
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -740,6 +864,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
         </executions>
       </plugin>
+
+      <!-- END plugin spring-boot-maven-plugin -->
+
+      <!-- BEGIN plugin dockerfile-maven-plugin -->
 
       <plugin>
         <groupId>com.spotify</groupId>
@@ -767,10 +895,65 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         </configuration>
       </plugin>
 
+      <!-- END plugin dockerfile-maven-plugin -->
+
+      <!-- BEGIN plugin maven-postman-plugin -->
+
+      <plugin>
+        <groupId>ch.fortysix</groupId>
+        <artifactId>maven-postman-plugin</artifactId>
+        <version>${plugin.version.maven-postman-plugin}</version>
+        <executions>
+          <execution>
+            <id>send-deploy-mail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>send-mail</goal>
+            </goals>
+            <configuration>
+              <skip>${skipDeployEmail}</skip>
+              <failonerror>${deployEmailFailOnError}</failonerror>
+              <multipartSupported>false</multipartSupported>
+              <mailcontenttype>text/plain</mailcontenttype>
+              <from>${deployEmailFrom}</from>
+              <receivers>
+                <receiver>${deployEmailTo}</receiver>
+              </receivers>
+              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
+              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${maven.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp}
+Git user: "${git.build.user.name}" <${git.build.user.email}>
+Git branch: ${git.branch} (${git.remote.origin.url})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></textMessage>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-postman-plugin -->
+
     </plugins>
   
+    <!-- END plugins -->
+
   </build>
   
+  <!-- END build -->
+
   <profiles>
   
     <profile>
