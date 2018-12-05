@@ -317,7 +317,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     <fatJarClassifier>with-deps</fatJarClassifier>
     
     <!-- Mail related -->
-    <deployEmailFrom>"LOCKSS Buildmaster" &lt;buildmaster@lockss.org&gt;</deployEmailFrom>
+    <deployEmailFrom>buildmaster@lockss.org</deployEmailFrom>
     <deployEmailTo>dev-notify@lockss.org</deployEmailTo>
     <deployEmailFailOnError>true</deployEmailFailOnError>
 
@@ -925,8 +925,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 BUILD CONTEXT:
 Project: ${project.groupId}:${project.artifactId}:${project.version}
 Build timestamp: ${maven.build.timestamp}
-Git user: "${git.build.user.name}" <${git.build.user.email}>
-Git branch: ${git.branch} (${git.remote.origin.url})
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (${git.branch})
 Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
 
 JAVA CONTEXT:
