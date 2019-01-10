@@ -1073,7 +1073,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.8.0</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
-    <version.plugin.maven-enforcer-plugin>1.4.1</version.plugin.maven-enforcer-plugin>
+    <version.plugin.maven-enforcer-plugin>3.0.0-M2</version.plugin.maven-enforcer-plugin>
     <version.plugin.maven-javadoc-plugin>3.0.1</version.plugin.maven-javadoc-plugin>
     <version.plugin.maven-jar-plugin>3.1.1</version.plugin.maven-jar-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin>
@@ -1970,61 +1970,6 @@ POSSIBILITY OF SUCH DAMAGE.
           
       <!-- END plugin nexus-staging-maven-plugin -->
 
-      <!-- BEGIN plugin maven-postman-plugin -->
-
-      <plugin>
-        <groupId>ch.fortysix</groupId>
-        <artifactId>maven-postman-plugin</artifactId>
-        <version>${version.plugin.maven-postman-plugin}</version>
-        <executions>
-        
-          <!-- BEGIN step deployMail -->
-        
-          <execution>
-            <id>deployMail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>send-mail</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.deployMail.skip}</skip>
-              <failonerror>${build.java.deployMail.failOnError}</failonerror>
-              <multipartSupported>false</multipartSupported>
-              <mailcontenttype>text/plain</mailcontenttype>
-              <from>${build.java.deployMail.from}</from>
-              <receivers>
-                <receiver>${build.java.deployMail.to}</receiver>
-              </receivers>
-              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${maven.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp}
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></textMessage>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMail -->
-        
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-postman-plugin -->
-
       <!-- BEGIN plugin exec-maven-plugin -->
 
       <plugin>
@@ -2218,6 +2163,61 @@ Local directory: ${user.dir}
       </plugin>
 
       <!-- END plugin dockerfile-maven-plugin -->
+
+      <!-- BEGIN plugin maven-postman-plugin -->
+
+      <plugin>
+        <groupId>ch.fortysix</groupId>
+        <artifactId>maven-postman-plugin</artifactId>
+        <version>${version.plugin.maven-postman-plugin}</version>
+        <executions>
+        
+          <!-- BEGIN step deployMail -->
+        
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>send-mail</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <multipartSupported>false</multipartSupported>
+              <mailcontenttype>text/plain</mailcontenttype>
+              <from>${build.java.deployMail.from}</from>
+              <receivers>
+                <receiver>${build.java.deployMail.to}</receiver>
+              </receivers>
+              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
+              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${maven.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp}
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></textMessage>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
+        
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-postman-plugin -->
 
       <!-- BEGIN plugin maven-antrun-plugin -->
 
