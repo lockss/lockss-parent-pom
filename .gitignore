@@ -2,3 +2,7 @@
 /target/
 /pom.xml.versionsBackup
 .settings/
+
+# IntelliJ
+.idea/
+*.iml
