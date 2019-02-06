@@ -481,7 +481,7 @@ POSSIBILITY OF SUCH DAMAGE.
         Default: false
     -->
     <keeptempfiles>false</keeptempfiles>
-    <build.java.runTests.keepTempFiles>${outputtofile}</build.java.runTests.keepTempFiles>
+    <build.java.runTests.keepTempFiles>${keeptempfiles}</build.java.runTests.keepTempFiles>
 
     <!--
         `build.java.runTests.redirectTestOutputToFile` (alias: `outputtofile`)
