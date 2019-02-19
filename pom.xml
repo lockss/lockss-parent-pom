@@ -2243,6 +2243,7 @@ Local directory: ${user.dir}
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${build.docker.skip}</skip>
               <target>
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                 <if>
