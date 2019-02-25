@@ -1066,7 +1066,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <!-- BEGIN properties section: plugin versions -->
 
     <version.plugin.build-helper-maven-plugin>3.0.0</version.plugin.build-helper-maven-plugin>
-    <version.plugin.dockerfile-maven-plugin>1.4.9</version.plugin.dockerfile-maven-plugin>
+    <version.plugin.dockerfile-maven-plugin>1.4.10</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>2.2.5</version.plugin.git-commit-id-plugin>
     <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin>
