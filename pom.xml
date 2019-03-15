@@ -979,15 +979,26 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
 
     <!--
-        `build.docker.dockerBuild.servicePort` (alias: `dockerBuild.port`)
+        `build.docker.dockerBuild.restPort` (alias: `dockerBuild.restPort`)
         
-        The service port, passed to the Docker build as the build argument
-        `SVC_PORT`.
+        The service REST port, passed to the Docker build as the build argument
+        `LOCKSS_REST_PORT`.
         
-        Default: UNDEFINED!!!
+        Default: "" (empty string)
     -->
-    <dockerBuild.port>UNDEFINED!!!</dockerBuild.port>
-    <build.docker.dockerBuild.servicePort>${dockerBuild.port}</build.docker.dockerBuild.servicePort>
+    <dockerBuild.restPort></dockerBuild.restPort>
+    <build.docker.dockerBuild.restPort>${dockerBuild.restPort}</build.docker.dockerBuild.restPort>
+
+    <!--
+        `build.docker.dockerBuild.uiPort` (alias: `dockerBuild.uiPort`)
+        
+        The service UI port, passed to the Docker build as the build argument
+        `LOCKSS_UI_PORT`.
+        
+        Default: "" (empty string)
+    -->
+    <dockerBuild.uiPort></dockerBuild.uiPort>
+    <build.docker.dockerBuild.uiPort>${dockerBuild.restPort}</build.docker.dockerBuild.uiPort>
 
     <!--
         `build.docker.dockerTag.skip` (alias: `skipDockerTag`)
@@ -2087,8 +2098,13 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skipBuild>${build.docker.dockerBuild.skip}</skipBuild>
               <tag>${build.docker.tag}</tag>
+              <pullNewerImage>false</pullNewerImage>
               <buildArgs>
-                <SVC_PORT>${build.docker.dockerBuild.servicePort}</SVC_PORT>
+                <LOCKSS_MAVEN_GROUP>${project.groupId}</LOCKSS_MAVEN_GROUP>
+                <LOCKSS_MAVEN_ARTIFACT>${project.artifactId}</LOCKSS_MAVEN_ARTIFACT>
+                <LOCKSS_MAVEN_VERSION>${project.version}</LOCKSS_MAVEN_VERSION>
+                <LOCKSS_REST_PORT>${build.docker.dockerBuild.restPort}</LOCKSS_REST_PORT>
+                <LOCKSS_UI_PORT>${build.docker.dockerBuild.uiPort}</LOCKSS_UI_PORT>
               </buildArgs>
             </configuration>
           </execution>
