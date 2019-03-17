@@ -548,6 +548,16 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.jarTestSources.skip>${skipTestSources}</build.java.jarTestSources.skip>
 
     <!--
+        `build.java.jarJavadoc.header` (alias: `javadocHeader`)
+        
+        The Javadoc header string (used in jarJavadoc and jarTestJavadoc).
+        
+        Default: Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}
+    -->
+    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
+    <build.java.jarJavadoc.header>${javadocHeader}</build.java.jarJavadoc.header>
+
+    <!--
         `build.java.jarJavadoc.skip` (alias: `skipJavadoc`)
         
         Whether to skip the building of the Javadoc artifact.
@@ -1174,8 +1184,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <scmUrl>https://${gitHost}/${gitGroupId}/${gitParentProjectId}</scmUrl>
 
     <!-- END properties section: Git-related -->
-
-    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
 
   </properties>
 
@@ -1865,7 +1873,7 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skip>${build.java.jarJavadoc.skip}</skip>
               <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
-              <header>${javadocHeader}</header>
+              <header>${build.java.jarJavadoc.header}</header>
             </configuration>
           </execution>
 
@@ -1882,7 +1890,7 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skip>${build.java.jarTestJavadoc.skip}</skip>
               <outputDirectory>${project.reporting.outputDirectory}/testapidocs</outputDirectory>
-              <header>${javadocHeader}</header>
+              <header>${build.java.jarJavadoc.header}</header>
             </configuration>
           </execution>
 
