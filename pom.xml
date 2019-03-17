@@ -1172,6 +1172,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- END properties section: encoding-related Maven internals -->
 
+    <!-- BEGIN properties section: date/time-related Maven internals -->
+
+    <!--<maven.build.timestamp.format>...</maven.build.timestamp.format>-->
+
+    <!-- END properties section: date/time-related Maven internals -->
+
     <!-- BEGIN properties section: Git-related -->
 
     <gitSshUser>git</gitSshUser>
