@@ -554,7 +554,7 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}
     -->
-    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
+    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${local.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
     <build.java.jarJavadoc.header>${javadocHeader}</build.java.jarJavadoc.header>
 
     <!--
@@ -1175,6 +1175,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <!-- BEGIN properties section: date/time-related Maven internals -->
 
     <!--<maven.build.timestamp.format>...</maven.build.timestamp.format>-->
+<!--     <maven.build.timestamp.format>dd-MMM-yy' 'HH:mm:ss' 'zzz</maven.build.timestamp.format> -->
 
     <!-- END properties section: date/time-related Maven internals -->
 
@@ -1417,6 +1418,30 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
       
       <!-- END plugin git-commit-id-plugin -->
+
+      <!-- BEGIN plugin buildnumber-maven-plugin -->
+
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>buildnumber-maven-plugin</artifactId>
+	<version>1.3</version>
+	<inherited>true</inherited>
+	<executions>
+	  <execution>
+            <id>generate-timestamp</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create-timestamp</goal>
+            </goals>
+            <configuration>
+              <timestampFormat>dd-MMM-yy' 'HH:mm:ss' 'zzz</timestampFormat>
+              <timestampPropertyName>local.build.timestamp</timestampPropertyName>
+            </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+
+      <!-- END plugin buildnumber-maven-plugin -->
 
       <!-- BEGIN plugin build-helper-maven-plugin -->
 
