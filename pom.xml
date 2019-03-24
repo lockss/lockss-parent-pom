@@ -548,6 +548,16 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.jarTestSources.skip>${skipTestSources}</build.java.jarTestSources.skip>
 
     <!--
+        `build.java.jarJavadoc.header` (alias: `javadocHeader`)
+        
+        The Javadoc header string (used in jarJavadoc and jarTestJavadoc).
+        
+        Default: Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}
+    -->
+    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${local.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
+    <build.java.jarJavadoc.header>${javadocHeader}</build.java.jarJavadoc.header>
+
+    <!--
         `build.java.jarJavadoc.skip` (alias: `skipJavadoc`)
         
         Whether to skip the building of the Javadoc artifact.
@@ -1053,7 +1063,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.bouncycastle>1.60</version.group.bouncycastle>
     <version.group.derby>10.14.2.0</version.group.derby>
     <version.group.flyway>5.2.4</version.group.flyway>
-    <version.group.hadoop>2.7.3</version.group.hadoop><!-- upgradeable to 2.9.2 or 3.1.1 -->
+    <version.group.hadoop>2.9.2</version.group.hadoop><!-- upgradeable to 3.0.3 (lockss-hdfs) or 3.1.2 -->
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
     <version.group.icu4j>63.1</version.group.icu4j>
@@ -1172,6 +1182,13 @@ POSSIBILITY OF SUCH DAMAGE.
     <project.reporting.outputEncoding>${build.encoding}</project.reporting.outputEncoding>
 
     <!-- END properties section: encoding-related Maven internals -->
+
+    <!-- BEGIN properties section: date/time-related Maven internals -->
+
+    <!--<maven.build.timestamp.format>...</maven.build.timestamp.format>-->
+<!--     <maven.build.timestamp.format>dd-MMM-yy' 'HH:mm:ss' 'zzz</maven.build.timestamp.format> -->
+
+    <!-- END properties section: date/time-related Maven internals -->
 
     <!-- BEGIN properties section: Git-related -->
 
@@ -1412,6 +1429,30 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
       
       <!-- END plugin git-commit-id-plugin -->
+
+      <!-- BEGIN plugin buildnumber-maven-plugin -->
+
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>buildnumber-maven-plugin</artifactId>
+	<version>1.3</version>
+	<inherited>true</inherited>
+	<executions>
+	  <execution>
+            <id>generate-timestamp</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create-timestamp</goal>
+            </goals>
+            <configuration>
+              <timestampFormat>dd-MMM-yy' 'HH:mm:ss' 'zzz</timestampFormat>
+              <timestampPropertyName>local.build.timestamp</timestampPropertyName>
+            </configuration>
+	  </execution>
+	</executions>
+      </plugin>
+
+      <!-- END plugin buildnumber-maven-plugin -->
 
       <!-- BEGIN plugin build-helper-maven-plugin -->
 
@@ -1874,6 +1915,7 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skip>${build.java.jarJavadoc.skip}</skip>
               <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
+              <header>${build.java.jarJavadoc.header}</header>
             </configuration>
           </execution>
 
@@ -1890,6 +1932,7 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skip>${build.java.jarTestJavadoc.skip}</skip>
               <outputDirectory>${project.reporting.outputDirectory}/testapidocs</outputDirectory>
+              <header>${build.java.jarJavadoc.header}</header>
             </configuration>
           </execution>
 
