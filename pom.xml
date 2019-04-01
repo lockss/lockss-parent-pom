@@ -989,15 +989,26 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
 
     <!--
-        `build.docker.dockerBuild.servicePort` (alias: `dockerBuild.port`)
+        `build.docker.dockerBuild.restPort` (alias: `dockerBuild.restPort`)
         
-        The service port, passed to the Docker build as the build argument
-        `SVC_PORT`.
+        The service REST port, passed to the Docker build as the build argument
+        `LOCKSS_REST_PORT`.
         
-        Default: UNDEFINED!!!
+        Default: "" (empty string)
     -->
-    <dockerBuild.port>UNDEFINED!!!</dockerBuild.port>
-    <build.docker.dockerBuild.servicePort>${dockerBuild.port}</build.docker.dockerBuild.servicePort>
+    <dockerBuild.restPort></dockerBuild.restPort>
+    <build.docker.dockerBuild.restPort>${dockerBuild.restPort}</build.docker.dockerBuild.restPort>
+
+    <!--
+        `build.docker.dockerBuild.uiPort` (alias: `dockerBuild.uiPort`)
+        
+        The service UI port, passed to the Docker build as the build argument
+        `LOCKSS_UI_PORT`.
+        
+        Default: "" (empty string)
+    -->
+    <dockerBuild.uiPort></dockerBuild.uiPort>
+    <build.docker.dockerBuild.uiPort>${dockerBuild.restPort}</build.docker.dockerBuild.uiPort>
 
     <!--
         `build.docker.dockerTag.skip` (alias: `skipDockerTag`)
@@ -1064,7 +1075,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.log4j>2.11.1</version.group.log4j>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.pdfbox>1.8.16</version.group.pdfbox>
-    <version.group.solr>6.6.0</version.group.solr><!-- upgradeable to 6.6.5 or 7.6.0 -->
+    <version.group.solr>6.6.5</version.group.solr><!-- upgradeable 7.6.0 -->
     <version.group.slf4j>1.7.25</version.group.slf4j>
     <version.group.spring>4.3.18.RELEASE</version.group.spring><!-- upgradeable -->
     <version.group.spring-boot>1.5.17.RELEASE</version.group.spring-boot><!-- upgradeable -->
@@ -1134,13 +1145,13 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.3</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.11</version.dependency.commons-codec>
+    <version.dependency.commons-codec>1.12</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
-    <version.dependency.commons-collections4>4.2</version.dependency.commons-collections4>
+    <version.dependency.commons-collections4>4.3</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.18</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration>
-    <version.dependency.commons-digester>1.8</version.dependency.commons-digester><!-- upgradeable to 1.8.1 or 2.1 -->
-    <version.dependency.commons-fileupload>1.2.1</version.dependency.commons-fileupload><!-- upgradeable to 1.4 -->
+    <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- upgradeable to 2.1 -->
+    <version.dependency.commons-fileupload>1.4</version.dependency.commons-fileupload>
     <version.dependency.commons-io>2.6</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
@@ -2130,8 +2141,13 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <skipBuild>${build.docker.dockerBuild.skip}</skipBuild>
               <tag>${build.docker.tag}</tag>
+              <pullNewerImage>false</pullNewerImage>
               <buildArgs>
-                <SVC_PORT>${build.docker.dockerBuild.servicePort}</SVC_PORT>
+                <LOCKSS_MAVEN_GROUP>${project.groupId}</LOCKSS_MAVEN_GROUP>
+                <LOCKSS_MAVEN_ARTIFACT>${project.artifactId}</LOCKSS_MAVEN_ARTIFACT>
+                <LOCKSS_MAVEN_VERSION>${project.version}</LOCKSS_MAVEN_VERSION>
+                <LOCKSS_REST_PORT>${build.docker.dockerBuild.restPort}</LOCKSS_REST_PORT>
+                <LOCKSS_UI_PORT>${build.docker.dockerBuild.uiPort}</LOCKSS_UI_PORT>
               </buildArgs>
             </configuration>
           </execution>
