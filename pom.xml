@@ -2685,24 +2685,26 @@ Local directory: ${user.dir}
       </properties>
 
       <build>
-        <defaultGoal>validate</defaultGoal>
+        <defaultGoal>generate-sources</defaultGoal>
       
         <plugins>
         
-          <!-- To create a pretty REST API diagram from docs/swagger.yaml -->
+          <!-- To create a pretty REST API diagram from src/main/resources/swagger/swagger.yaml -->
           <plugin>
             <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>${version.plugin.swagger-codegen-maven-plugin}</version>
             <executions>
               <execution>
-                <phase>validate</phase>
+                <id>doRestApiDocs.swaggerCodegen</id>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>generate</goal>
                 </goals>
                 <configuration>
                   <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
                   <language>html</language>
+                  <output>${project.build.directory}/generated-sources/swagger/html</output>
                 </configuration>
               </execution>
             </executions>
@@ -2715,6 +2717,118 @@ Local directory: ${user.dir}
     </profile>
       
     <!-- END profile doRestApiDocs -->
+  
+    <!-- BEGIN profile doPythonClient -->
+  
+    <profile>
+      <id>doPythonClient</id>
+      
+      <properties>
+        <build.info.skip>true</build.info.skip>
+        <build.java.skip>true</build.java.skip>
+        <build.docker.skip>true</build.docker.skip>
+        
+        <build.python.project>${gitProjectId}-python</build.python.project>
+        <build.python.url>https://${gitHost}/${gitGroupId}/${build.python.project}</build.python.url>
+      </properties>
+
+      <build>
+        <defaultGoal>generate-sources</defaultGoal>
+      
+        <plugins>
+        
+          <!-- BEGIN plugin build-helper-maven-plugin -->
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>${version.plugin.build-helper-maven-plugin}</version>
+            <executions>
+
+              <!-- BEGIN step doPythonClient.setPythonPackage -->
+
+              <execution>
+                <id>doPythonClient.setPythonPackage</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>regex-property</goal>
+                </goals>
+                <configuration>
+                  <name>build.python.package</name>
+                  <value>${project.description}</value>
+                  <regex>[ ]+</regex>
+                  <replacement>_</replacement>
+                  <toLowerCase>true</toLowerCase>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.setPythonPackage -->
+
+              <!-- BEGIN step doPythonClient.setPythonVersion -->
+
+              <execution>
+                <id>doPythonClient.setPythonVersion</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>regex-property</goal>
+                </goals>
+                <configuration>
+                  <name>build.python.version</name>
+                  <value>${project.version}</value>
+                  <regex>-SNAPSHOT$</regex>
+                  <replacement>-dev</replacement>
+                  <failIfNoMatch>false</failIfNoMatch>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.setPythonVersion -->
+
+            </executions>
+          </plugin>
+
+          <!-- BEGIN plugin swagger-codegen-maven-plugin -->
+
+          <plugin>
+            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>${version.plugin.swagger-codegen-maven-plugin}</version>
+            <executions>
+
+              <!-- BEGIN step doPythonClient.swaggerCodegen -->
+
+              <execution>
+              <id>doPythonClient.swaggerCodegen</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+                  <language>python</language>
+                  <output>${project.build.directory}/generated-sources/swagger/python</output>
+                  <configOptions>
+                    <projectName>${build.python.project}</projectName>                  
+                    <packageName>${build.python.package}</packageName>
+                    <packageVersion>${build.python.version}</packageVersion>
+                    <packageUrl>${build.python.url}</packageUrl>
+                  </configOptions>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.swaggerCodegen -->
+
+            </executions>
+          </plugin>
+    
+          <!-- END plugin swagger-codegen-maven-plugin -->
+
+        </plugins>
+        
+      </build>
+      
+    </profile>
+      
+    <!-- END profile doPythonClient -->
   
   </profiles>
   
