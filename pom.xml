@@ -171,7 +171,10 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: ${project.build.directory}/build-info
     -->
-    <file.buildInfo>${project.build.directory}/build-info</file.buildInfo>
+<!--     <file.buildInfo>${project.build.directory}/build-info</file.buildInfo> -->
+
+    <dir.buildInfo>${project.build.outputDirectory}/org/lockss/componentresources</dir.buildInfo>
+    <file.buildInfo>${dir.buildInfo}/build.properties</file.buildInfo>
 
     <!--
         `file.classpath.compile`
@@ -329,7 +332,8 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: ${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX (matches the old lockss-daemon build)
     -->
-    <build.info.buildInfo.antTimestamp>${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX</build.info.buildInfo.antTimestamp>
+<!--     <build.info.buildInfo.antTimestamp>${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX</build.info.buildInfo.antTimestamp> -->
+    <build.info.buildInfo.antTimestamp>dd-MMM-yy' 'HH:mm:ss' 'zzz</build.info.buildInfo.antTimestamp>
 
     <!--
         `build.info.classpathFiles.skip` (alias: `skipClasspathFiles`)
@@ -2351,6 +2355,7 @@ Local directory: ${user.dir}
                 <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
                   <isset property="env.HOSTNAME" />
                 </condition>
+		<mkdir dir="${dir.buildInfo}"/>
                 <propertyfile comment="Build information" file="${file.buildInfo}">
                   <entry key="build.name" value="${project.name}" />
                   <entry key="build.description" value="${project.description}" />
