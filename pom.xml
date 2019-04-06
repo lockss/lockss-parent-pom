@@ -53,7 +53,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
   <licenses>
     <license>
-      <name>3-Clause BSD License</name>
+      <name>BSD-3-Clause</name>
       <url>https://opensource.org/licenses/BSD-3-Clause</url>
     </license>
   </licenses>
@@ -2352,6 +2352,8 @@ Local directory: ${user.dir}
                   <isset property="env.HOSTNAME" />
                 </condition>
                 <propertyfile comment="Build information" file="${file.buildInfo}">
+                  <entry key="build.name" value="${project.name}" />
+                  <entry key="build.description" value="${project.description}" />
                   <entry key="build.groupId" value="${project.groupId}" />
                   <entry key="build.artifactId" value="${project.artifactId}" />
                   <entry key="build.version" value="${project.version}" />
