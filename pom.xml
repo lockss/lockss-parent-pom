@@ -169,9 +169,8 @@ POSSIBILITY OF SUCH DAMAGE.
         
         The path to the build info file.
         
-        Default: ${project.build.directory}/build-info
+        Default: ${project.build.outputDirectory}/org/lockss/componentresources/build.properties
     -->
-<!--     <file.buildInfo>${project.build.directory}/build-info</file.buildInfo> -->
 
     <dir.buildInfo>${project.build.outputDirectory}/org/lockss/componentresources</dir.buildInfo>
     <file.buildInfo>${dir.buildInfo}/build.properties</file.buildInfo>
@@ -332,7 +331,6 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: ${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX (matches the old lockss-daemon build)
     -->
-<!--     <build.info.buildInfo.antTimestamp>${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX</build.info.buildInfo.antTimestamp> -->
     <build.info.buildInfo.antTimestamp>dd-MMM-yy' 'HH:mm:ss' 'zzz</build.info.buildInfo.antTimestamp>
 
     <!--
@@ -1453,6 +1451,16 @@ POSSIBILITY OF SUCH DAMAGE.
               <timestampPropertyName>local.build.timestamp</timestampPropertyName>
             </configuration>
 	  </execution>
+	  <execution>
+            <id>generate-raw-timestamp</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>create-timestamp</goal>
+            </goals>
+            <configuration>
+              <timestampPropertyName>build.rawtimestamp</timestampPropertyName>
+            </configuration>
+	  </execution>
 	</executions>
       </plugin>
 
@@ -2367,9 +2375,8 @@ Local directory: ${user.dir}
                   <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
                   <entry key="build.parent.version" value="${project.parent.version}" />
                   <entry key="build.parent.packaging" value="${project.parent.packaging}" />
-                  <entry key="build.date" type="date" pattern="${build.info.buildInfo.antDate}" value="now" />
-                  <entry key="build.time" type="date" pattern="${build.info.buildInfo.antTime}" value="now" />
                   <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
+                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
                   <entry key="build.releasename" value="${build.releasename}" />
                   <entry key="build.host" value="${hostname}" />
                   <entry key="build.user.name" value="${user.name}" />
