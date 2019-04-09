@@ -1091,7 +1091,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.build-helper-maven-plugin>3.0.0</version.plugin.build-helper-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.10</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin>
-    <version.plugin.git-commit-id-plugin>2.2.5</version.plugin.git-commit-id-plugin>
+    <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin>
     <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin>
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.8.0</version.plugin.maven-compiler-plugin>
@@ -2155,9 +2155,18 @@ POSSIBILITY OF SUCH DAMAGE.
               <tag>${build.docker.tag}</tag>
               <pullNewerImage>false</pullNewerImage>
               <buildArgs>
-                <LOCKSS_MAVEN_GROUP>${project.groupId}</LOCKSS_MAVEN_GROUP>
-                <LOCKSS_MAVEN_ARTIFACT>${project.artifactId}</LOCKSS_MAVEN_ARTIFACT>
-                <LOCKSS_MAVEN_VERSION>${project.version}</LOCKSS_MAVEN_VERSION>
+                <LABEL_BUILD_DATE>${build.rawtimestamp}</LABEL_BUILD_DATE>
+                <LABEL_DESCRIPTION>${project.description}</LABEL_DESCRIPTION>
+                <LABEL_LOCKSS_RELEASE>${build.releasename}</LABEL_LOCKSS_RELEASE>
+                <LABEL_MAVEN_ARTIFACT>${project.artifactId}</LABEL_MAVEN_ARTIFACT>
+                <LABEL_MAVEN_GROUP>${project.groupId}</LABEL_MAVEN_GROUP>
+                <LABEL_MAVEN_VERSION>${project.version}</LABEL_MAVEN_VERSION>
+                <LABEL_NAME>${project.name}</LABEL_NAME>
+                <LABEL_URL>${project.url}</LABEL_URL>
+                <LABEL_VCS_REF>${git.commit.id}</LABEL_VCS_REF>
+                <LABEL_VCS_URL>${scmUrl}</LABEL_VCS_URL>
+                <LABEL_VENDOR>${project.organization.name}</LABEL_VENDOR>
+                <LABEL_VERSION>${project.version}</LABEL_VERSION>
                 <LOCKSS_REST_PORT>${build.docker.dockerBuild.restPort}</LOCKSS_REST_PORT>
                 <LOCKSS_UI_PORT>${build.docker.dockerBuild.uiPort}</LOCKSS_UI_PORT>
               </buildArgs>
@@ -2170,7 +2179,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <execution>
             <id>dockerTag</id>
-            <phase>package</phase>
+            <phase>install</phase>
             <goals>
               <goal>tag</goal>
             </goals>
@@ -2186,7 +2195,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <execution>
             <id>dockerTagLatest</id>
-            <phase>package</phase>
+            <phase>install</phase>
             <goals>
               <goal>tag</goal>
             </goals>
@@ -2724,6 +2733,37 @@ Local directory: ${user.dir}
     </profile>
       
     <!-- END profile doRestApiDocs -->
+
+    <!-- BEGIN profile doDockerBuild -->
+    <profile>
+      <id>doDockerBuild</id>
+      
+      <properties>
+        <skipCompileTests>true</skipCompileTests>
+        <skipTests>true</skipTests>
+        <skipJarTests>true</skipJarTests>
+        <skipJavadoc>true</skipJavadoc>
+        <skipTestJavadoc>true</skipTestJavadoc>
+        <skipSources>true</skipSources>
+        <skipTestSources>true</skipTestSources>
+        <skipGpg>true</skipGpg>
+        <skipMavenCentral>true</skipMavenCentral>
+        <skipDeployMail>true</skipDeployMail>
+        <skipDocker>false</skipDocker>
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerTag>false</skipDockerTag>
+        <skipDockerTagLatest>true</skipDockerTagLatest><!-- FIXME -->
+        <skipDockerPush>false</skipDockerPush>
+        <skipDockerPushLatest>true</skipDockerPushLatest><!-- FIXME -->
+      </properties>
+      
+      <build>
+        <defaultGoal>package</defaultGoal>
+      </build>
+
+    </profile>
+  
+    <!-- END profile doDockerBuild -->
   
     <!-- BEGIN profile doPythonClient -->
   
