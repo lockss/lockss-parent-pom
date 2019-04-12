@@ -33,7 +33,8 @@ POSSIBILITY OF SUCH DAMAGE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.inherit.append.path="false">
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.lockss</groupId>
@@ -102,11 +103,10 @@ POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
-  <!-- Must be in every lockss-parent-pom descendant -->
-  <scm>
-    <connection>${scmConnection}</connection>
-    <developerConnection>${scmDeveloperConnection}</developerConnection>
-    <url>${scmUrl}</url>
+  <scm child.inherit.append.path="false">
+    <connection>scm:git:https://${gitHost}/${gitGroupId}/${gitProjectId}.git</connection>
+    <developerConnection>scm:git:ssh://${gitHost}/${gitGroupId}/${gitProjectId}.git</developerConnection>
+    <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
   
   <distributionManagement>
@@ -431,14 +431,14 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.buildEtags.skip>${skipEtags}</build.java.buildEtags.skip>
 
     <!--
-        `build.java.compileMain.skip` (alias: `skipCompile`)
+        `build.java.compileMain.skip` (alias: `skipCompileMain`)
         
         Whether to skip the compileMain step, which compiles the main Java code
         tree. 
         
         Default: ${build.java.skip} (on when the Java build is on)
     -->
-    <skipCompile>${build.java.skip}</skipCompile>
+    <skipCompileMain>${build.java.skip}</skipCompileMain>
     <build.java.compileMain.skip>${skipCompile}</build.java.compileMain.skip>
 
     <!--
@@ -507,7 +507,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.runTests.trimStackTrace>${trimstack}</build.java.runTests.trimStackTrace>
 
     <!--
-        `build.java.jarMain.skip` (alias: `skipJar`)
+        `build.java.jarMain.skip` (alias: `skipMainJar`)
         
         Whether to skip the building of the main artifact.
         
@@ -516,8 +516,8 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: ${build.java.skip} (on when the Java build is on)
     -->
-    <skipJar>${build.java.skip}</skipJar>
-    <build.java.jarMain.skip>${skipJar}</build.java.jarMain.skip>
+    <skipMainJar>${build.java.skip}</skipMainJar>
+    <build.java.jarMain.skip>${skipMainJar}</build.java.jarMain.skip>
 
     <!--
         `build.java.jarTests.skip` (alias: `skipTestJar`)
@@ -530,14 +530,14 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.jarTests.skip>${skipTestJar}</build.java.jarTests.skip>
 
     <!--
-        `build.java.jarSources.skip` (alias: `skipSources`)
+        `build.java.jarMainSources.skip` (alias: `skipMainSources`)
         
         Whether to skip the building of the sources artifact.
         
         Default: true (the sources artifact is not built)
     -->
-    <skipSources>true</skipSources>
-    <build.java.jarSources.skip>${skipSources}</build.java.jarSources.skip>
+    <skipMainSources>true</skipMainSources>
+    <build.java.jarMainSources.skip>${skipSources}</build.java.jarMainSources.skip>
 
     <!--
         `build.java.jarTestSources.skip` (alias: `skipTestSources`)
@@ -560,23 +560,33 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.jarJavadoc.header>${javadocHeader}</build.java.jarJavadoc.header>
 
     <!--
-        `build.java.jarJavadoc.skip` (alias: `skipJavadoc`)
+        `build.java.javadoc.skip` (alias: `skipJavadoc`)
         
-        Whether to skip the building of the Javadoc artifact.
+        Whether to skip the building of the Javadoc artifacts.
         
-        Default: true (the Javadoc artifact is not built)
+        Default: true (the Javadoc artifacts are not built)
     -->
     <skipJavadoc>true</skipJavadoc>
-    <build.java.jarJavadoc.skip>${skipJavadoc}</build.java.jarJavadoc.skip>
+    <build.java.javadoc.skip>${skipJavadoc}</build.java.javadoc.skip>
+
+    <!--
+        `build.java.jarMainJavadoc.skip` (alias: `skipMainJavadoc`)
+        
+        Whether to skip the building of the main Javadoc artifact.
+        
+        Default: ${build.java.javadoc.skip}
+    -->
+    <skipMainJavadoc>${build.java.javadoc.skip}</skipMainJavadoc>
+    <build.java.jarMainJavadoc.skip>${skipMainJavadoc}</build.java.jarMainJavadoc.skip>
 
     <!--
         `build.java.jarTestJavadoc.skip` (alias: `skipTestJavadoc`)
         
         Whether to skip the building of the test Javadoc artifact.
         
-        Default: true (the test Javadoc artifact is not built)
+        Default: ${build.java.javadoc.skip}
     -->
-    <skipTestJavadoc>true</skipTestJavadoc>
+    <skipTestJavadoc>${build.java.javadoc.skip}</skipTestJavadoc>
     <build.java.jarTestJavadoc.skip>${skipTestJavadoc}</build.java.jarTestJavadoc.skip>
 
     <!--
@@ -983,7 +993,8 @@ POSSIBILITY OF SUCH DAMAGE.
     <!--
         `build.docker.dockerBuild.skip` (alias: `skipDockerBuild`)
         
-        Whether to skip the dockerBuild step, which builds a Docker image.
+        Whether to skip the dockerBuild step, which builds a Docker image
+        and tags it with the current version.
         
         Default: true (the Docker build step is off)
     -->
@@ -1011,17 +1022,6 @@ POSSIBILITY OF SUCH DAMAGE.
     -->
     <dockerBuild.uiPort></dockerBuild.uiPort>
     <build.docker.dockerBuild.uiPort>${dockerBuild.restPort}</build.docker.dockerBuild.uiPort>
-
-    <!--
-        `build.docker.dockerTag.skip` (alias: `skipDockerTag`)
-        
-        Whether to skip the dockerTag step, which tags the Docker image with
-        the current version.
-        
-        Default: ${build.docker.dockerBuild.skip} (on when the Docker image is built)
-    -->
-    <skipDockerTag>${build.docker.dockerBuild.skip}</skipDockerTag>
-    <build.docker.dockerTag.skip>${skipDockerTag}</build.docker.dockerTag.skip>
 
     <!--
         `build.docker.dockerTagLatest.skip` (alias: `skipDockerTagLatest`)
@@ -1061,6 +1061,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <!-- BEGIN properties section: plugin versions -->
 
     <version.plugin.build-helper-maven-plugin>3.0.0</version.plugin.build-helper-maven-plugin>
+    <version.plugin.buildnumber-maven-plugin>1.3</version.plugin.buildnumber-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.10</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin>
@@ -1200,14 +1201,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: Git-related -->
 
-    <gitSshUser>git</gitSshUser>
     <gitHost>github.com</gitHost>
     <gitGroupId>lockss</gitGroupId>
     <gitProjectId>${project.artifactId}</gitProjectId>
-    <gitParentProjectId>${gitProjectId}</gitParentProjectId>
-    <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitParentProjectId}.git</scmConnection>
-    <scmDeveloperConnection>scm:git:${gitSshUser}@${gitHost}:${gitGroupId}/${gitParentProjectId}.git</scmDeveloperConnection>
-    <scmUrl>https://${gitHost}/${gitGroupId}/${gitParentProjectId}</scmUrl>
 
     <!-- END properties section: Git-related -->
 
@@ -1369,16 +1365,15 @@ POSSIBILITY OF SUCH DAMAGE.
       - Build tests artifact (if `build.java.jarTests.skip` is false)
       - Create a main artifact with dependencies with Spring Boot (if
         `build.java.spring.repackageJar.skip` is false)
-      - Build sources artifact (if `build.java.jarSources.skip` is false)
+      - Build sources artifact (if `build.java.jarMainSources.skip` is false)
       - Build test sources artifact (if `build.java.jarTestSources.skip`
         is false)
-      - Build Javadoc artifact (if `build.java.jarJavadoc.skip` is false)
+      - Build Javadoc artifact (if `build.java.jarMainJavadoc.skip` is false)
       - Build test Javadoc artifact (if `build.java.jarTestJavadoc.skip`
         is false)
       - Create symbolic links to the main artifact, tests artifact, and main
         artifact with dependencies (if the respective artifacts are built above)
-      - Build Docker image (if `build.docker.dockerBuild.skip` is false)
-      - Tag Docker image (if `build.docker.dockerTag.skip` is false)
+      - Build and tag Docker image (if `build.docker.dockerBuild.skip` is false)
       - Tag Docker image as latest (if `build.docker.dockerTagLatest.skip` is
         false)
 
@@ -1402,6 +1397,7 @@ POSSIBILITY OF SUCH DAMAGE.
       - Also clean the src/main/generated directory
   -->
   <build>
+    <defaultGoal>package</defaultGoal>
   
     <!-- BEGIN plugins -->
 
@@ -1443,12 +1439,15 @@ POSSIBILITY OF SUCH DAMAGE.
       <plugin>
 	<groupId>org.codehaus.mojo</groupId>
 	<artifactId>buildnumber-maven-plugin</artifactId>
-	<version>1.3</version>
+	<version>${version.plugin.buildnumber-maven-plugin}</version>
 	<inherited>true</inherited>
 	<executions>
+	
+	  <!-- BEGIN step generateTimestamp -->
+	
 	  <execution>
-            <id>generate-timestamp</id>
-            <phase>validate</phase>
+            <id>generateTimestamp</id>
+            <phase>initialize</phase>
             <goals>
               <goal>create-timestamp</goal>
             </goals>
@@ -1457,9 +1456,14 @@ POSSIBILITY OF SUCH DAMAGE.
               <timestampPropertyName>local.build.timestamp</timestampPropertyName>
             </configuration>
 	  </execution>
+
+	  <!-- END step generateTimestamp -->
+
+	  <!-- BEGIN step generateRawTimestamp -->
+
 	  <execution>
-            <id>generate-raw-timestamp</id>
-            <phase>validate</phase>
+            <id>generateRawTimestamp</id>
+            <phase>initialize</phase>
             <goals>
               <goal>create-timestamp</goal>
             </goals>
@@ -1467,6 +1471,9 @@ POSSIBILITY OF SUCH DAMAGE.
               <timestampPropertyName>build.rawtimestamp</timestampPropertyName>
             </configuration>
 	  </execution>
+
+	  <!-- END step generateRawTimestamp -->
+
 	</executions>
       </plugin>
 
@@ -1878,20 +1885,20 @@ POSSIBILITY OF SUCH DAMAGE.
         <version>${version.plugin.maven-source-plugin}</version>
         <executions>
         
-          <!-- BEGIN step jarSources -->
+          <!-- BEGIN step jarMainSources -->
           
           <execution>
-            <id>jarSources</id>
+            <id>jarMainSources</id>
             <phase>package</phase>
             <goals>
               <goal>jar-no-fork</goal>
             </goals>
             <configuration>
-              <skipSource>${build.java.jarSources.skip}</skipSource>
+              <skipSource>${build.java.jarMainSources.skip}</skipSource>
             </configuration>
           </execution>
         
-          <!-- END step jarSources -->
+          <!-- END step jarMainSources -->
           
           <!-- BEGIN step jarTestSources -->
           
@@ -1922,22 +1929,22 @@ POSSIBILITY OF SUCH DAMAGE.
         <version>${version.plugin.maven-javadoc-plugin}</version>
         <executions>
 
-          <!-- BEGIN step jarJavadoc -->
+          <!-- BEGIN step jarMainJavadoc -->
 
           <execution>
-            <id>jarJavadoc</id>
+            <id>jarMainJavadoc</id>
             <phase>package</phase>
             <goals>
               <goal>jar</goal>
             </goals>
             <configuration>
-              <skip>${build.java.jarJavadoc.skip}</skip>
+              <skip>${build.java.jarMainJavadoc.skip}</skip>
               <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
               <header>${build.java.jarJavadoc.header}</header>
             </configuration>
           </execution>
 
-          <!-- END step jarJavadoc -->
+          <!-- END step jarMainJavadoc -->
 
           <!-- BEGIN step jarTestJavadoc -->
 
@@ -2162,8 +2169,9 @@ POSSIBILITY OF SUCH DAMAGE.
               <pullNewerImage>false</pullNewerImage>
               <buildArgs>
                 <LOCKSS_SPRING_VERSION>${version.docker.lockss-spring}</LOCKSS_SPRING_VERSION>
-                <LABEL_BUILD_DATE>${build.rawtimestamp}</LABEL_BUILD_DATE>
+                <LABEL_BUILD_DATE>${maven.build.timestamp}</LABEL_BUILD_DATE>
                 <LABEL_DESCRIPTION>${project.description}</LABEL_DESCRIPTION>
+                <LABEL_GIT_DIRTY>${git.dirty}</LABEL_GIT_DIRTY>
                 <LABEL_LOCKSS_RELEASE>${build.releasename}</LABEL_LOCKSS_RELEASE>
                 <LABEL_MAVEN_ARTIFACT>${project.artifactId}</LABEL_MAVEN_ARTIFACT>
                 <LABEL_MAVEN_GROUP>${project.groupId}</LABEL_MAVEN_GROUP>
@@ -2171,7 +2179,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <LABEL_NAME>${project.name}</LABEL_NAME>
                 <LABEL_URL>${project.url}</LABEL_URL>
                 <LABEL_VCS_REF>${git.commit.id}</LABEL_VCS_REF>
-                <LABEL_VCS_URL>${scmUrl}</LABEL_VCS_URL>
+                <LABEL_VCS_URL>${project.scm.url}</LABEL_VCS_URL>
                 <LABEL_VENDOR>${project.organization.name}</LABEL_VENDOR>
                 <LABEL_VERSION>${project.version}</LABEL_VERSION>
                 <LOCKSS_REST_PORT>${build.docker.dockerBuild.restPort}</LOCKSS_REST_PORT>
@@ -2181,22 +2189,6 @@ POSSIBILITY OF SUCH DAMAGE.
           </execution>
 
           <!-- END step dockerBuild -->
-
-          <!-- BEGIN step dockerTag -->
-
-          <execution>
-            <id>dockerTag</id>
-            <phase>install</phase>
-            <goals>
-              <goal>tag</goal>
-            </goals>
-            <configuration>
-              <skipTag>${build.docker.dockerTag.skip}</skipTag>
-              <tag>${build.docker.tag}</tag>
-            </configuration>
-          </execution>
-
-          <!-- END step dockerTag -->
 
           <!-- BEGIN step dockerTagLatest -->
 
@@ -2277,11 +2269,11 @@ POSSIBILITY OF SUCH DAMAGE.
                 <receiver>${build.java.deployMail.to}</receiver>
               </receivers>
               <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${maven.build.timestamp}.
+              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${local.build.timestamp}.
 
 BUILD CONTEXT:
 Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
 Git user: ${git.build.user.name} <${git.build.user.email}>
 Git repository: ${git.remote.origin.url} (${git.branch})
 Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
@@ -2293,6 +2285,7 @@ Maven: ${maven.build.version}
 
 SYSTEM CONTEXT:
 OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
 Local user: ${user.name}
 Local directory: ${user.dir}
 ]]></textMessage>
@@ -2539,25 +2532,29 @@ Local directory: ${user.dir}
       <id>doSnapshot</id>
 
       <properties>
-        <build.java.jarSources.skip>false</build.java.jarSources.skip>
-        <build.java.jarJavadoc.skip>false</build.java.jarJavadoc.skip>
-        <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
-        <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
-        <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
-        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
-        <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
-        <build.java.deployMail.skip>false</build.java.deployMail.skip>
+        <skipMainSources>true</skipMainSources><!-- build.java.jarMainSources.skip -->
+        <skipTestSources>${build.java.jarTests.skip}</skipTestSources><!-- build.java.jarTestSources.skip -->
+        <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
+        <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
+        <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
+        <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
+        <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
       </properties>
       
       <build>
         <defaultGoal>deploy</defaultGoal>
+        
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <version>${version.plugin.maven-enforcer-plugin}</version>
             <executions>
+            
+              <!-- BEGIN step doSnapshot.checkPrerequisites -->
+            
               <execution>
                 <id>doSnapshot.checkPrerequisites</id>
                 <phase>validate</phase>
@@ -2567,11 +2564,36 @@ Local directory: ${user.dir}
                 <configuration>
                   <rules>
                     <requireSnapshotVersion>
-                      <message>Expected snapshot version, got ${project.version}</message>
+                      <message>Error: expected snapshot version, got ${project.version}</message>
                     </requireSnapshotVersion>
                   </rules>
                 </configuration>
               </execution>
+
+              <!-- END step doSnapshot.checkPrerequisites -->
+
+              <!-- BEGIN step doSnapshot.checkPrerequisitesInitialize -->
+            
+              <execution>
+                <id>doSnapshot.checkPrerequisitesInitialize</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>git.dirty</property>
+                      <message>Error: property git.dirty not set in snapshot build</message>
+                      <regex>^false$</regex>
+                      <regexMessage>Error: dirty Git state not allowed in snapshot build</regexMessage>
+                    </requireProperty>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doSnapshot.checkPrerequisitesInitialize -->
+
             </executions>
           </plugin>
         </plugins>
@@ -2587,17 +2609,15 @@ Local directory: ${user.dir}
       <id>doRelease</id>
 
       <properties>
-        <build.java.jarSources.skip>false</build.java.jarSources.skip>
-        <build.java.jarJavadoc.skip>false</build.java.jarJavadoc.skip>
-        <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
-        <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
-        <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
-        <build.docker.dockerTagLatest.skip>${build.docker.skip}</build.docker.dockerTagLatest.skip>
-        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
-        <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
-        <build.docker.dockerPushLatest.skip>${build.docker.skip}</build.docker.dockerPushLatest.skip>
-        <build.java.deployMail.skip>false</build.java.deployMail.skip>
+        <skipMainSources>true</skipMainSources><!-- build.java.jarMainSources.skip -->
+        <skipTestSources>${build.java.jarTests.skip}</skipTestSources><!-- build.java.jarTestSources.skip -->
+        <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
+        <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
+        <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
+        <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
+        <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
       </properties>
       
       <build>
@@ -2608,6 +2628,9 @@ Local directory: ${user.dir}
             <artifactId>maven-enforcer-plugin</artifactId>
             <version>${version.plugin.maven-enforcer-plugin}</version>
             <executions>
+            
+              <!-- BEGIN step doRelease.checkPrerequisites -->
+            
               <execution>
                 <id>doRelease.checkPrerequisites</id>
                 <phase>validate</phase>
@@ -2617,11 +2640,40 @@ Local directory: ${user.dir}
                 <configuration>
                   <rules>
                     <requireReleaseVersion>
-                      <message>Expected release version, got ${project.version}</message>
+                      <message>Error: expected release version, got ${project.version}</message>
                     </requireReleaseVersion>
+                    <requireReleaseDeps>
+                      <onlyWhenRelease>true</onlyWhenRelease>
+                      <message>Error: snapshot dependencies not allowed in release build</message>
+                    </requireReleaseDeps>
                   </rules>
                 </configuration>
               </execution>
+
+              <!-- END step doRelease.checkPrerequisites -->
+
+              <!-- BEGIN step doRelease.checkPrerequisitesInitialize -->
+            
+              <execution>
+                <id>doRelease.checkPrerequisitesInitialize</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>git.dirty</property>
+                      <message>Error: property git.dirty not set in release build</message>
+                      <regex>^false$</regex>
+                      <regexMessage>Error: dirty Git state not allowed in release build</regexMessage>
+                    </requireProperty>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doRelease.checkPrerequisitesInitialize -->
+
             </executions>
           </plugin>
         </plugins>
@@ -2631,71 +2683,32 @@ Local directory: ${user.dir}
   
     <!-- END profile doRelease -->
   
-    <!-- BEGIN profile travis-maven-central -->
+    <!-- BEGIN profile doJavadoc -->
   
-    <!-- 
-    
-        travis-maven-central profile
-        
-        Assumes that the code has been cleaned, built and tested successfully,
-        and is only concerned with doing the Maven Central/OSSRH deploy.
-    
-    -->
     <profile>
-      <id>travis-maven-central</id>
-
+      <id>doJavadoc</id>
+      
       <properties>
-        <build.java.runTests.skip>true</build.java.runTests.skip>
-        <build.java.jarSources.skip>false</build.java.jarSources.skip>
-        <build.java.jarJavadoc.skip>false</build.java.jarJavadoc.skip>
-        <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
-        <build.docker.skip>true</build.docker.skip>
-        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <skipInfo>true</skipInfo><!-- build.info.skip -->
+        <skipTests>true</skipTests><!-- build.java.runTests.skip -->
+        <skipMainJar>true</skipMainJar><!-- build.java.jarMain.skip -->
+        <skipJarTests>true</skipJarTests><!-- build.java.jarTests.skip -->
+        <skipJarWithDeps>true</skipJarWithDeps><!-- build.java.repackageJar.skip -->
+        <skipJavadoc>false</skipJavadoc><!-- build.java.javadoc.skip -->
+        <skipGpg>true</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>true</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDeployMail>true</skipDeployMail><!-- build.java.deployMail.skip -->
+        <skipDocker>true</skipDocker><!-- build.docker.skip -->
       </properties>
       
       <build>
-        <defaultGoal>deploy</defaultGoal>
+        <defaultGoal>package</defaultGoal>
       </build>
-
+      
     </profile>
-  
-    <!-- END profile travis-maven-central -->
-  
-    <!-- BEGIN profile travis-docker-hub -->
-  
-    <!-- 
-    
-        travis-docker-hub profile
-        
-        Assumes that the code has been cleaned, built and tested successfully,
-        and is only concerned with doing the Docker Hub deploy.
-    
-    -->
-    <profile>
-      <id>travis-docker-hub</id>
+      
+    <!-- END profile doJavadoc -->
 
-      <properties>
-        <build.java.runTests.skip>true</build.java.runTests.skip>
-        <build.java.jarSources.skip>true</build.java.jarSources.skip>
-        <build.java.jarJavadoc.skip>true</build.java.jarJavadoc.skip>
-        <build.java.jarTestJavadoc.skip>true</build.java.jarTestJavadoc.skip>
-        <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
-        <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
-        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
-        <!-- FIXME what of tagLatest, pushLatest? -->
-      </properties>
-
-      <build>
-        <defaultGoal>deploy</defaultGoal>
-      </build>
-
-    </profile>
-  
-    <!-- END profile travis-docker-hub -->
-  
     <!-- BEGIN profile doRestApiDocs -->
   
     <profile>
@@ -2742,6 +2755,7 @@ Local directory: ${user.dir}
     <!-- END profile doRestApiDocs -->
 
     <!-- BEGIN profile doDockerBuild -->
+
     <profile>
       <id>doDockerBuild</id>
       
@@ -2749,20 +2763,17 @@ Local directory: ${user.dir}
         <skipCompileTests>true</skipCompileTests>
         <skipTests>true</skipTests>
         <skipJarTests>true</skipJarTests>
-        <skipJavadoc>true</skipJavadoc>
-        <skipTestJavadoc>true</skipTestJavadoc>
-        <skipSources>true</skipSources>
+        <skipMainSources>true</skipMainSources>
         <skipTestSources>true</skipTestSources>
+        <skipMainJavadoc>true</skipMainJavadoc>
+        <skipTestJavadoc>true</skipTestJavadoc>
         <skipGpg>true</skipGpg>
         <skipMavenCentral>true</skipMavenCentral>
         <skipDeployMail>true</skipDeployMail>
         <skipDocker>false</skipDocker>
         <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerTag>false</skipDockerTag>
-        <skipDockerTagLatest>true</skipDockerTagLatest><!-- FIXME -->
         <skipDockerPush>false</skipDockerPush>
-        <skipDockerPushLatest>true</skipDockerPushLatest><!-- FIXME -->
-      </properties>
+     </properties>
       
       <build>
         <defaultGoal>package</defaultGoal>
@@ -2778,9 +2789,9 @@ Local directory: ${user.dir}
       <id>doPythonClient</id>
       
       <properties>
-        <build.info.skip>true</build.info.skip>
-        <build.java.skip>true</build.java.skip>
-        <build.docker.skip>true</build.docker.skip>
+        <skipInfo>true</skipInfo>
+        <skipJava>true</skipJava>
+        <skipDocker>true</skipDocker>
         
         <build.python.project>${gitProjectId}-python</build.python.project>
         <build.python.url>https://${gitHost}/${gitGroupId}/${build.python.project}</build.python.url>
@@ -2883,6 +2894,71 @@ Local directory: ${user.dir}
     </profile>
       
     <!-- END profile doPythonClient -->
+  
+    <!-- BEGIN profile travis-maven-central -->
+
+    <!-- 
+    
+        travis-maven-central profile
+        
+        Assumes that the code has been cleaned, built and tested successfully,
+        and is only concerned with doing the Maven Central/OSSRH deploy.
+    
+    -->
+    <profile>
+      <id>travis-maven-central</id>
+
+      <properties>
+        <build.java.runTests.skip>true</build.java.runTests.skip>
+        <build.java.jarMainSources.skip>false</build.java.jarMainSources.skip>
+        <build.java.jarMainJavadoc.skip>false</build.java.jarMainJavadoc.skip>
+        <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
+        <build.docker.skip>true</build.docker.skip>
+        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
+        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+      </properties>
+      
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+      </build>
+
+    </profile>
+  
+    <!-- END profile travis-maven-central -->
+  
+    <!-- BEGIN profile travis-docker-hub -->
+  
+    <!-- 
+    
+        travis-docker-hub profile
+        
+        Assumes that the code has been cleaned, built and tested successfully,
+        and is only concerned with doing the Docker Hub deploy.
+    
+    -->
+    <profile>
+      <id>travis-docker-hub</id>
+
+      <properties>
+        <build.java.runTests.skip>true</build.java.runTests.skip>
+        <build.java.jarMainSources.skip>true</build.java.jarMainSources.skip>
+        <build.java.jarMainJavadoc.skip>true</build.java.jarMainJavadoc.skip>
+        <build.java.jarTestJavadoc.skip>true</build.java.jarTestJavadoc.skip>
+        <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
+        <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
+        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
+        <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
+        <!-- FIXME what of tagLatest, pushLatest? -->
+      </properties>
+
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+      </build>
+
+    </profile>
+  
+    <!-- END profile travis-docker-hub -->
   
   </profiles>
   
