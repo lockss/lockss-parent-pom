@@ -2037,6 +2037,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>
               <serverId>ossrh</serverId>
               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <skipLocalStaging>true</skipLocalStaging>              
               <autoReleaseAfterClose>true</autoReleaseAfterClose>
             </configuration>
           </execution>
