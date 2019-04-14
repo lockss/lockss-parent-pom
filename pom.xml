@@ -130,15 +130,26 @@ POSSIBILITY OF SUCH DAMAGE.
     <!-- BEGIN properties section: directories -->
 
     <!--
-        `dir.generated` (alias: `generatedDir`)
+        `dir.generated` (alias: `genDirs`)
         
-        The directory where code generated during the generate-sources phase
-        should be output.
+        The parent directory where generated code directories are located during
+        generate-sources phases.
         
-        Default: ${project.basedir}/src/generated/java
+        Default: ${project.basedir}/src/generated
+    -->
+    <genDirs>${project.basedir}/src/generated</genDirs>
+    <dir.generated>${genDirs}</dir.generated>
+
+    <!--
+        `dir.generated.java` (alias: `generatedDir`)
+        
+        The directory where Java code generated during the generate-sources
+        phase should be output.
+        
+        Default: ${dir.generated}/java
     -->
     <generatedDir>${project.basedir}/src/generated/java</generatedDir>
-    <dir.generated>${generatedDir}</dir.generated>
+    <dir.generated.java>${dir.generated}/java</dir.generated.java>
 
     <!--
         `dir.resources` (alias: `resourcesDir`)
@@ -762,9 +773,9 @@ POSSIBILITY OF SUCH DAMAGE.
         The base directory under which JOOQ generates database code. See also
         `build.java.db.generateDatabase.package`.
         
-        Default: ${dir.generated}
+        Default: ${dir.generated.java}
     -->
-    <generateDatabase.directory>${dir.generated}</generateDatabase.directory>
+    <generateDatabase.directory>${dir.generated.java}</generateDatabase.directory>
     <build.java.db.generateDatabase.directory>${generateDatabase.directory}</build.java.db.generateDatabase.directory>
 
     <!--
@@ -1497,7 +1508,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <sources>
-                <source>${dir.generated}</source>
+                <source>${dir.generated.java}</source>
               </sources>
             </configuration>
           </execution>
@@ -1527,7 +1538,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <skip>${build.java.antlr.generateAntlr.skip}</skip>
-              <outputDirectory>${dir.generated}</outputDirectory>
+              <outputDirectory>${dir.generated.java}</outputDirectory>
             </configuration>
           </execution>
 
@@ -2796,6 +2807,7 @@ Local directory: ${user.dir}
         
         <build.python.project>${gitProjectId}-python</build.python.project>
         <build.python.url>https://${gitHost}/${gitGroupId}/${build.python.project}</build.python.url>
+        <dir.generated.python>${dir.generated}/python</dir.generated.python>
       </properties>
 
       <build>
@@ -2871,7 +2883,7 @@ Local directory: ${user.dir}
                 <configuration>
                   <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
                   <language>python</language>
-                  <output>${project.build.directory}/generated-sources/swagger/python</output>
+                  <output>${dir.generated.python}</output>
                   <configOptions>
                     <projectName>${build.python.project}</projectName>                  
                     <packageName>${build.python.package}</packageName>
