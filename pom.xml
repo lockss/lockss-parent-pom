@@ -2343,7 +2343,6 @@ Local directory: ${user.dir}
                     <isfalse value="${build.docker.skip}" />
                     <or>
                       <isfalse value="${build.docker.dockerBuild.skip}" />
-                      <isfalse value="${build.docker.dockerTag.skip}" />
                       <isfalse value="${build.docker.dockerTagLatest.skip}" />
                       <isfalse value="${build.docker.dockerPush.skip}" />
                       <isfalse value="${build.docker.dockerPushLatest.skip}" />
