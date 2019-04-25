@@ -2379,6 +2379,7 @@ Local directory: ${user.dir}
               <skip>${build.info.buildInfo.skip}</skip>
               <exportAntProperties>true</exportAntProperties>
               <target>
+                <property environment="env" />
                 <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
                 <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
                   <isset property="env.HOSTNAME" />
