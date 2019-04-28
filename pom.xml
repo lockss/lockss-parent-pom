@@ -355,6 +355,16 @@ POSSIBILITY OF SUCH DAMAGE.
     <skipClasspathFiles>${build.info.skip}</skipClasspathFiles>
     <build.info.classpathFiles.skip>${skipClasspathFiles}</build.info.classpathFiles.skip>
 
+    <!--
+        `build.localPublishSite.skip.skip` (alias: `skipLocalPublishSite`)
+
+        Whether to skip the local-publish-site step
+
+        Default: false
+    -->
+    <skipLocalPublishSite>false</skipLocalPublishSite>
+    <build.localPublishSite.skip>${skipLocalPublishSite}</build.localPublishSite.skip>
+
     <!-- END properties section: info build -->
 
     <!-- BEGIN properties section: Java build -->
@@ -2326,6 +2336,48 @@ Local directory: ${user.dir}
           </dependency>  
         </dependencies>
         <executions>
+
+          <!-- BEGIN step local-publish-site -->
+
+	  <!-- Copy the site documentation to a subdirectory of
+	       ${dir.publishSite} (which must be set, e.g., in a profile in
+	       a user's settings.xml).  Done only if dir.publishSite has a
+	       value, and if javadoc is being generated.  Must follow the
+	       javadoc plugin in the pom as it must run after that, and
+	       it's in the same phase -->
+          <execution>
+            <id>local-publish-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+	      <!-- Even though the ant target itself is conditionalized,
+	           skip is needed to completely suppress the antrun
+	           invocation in FuncStateManager -->
+              <skip>${build.localPublishSite.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <available file="target/site"/>
+                    <isset property="dir.publishSite" />
+                    <or>
+                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
+                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <copy todir="${dir.publishSite}/${project.artifactId}" >
+                      <fileset dir="target/site" />
+                    </copy>
+                  </then>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step local-publish-site -->
 
           <!-- BEGIN step checkDocker -->
           
