@@ -1023,28 +1023,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
 
     <!--
-        `build.docker.dockerBuild.restPort` (alias: `dockerBuild.restPort`)
-        
-        The service REST port, passed to the Docker build as the build argument
-        `LOCKSS_REST_PORT`.
-        
-        Default: "" (empty string)
-    -->
-    <dockerBuild.restPort></dockerBuild.restPort>
-    <build.docker.dockerBuild.restPort>${dockerBuild.restPort}</build.docker.dockerBuild.restPort>
-
-    <!--
-        `build.docker.dockerBuild.uiPort` (alias: `dockerBuild.uiPort`)
-        
-        The service UI port, passed to the Docker build as the build argument
-        `LOCKSS_UI_PORT`.
-        
-        Default: "" (empty string)
-    -->
-    <dockerBuild.uiPort></dockerBuild.uiPort>
-    <build.docker.dockerBuild.uiPort>${dockerBuild.restPort}</build.docker.dockerBuild.uiPort>
-
-    <!--
         `build.docker.dockerTagLatest.skip` (alias: `skipDockerTagLatest`)
         
         Whether to skip the dockerTagLatest step, which tags the Docker image as
@@ -2205,8 +2183,6 @@ POSSIBILITY OF SUCH DAMAGE.
                 <LABEL_VCS_URL>${project.scm.url}</LABEL_VCS_URL>
                 <LABEL_VENDOR>${project.organization.name}</LABEL_VENDOR>
                 <LABEL_VERSION>${project.version}</LABEL_VERSION>
-                <LOCKSS_REST_PORT>${build.docker.dockerBuild.restPort}</LOCKSS_REST_PORT>
-                <LOCKSS_UI_PORT>${build.docker.dockerBuild.uiPort}</LOCKSS_UI_PORT>
               </buildArgs>
             </configuration>
           </execution>
