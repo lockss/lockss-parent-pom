@@ -2169,7 +2169,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <tag>${build.docker.tag}</tag>
               <pullNewerImage>false</pullNewerImage>
               <buildArgs>
-                <LOCKSS_SPRING_VERSION>${version.docker.lockss-spring}</LOCKSS_SPRING_VERSION>
+                <LOCKSS_SPRING_VERSION>${version.docker.lockss-spring}</LOCKSS_SPRING_VERSION><!-- probably obsolete -->
                 <LABEL_BUILD_DATE>${maven.build.timestamp}</LABEL_BUILD_DATE>
                 <LABEL_DESCRIPTION>${project.description}</LABEL_DESCRIPTION>
                 <LABEL_GIT_DIRTY>${git.dirty}</LABEL_GIT_DIRTY>
