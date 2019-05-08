@@ -2318,12 +2318,13 @@ Local directory: ${user.dir}
 	  <!-- Copy the site documentation to a subdirectory of
 	       ${dir.publishSite} (which must be set, e.g., in a profile in
 	       a user's settings.xml).  Done only if dir.publishSite has a
-	       value, and if javadoc is being generated.  Must follow the
-	       javadoc plugin in the pom as it must run after that, and
-	       it's in the same phase -->
-          <execution>
+	       value, and if javadoc is being generated.  This is done in
+	       the verify phase as it must follow some package phase antrun
+	       executions in the lockss-core child pom -->
+
+	  <execution>
             <id>local-publish-site</id>
-            <phase>package</phase>
+            <phase>verify</phase>
             <goals>
               <goal>run</goal>
             </goals>
