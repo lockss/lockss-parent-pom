@@ -33,8 +33,7 @@ POSSIBILITY OF SUCH DAMAGE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-         child.inherit.append.path="false">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.lockss</groupId>
@@ -103,7 +102,7 @@ POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
-  <scm child.inherit.append.path="false">
+  <scm>
     <connection>scm:git:https://${gitHost}/${gitGroupId}/${gitProjectId}.git</connection>
     <developerConnection>scm:git:ssh://${gitHost}/${gitGroupId}/${gitProjectId}.git</developerConnection>
     <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
