@@ -33,12 +33,13 @@ POSSIBILITY OF SUCH DAMAGE.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         child.inherit.append.path="false">
   <modelVersion>4.0.0</modelVersion>
   
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.9.0</version>
+  <version>1.10.0</version>
   <packaging>pom</packaging>
   
   <name>lockss-parent-pom</name>
@@ -50,10 +51,10 @@ POSSIBILITY OF SUCH DAMAGE.
     <name>LOCKSS Program</name>
     <url>https://www.lockss.org/</url>
   </organization>
-  
+
   <licenses>
     <license>
-      <name>3-Clause BSD License</name>
+      <name>BSD-3-Clause</name>
       <url>https://opensource.org/licenses/BSD-3-Clause</url>
     </license>
   </licenses>
@@ -102,11 +103,10 @@ POSSIBILITY OF SUCH DAMAGE.
     </developer>
   </developers>
 
-  <!-- Must be in every lockss-parent-pom descendant -->
-  <scm>
-    <connection>${scmConnection}</connection>
-    <developerConnection>${scmDeveloperConnection}</developerConnection>
-    <url>${scmUrl}</url>
+  <scm child.inherit.append.path="false">
+    <connection>scm:git:https://${gitHost}/${gitGroupId}/${gitProjectId}.git</connection>
+    <developerConnection>scm:git:ssh://${gitHost}/${gitGroupId}/${gitProjectId}.git</developerConnection>
+    <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
   
   <distributionManagement>
@@ -123,405 +123,2268 @@ POSSIBILITY OF SUCH DAMAGE.
 
   </distributionManagement>
 
-  <!--
-
-      PROPERTIES
-
-  -->
+  <!-- BEGIN properties -->
   
   <properties>
 
-    <!-- Java related -->
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>1.8</java.version>
-    <maven.compiler.source>${java.version}</maven.compiler.source>
-    <maven.compiler.target>${java.version}</maven.compiler.target>
-    <test.fork.count>1.0C</test.fork.count>
+    <!-- BEGIN properties section: directories -->
+
+    <!--
+        `dir.generated` (alias: `genDirs`)
+        
+        The parent directory where generated code directories are located during
+        generate-sources phases.
+        
+        Default: ${project.basedir}/src/generated
+    -->
+    <genDirs>${project.basedir}/src/generated</genDirs>
+    <dir.generated>${genDirs}</dir.generated>
+
+    <!--
+        `dir.generated.java` (alias: `generatedDir`)
+        
+        The directory where Java code generated during the generate-sources
+        phase should be output.
+        
+        Default: ${dir.generated}/java
+    -->
+    <generatedDir>${project.basedir}/src/generated/java</generatedDir>
+    <dir.generated.java>${dir.generated}/java</dir.generated.java>
+
+    <!--
+        `dir.resources` (alias: `resourcesDir`)
+        
+        The resources directory.
+        
+        Default: ${project.basedir}/src/main/resources
+    -->
+    <resourcesDir>${project.basedir}/src/main/resources</resourcesDir>
+    <dir.resources>${resourcesDir}</dir.resources>
+
+    <!--
+        `dir.temporary` (alias: `tmpdir`)
+        
+        A temporary directory.
+        
+        Default: ${java.io.tmpdir}
+    -->
+    <tmpdir>${java.io.tmpdir}</tmpdir>
+    <dir.temporary>${tmpdir}</dir.temporary>
+
+    <!-- END properties section: directories -->
+
+    <!-- BEGIN properties section: files -->
+
+    <!--
+        `file.buidinfo`
+        
+        The path to the build info file.
+        
+        Default: ${project.build.outputDirectory}/org/lockss/componentresources/build.properties
+    -->
+
+    <dir.buildInfo>${project.build.outputDirectory}/org/lockss/componentresources</dir.buildInfo>
+    <file.buildInfo>${dir.buildInfo}/build.properties</file.buildInfo>
+
+    <!--
+        `file.classpath.compile`
+        
+        The path to the compile classpath file.
+        
+        Default: ${project.build.directory}/compile-classpath
+    -->
+    <file.classpath.compile>${project.build.directory}/compile-classpath</file.classpath.compile>
+
+    <!--
+        `file.classpath.runtime`
+        
+        The path to the runtime classpath file.
+        
+        Default: ${project.build.directory}/run-classpath
+    -->
+    <file.classpath.runtime>${project.build.directory}/run-classpath</file.classpath.runtime>
+
+    <!--
+        `file.classpath.test`
+        
+        The path to the test classpath file.
+        
+        Default: ${project.build.directory}/test-classpath
+    -->
+    <file.classpath.test>${project.build.directory}/test-classpath</file.classpath.test>
+
+    <!-- END properties section: files -->
+
+    <!-- BEGIN properties section: repositories and plugin repositories -->
+
+    <!--
+        `repository.enabled.lockss-legacy`
+        
+        Whether the lockss-legacy repository is enabled. By default it is not,
+        only some projects require access to the legacy JARs. See also
+        `repository.update.lockss-legacy`.
+        
+        Default: false (enabled in projects that need it)
+    -->
+    <repository.enabled.lockss-legacy>false</repository.enabled.lockss-legacy>
+
+    <!--
+        `pluginRepository.update.ossrh-snapshots`
+        
+        The <updatePolicy> for the ossrh-snapshots plugin repository (see
+        <pluginRepositories>). To use a different update policy than the Maven
+        default of 'daily', use a profile in your settings.xml file with this
+        property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
+        minutes) or 'never'. See also `repository.update.ossrh-snapshots`.
+        
+        Default: daily (the Maven default for a plugin repository)
+    -->
+    <pluginRepository.update.ossrh-snapshots>daily</pluginRepository.update.ossrh-snapshots>
+
+    <!--
+        `repository.update.lockss-legacy`
+        
+        The <updatePolicy> for the lockss-legacy repository (see
+        <repositories>). To use a different update policy than the Maven
+        default of 'daily', use a profile in your settings.xml file with this
+        property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
+        minutes) or 'never'.
+        
+        Default: daily (the Maven default for a repository)
+    -->
+    <repository.update.lockss-legacy>daily</repository.update.lockss-legacy>
+
+    <!--
+        `repository.update.ossrh-snapshots`
+        
+        The <updatePolicy> for the ossrh-snapshots repository (see
+        <repositories>). To use a different update policy than the Maven
+        default of 'daily', use a profile in your settings.xml file with this
+        property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
+        minutes) or 'never'. See also `pluginRepository.update.ossrh-snapshots`.
+        
+        Default: daily (the Maven default for a repository)
+    -->
+    <repository.update.ossrh-snapshots>daily</repository.update.ossrh-snapshots>
+
+    <!-- END properties section: repositories and plugin repositories -->
+
+    <!-- BEGIN properties section: build configuration -->
+
+    <!--
+        `build.encoding` (alias: `buildEncoding`)
+
+        The preferred encoding. Used for `project.build.sourceEncoding`,
+        `project.reporting.outputEncoding`.
+
+        Default: UTF-8
+    -->
+    <buildEncoding>UTF-8</buildEncoding>
+    <build.encoding>${buildEncoding}</build.encoding>
+
+    <!-- END properties section: build configuration -->
+
+    <!-- BEGIN properties section: info build -->
+
+    <!--
+        `build.info.skip` (alias: `skipInfo`)
+        
+        Whether to skip the info build's steps.
+        
+        Default: false (the info build is on)
+    -->
+    <skipInfo>false</skipInfo>
+    <build.info.skip>${skipInfo}</build.info.skip>
+
+    <!--
+        `build.info.gitProperties.skip` (alias: `skipGitProperties`)
+        
+        Whether to skip the gitProperties step which generates a file of Git
+        properties with git-commit-id-plugin.
+        
+        Default: ${build.info.skip} (on when the info build is on)
+    -->
+    <skipGitProperties>${build.info.skip}</skipGitProperties>
+    <build.info.gitProperties.skip>${skipGitProperties}</build.info.gitProperties.skip>
+
+    <!--
+        `build.info.buildInfo.skip` (alias: `skipBuildInfo`)
+        
+        Whether to skip the buildInfo step, which generates a build info file.
+        
+        Default: ${build.info.skip} (on when the info build is on)
+    -->
+    <skipBuildInfo>${build.info.skip}</skipBuildInfo>
+    <build.info.buildInfo.skip>${skipBuildInfo}</build.info.buildInfo.skip>
+
+    <!--
+        `build.info.buildInfo.antDate`
+        
+        A format string for Ant dates.
+        
+        Default: yyyy-MM-dd (matches the old lockss-daemon build)
+    -->
+    <build.info.buildInfo.antDate>yyyy-MM-dd</build.info.buildInfo.antDate>
+
+    <!--
+        `build.info.buildInfo.antTime`
+        
+        A format string for Ant times.
+        
+        Default: HH:mm:ss (matches the old lockss-daemon build)
+    -->
+    <build.info.buildInfo.antTime>HH:mm:ss</build.info.buildInfo.antTime>
+
+    <!--
+        `build.info.buildInfo.antTimestamp`
+        
+        A format string for Ant timestamps.
+        
+        Default: ${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX (matches the old lockss-daemon build)
+    -->
+    <build.info.buildInfo.antTimestamp>dd-MMM-yy' 'HH:mm:ss' 'zzz</build.info.buildInfo.antTimestamp>
+
+    <!--
+        `build.info.classpathFiles.skip` (alias: `skipClasspathFiles`)
+        
+        Whether to skip the classpathFiles step, which generates files
+        containing the various classpaths.
+        
+        Default: ${build.info.skip} (on when the info build is on)
+    -->
+    <skipClasspathFiles>${build.info.skip}</skipClasspathFiles>
+    <build.info.classpathFiles.skip>${skipClasspathFiles}</build.info.classpathFiles.skip>
+
+    <!--
+        `build.localPublishSite.skip.skip` (alias: `skipLocalPublishSite`)
+
+        Whether to skip the local-publish-site step
+
+        Default: false
+    -->
+    <skipLocalPublishSite>false</skipLocalPublishSite>
+    <build.localPublishSite.skip>${skipLocalPublishSite}</build.localPublishSite.skip>
+
+    <!-- END properties section: info build -->
+
+    <!-- BEGIN properties section: Java build -->
+
+    <!--
+        `build.java.skip` (alias: `skipJava`)
+        
+        Whether to skip the Java build's steps.
+        
+        Default: false (the Java build is on)
+    -->
+    <skipJava>false</skipJava>
+    <build.java.skip>${skipJava}</build.java.skip>
+
+    <!--
+        `build.java.incremental` (alias: `useIncrementalCompilation`)
+        
+        Whether to enable the incremental compilation feature. used for
+        `maven.compiler.useIncrementalCompilation`. 
+        
+        Default: true
+    -->
+    <useIncrementalCompilation>true</useIncrementalCompilation>
+    <build.java.incremental>${useIncrementalCompilation}</build.java.incremental>
+
+    <!--
+        `build.java.mainClass`
+        
+        The main class of this project.
+        
+        Default: "" (empty string)
+    -->
+    <build.java.mainClass></build.java.mainClass>
+
+    <!--
+        `build.java.package` (alias: `javaPackage`)
+        
+        The root Java package of this project.
+        
+        Default: UNDEFINED!!!
+    -->
+    <javaPackage>UNDEFINED!!!</javaPackage>
+    <build.java.package>${javaPackage}</build.java.package>
+
+    <!--
+        `build.java.logLevel` (alias: `loglevel`)
+        
+        The log level.
+        
+        Default: info
+    -->
+    <loglevel>info</loglevel>
+    <build.java.logLevel>${loglevel}</build.java.logLevel>
+
+    <!--
+        `build.java.rootLogLevel` (alias: `rootloglevel`)
+        
+        The root log level.
+        
+        Default: "" (empty string)
+    -->
+    <rootloglevel></rootloglevel>
+    <build.java.rootLogLevel>${rootloglevel}</build.java.rootLogLevel>
+
+    <!--
+        `build.java.version` (alias: `javaVersion`)
+        
+        The preferred Java version. Used for `maven.compiler.source`,
+        `maven.compiler.target`.
+
+        Default: 1.8
+    -->
+    <javaVersion>1.8</javaVersion>
+    <build.java.version>${javaVersion}</build.java.version>
+
+    <!--
+        `build.java.buildEtags.skip` (alias: `skipEtags`)
+        
+        Whether to skip the buildEtags step, which builds a tags file with Etags
+        from all Java files under `src/`.
+        
+        Default: true (the tags file is not built)
+    -->
+    <skipEtags>true</skipEtags>
+    <build.java.buildEtags.skip>${skipEtags}</build.java.buildEtags.skip>
+
+    <!--
+        `build.java.compileMain.skip` (alias: `skipCompileMain`)
+        
+        Whether to skip the compileMain step, which compiles the main Java code
+        tree. 
+        
+        Default: ${build.java.skip} (on when the Java build is on)
+    -->
+    <skipCompileMain>${build.java.skip}</skipCompileMain>
+    <build.java.compileMain.skip>${skipCompile}</build.java.compileMain.skip>
+
+    <!--
+        `build.java.compileTests.skip` (alias: `skipCompileTests`)
+        
+        Whether to skip the compileTests step, which compiles the test tree.
+        
+        Default: ${build.java.skip} (on when the Java build is on)
+    -->
+    <skipCompileTests>${build.java.skip}</skipCompileTests>
+    <build.java.compileTests.skip>${skipCompileTests}</build.java.compileTests.skip>
+
+    <!--
+        `build.java.runTests.skip` (alias: `skipTests`)
+        
+        Whether to skip the runTests step, which runs the unit tests.
+        
+        Default: ${build.java.skip} (on when the Java build is on)
+    -->
+    <skipTests>${build.java.skip}</skipTests>
+    <build.java.runTests.skip>${skipTests}</build.java.runTests.skip>
+
+    <!--
+        `build.java.runTests.forkCount` (alias: `testForkCount`)
+        
+        The number of VMs to fork in parallel in order to execute the tests.
+        When terminated with "C", the number part is multiplied with the number
+        of CPU cores. Floating point value are only accepted together with "C".
+        If set to "0", no VM is forked and all tests are executed within the
+        main process.
+        
+        Default: 1.0C
+    -->
+    <testForkCount>1.0C</testForkCount>
+    <build.java.runTests.forkCount>${testForkCount}</build.java.runTests.forkCount>
+
+    <!--
+        `build.java.runTests.keepTempFiles` (alias: `keeptempfiles`)
+        
+        Whether to keep temp files after tests run.
+        
+        Default: false
+    -->
+    <keeptempfiles>false</keeptempfiles>
+    <build.java.runTests.keepTempFiles>${keeptempfiles}</build.java.runTests.keepTempFiles>
+
+    <!--
+        `build.java.runTests.redirectTestOutputToFile` (alias: `outputtofile`)
+        
+        Whether to redirect the unit test standard output to a file.
+        
+        Default: true
+    -->
+    <outputtofile>true</outputtofile>
+    <build.java.runTests.redirectTestOutputToFile>${outputtofile}</build.java.runTests.redirectTestOutputToFile>
+
+    <!--
+        `build.java.runTests.trimStackTrace` (alias: `trimstack`)
+        
+        Whether to trim the stack trace in the reports to just the lines within
+        the test, or show the full trace.
+        
+        Default: false
+    -->
+    <trimstack>true</trimstack>
+    <build.java.runTests.trimStackTrace>${trimstack}</build.java.runTests.trimStackTrace>
+
+    <!--
+        `build.java.jarMain.skip` (alias: `skipMainJar`)
+        
+        Whether to skip the building of the main artifact.
+        
+        Note that this likely has no effect; maven-jar-plugin's jar goal does
+        not seem to have a <skip> parameter.
+        
+        Default: ${build.java.skip} (on when the Java build is on)
+    -->
+    <skipMainJar>${build.java.skip}</skipMainJar>
+    <build.java.jarMain.skip>${skipMainJar}</build.java.jarMain.skip>
+
+    <!--
+        `build.java.jarTests.skip` (alias: `skipTestJar`)
+        
+        Whether to skip the building of the tests artifact.
+        
+        Default: true (the tests artifact is not built)
+    -->
+    <skipTestJar>true</skipTestJar>
+    <build.java.jarTests.skip>${skipTestJar}</build.java.jarTests.skip>
+
+    <!--
+        `build.java.jarMainSources.skip` (alias: `skipMainSources`)
+        
+        Whether to skip the building of the sources artifact.
+        
+        Default: true (the sources artifact is not built)
+    -->
+    <skipMainSources>true</skipMainSources>
+    <build.java.jarMainSources.skip>${skipSources}</build.java.jarMainSources.skip>
+
+    <!--
+        `build.java.jarTestSources.skip` (alias: `skipTestSources`)
+        
+        Whether to skip the building of the test sources artifact.
+        
+        Default: ${build.java.jarTests.skip} (the test sources artifact is built when the tests artifact is built)
+    -->
+    <skipTestSources>${build.java.jarTests.skip}</skipTestSources>
+    <build.java.jarTestSources.skip>${skipTestSources}</build.java.jarTestSources.skip>
+
+    <!--
+        `build.java.jarJavadoc.header` (alias: `javadocHeader`)
+        
+        The Javadoc header string (used in jarJavadoc and jarTestJavadoc).
+        
+        Default: Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}
+    -->
+    <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${local.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
+    <build.java.jarJavadoc.header>${javadocHeader}</build.java.jarJavadoc.header>
+
+    <!--
+        `build.java.javadoc.skip` (alias: `skipJavadoc`)
+        
+        Whether to skip the building of the Javadoc artifacts.
+        
+        Default: true (the Javadoc artifacts are not built)
+    -->
+    <skipJavadoc>true</skipJavadoc>
+    <build.java.javadoc.skip>${skipJavadoc}</build.java.javadoc.skip>
+
+    <!--
+        `build.java.jarMainJavadoc.skip` (alias: `skipMainJavadoc`)
+        
+        Whether to skip the building of the main Javadoc artifact.
+        
+        Default: ${build.java.javadoc.skip}
+    -->
+    <skipMainJavadoc>${build.java.javadoc.skip}</skipMainJavadoc>
+    <build.java.jarMainJavadoc.skip>${skipMainJavadoc}</build.java.jarMainJavadoc.skip>
+
+    <!--
+        `build.java.jarTestJavadoc.skip` (alias: `skipTestJavadoc`)
+        
+        Whether to skip the building of the test Javadoc artifact.
+        
+        Default: ${build.java.javadoc.skip}
+    -->
+    <skipTestJavadoc>${build.java.javadoc.skip}</skipTestJavadoc>
+    <build.java.jarTestJavadoc.skip>${skipTestJavadoc}</build.java.jarTestJavadoc.skip>
+
+    <!--
+        `build.java.signArtifacts.skip` (alias: `skipGpg`)
+        
+        Whether to skip the signArtifacts step, which signs artifacts with
+        GnuPG.
+        
+        Default: true (the artifacts are not signed)
+    -->
+    <skipGpg>true</skipGpg>
+    <build.java.signArtifacts.skip>${skipGpg}</build.java.signArtifacts.skip>
+
+    <!--
+        `build.java.deployMavenCentral.skip` (alias: `skipMavenCentral`)
+        
+        Whether to skip the deployMavenCentral step, which pushes artifacts to
+        Maven Central.
+        
+        Default: true (the artifacts are not pushed)
+    -->
+    <skipMavenCentral>true</skipMavenCentral>
+    <build.java.deployMavenCentral.skip>${skipMavenCentral}</build.java.deployMavenCentral.skip>
+
+    <!--
+        `build.java.deployMail.skip` (alias: `skipDeployMail`)
+        
+        Whether to skip the deployMail step, which sends e-mail out to indicate
+        the end of the deploy phase.
+        
+        Default: true (the e-mail is not sent)
+    -->
+    <skipDeployMail>true</skipDeployMail>
+    <build.java.deployMail.skip>${skipDeployMail}</build.java.deployMail.skip>
+
+    <!--
+        `build.java.deployMail.failOnError` (alias: `deployMail.fatal`)
+        
+        Whether to fail if the deployMail step fails.
+        
+        Default: true (the build fails if the deployMail step fails)
+    -->
+    <deployMail.fatal>true</deployMail.fatal>
+    <build.java.deployMail.failOnError>${deployMail.fatal}</build.java.deployMail.failOnError>
+
+    <!--
+        `build.java.deployMail.from` (alias: `deployMail.from`)
+        
+        The deploy mail's sender (From).
+        
+        Default: buildmaster@lockss.org
+    -->
+    <deployMail.from>buildmaster@lockss.org</deployMail.from>
+    <build.java.deployMail.from>${deployMail.from}</build.java.deployMail.from>
+
+    <!--
+        `build.java.deployMail.to` (alias: `deployMail.to`)
+        
+        The deploy mail's recipient (To).
+        
+        Default: dev-notify@lockss.org
+    -->
+    <deployMail.to>dev-notify@lockss.org</deployMail.to>
+    <build.java.deployMail.to>${deployMail.to}</build.java.deployMail.to>
+
+    <!-- END properties section: Java build -->
+
+    <!-- BEGIN properties section: ANTLR portion of the Java build -->
+
+    <!--
+        `build.java.antlr.skip` (alias: `skipAntlr`)
+        
+        Whether to skip the ANTLR portion of the Java build.
+        
+        Default: true (the ANTLR portion of the Java build is off)
+    -->
+    <skipAntlr>true</skipAntlr>
+    <build.java.antlr.skip>${skipAntlr}</build.java.antlr.skip>
+
+    <!--
+        `build.java.antlr.generateAntlr.skip` (alias: `skipGenAntlr`)
+        
+        Whether to skip the generateAntlr step which generates code from ANTLR
+        grammars in src/main/antlr4.
+        
+        Note: This doesn't actually work yet because the ANTLR Maven plugin has
+        no idiomatic skip parameter: https://github.com/antlr/antlr4/issues/2448
+        
+        Default: ${build.java.antlr.skip} (on when the ANTLR portion of the Java build is on)
+    -->
+    <skipGenAntlr>${build.java.antlr.skip}</skipGenAntlr>
+    <build.java.antlr.generateAntlr.skip>${skipGenAntlr}</build.java.antlr.generateAntlr.skip>
+
+    <!-- END properties section: ANTLR portion of the Java build -->
+
+    <!-- BEGIN properties section: database portion of the Java build -->
+
+    <!--
+        `build.java.db.skip` (alias: `skipDb`)
+        
+        Whether to skip the database portion of the Java build.
+        
+        Default: true (the database portion of the Java build is off)
+    -->
+    <skipDb>true</skipDb>
+    <build.java.db.skip>${skipDb}</build.java.db.skip>
+
+    <!--
+        `build.java.db.schema` (alias: `db.schema`)
+        
+        The project's database schema name.
+        
+        Default: UNDEFINED!!!
+    -->
+    <db.schema>UNDEFINED!!!</db.schema>
+    <build.java.db.schema>${db.schema}</build.java.db.schema>
     
-    <!-- Git related -->
-    <gitSshUser>git</gitSshUser>
+    <!--
+        `build.java.db.url` (alias: `db.url`)
+        
+        The JDBC URL to be used by Flyway and JOOQ during the build.
+        
+        Default: UNDEFINED!!!
+    -->
+    <db.url>jdbc:h2:${project.build.directory}/db-h2</db.url>
+    <build.java.db.url>${db.url}</build.java.db.url>
+    
+    <!--
+        `build.java.db.migrateDatabase.skip` (alias: `skipFlyway`)
+        
+        Whether to skip the migration of the database schema with Flyway.
+        
+        Default: ${build.java.db.skip} (on when the database portion of the Java build is on)
+    -->
+    <skipFlyway>${build.java.db.skip}</skipFlyway>
+    <build.java.db.migrateDatabase.skip>${skipFlyway}</build.java.db.migrateDatabase.skip>
+
+    <!--
+        `build.java.db.migrateDatabase.location` (alias: `migrateDatabase.location`)
+        
+        The general Flyway migration path.
+        
+        Default: filesystem:${dir.resources}/db/migration
+    -->
+    <migrateDatabase.location>filesystem:${dir.resources}/db/migration</migrateDatabase.location>
+    <build.java.db.migrateDatabase.location>${migrateDatabase.location}</build.java.db.migrateDatabase.location>
+
+    <!--
+        `build.java.db.migrateDatabase.locations` (alias: `migrateDatabase.locations`)
+        
+        The comma-separated list of Flyway migration paths, including the
+        general migration path `build.java.db.migrateDatabase` and DBMS-specific
+        migration paths.
+        
+        Default: filesystem:${dir.resources}/db/migration
+    -->
+    <migrateDatabase.locations>${build.java.db.migrateDatabase.location},${build.java.db.migrateDatabase.location}/h2</migrateDatabase.locations>
+    <build.java.db.migrateDatabase.locations>${migrateDatabase.locations}</build.java.db.migrateDatabase.locations>
+
+    <!--
+        `build.java.db.generateDatabase.skip` (alias: `skipJooq`)
+        
+        Whether to skip the generation of database object code with JOOQ.
+        
+        Default: ${build.java.db.skip} (on when the database portion of the Java build is on)
+    -->
+    <skipJooq>${build.java.db.skip}</skipJooq>
+    <build.java.db.generateDatabase.skip>${skipJooq}</build.java.db.generateDatabase.skip>
+
+    <!--
+        `build.java.db.generateDatabase.directory` (alias: `generateDatabase.directory`)
+        
+        The base directory under which JOOQ generates database code. See also
+        `build.java.db.generateDatabase.package`.
+        
+        Default: ${dir.generated.java}
+    -->
+    <generateDatabase.directory>${dir.generated.java}</generateDatabase.directory>
+    <build.java.db.generateDatabase.directory>${generateDatabase.directory}</build.java.db.generateDatabase.directory>
+
+    <!--
+        `build.java.db.generateDatabase.excludes` (alias: `generateDatabase.excludes`)
+        
+        JOOQ excludes string (https://flywaydb.org/documentation/maven/migrate).
+        
+        Default: flyway_schema_history
+    -->
+    <generateDatabase.excludes>flyway_schema_history</generateDatabase.excludes>
+    <build.java.db.generateDatabase.excludes>${generateDatabase.excludes}</build.java.db.generateDatabase.excludes>
+
+    <!--
+        `build.java.db.generateDatabase.includes` (alias: `generateDatabase.includes`)
+        
+        JOOQ includes string (https://flywaydb.org/documentation/maven/migrate).
+        
+        Default: .*
+    -->
+    <generateDatabase.includes>.*</generateDatabase.includes>
+    <build.java.db.generateDatabase.includes>${generateDatabase.includes}</build.java.db.generateDatabase.includes>
+
+    <!--
+        `build.java.db.generateDatabase.logLevel` (alias: `generateDatabase.logLevel`)
+        
+        JOOQ log level (https://flywaydb.org/documentation/maven/migrate).
+        
+        Default: WARN
+    -->
+    <generateDatabase.logLevel>WARN</generateDatabase.logLevel>
+    <build.java.db.generateDatabase.logLevel>${generateDatabase.logLevel}</build.java.db.generateDatabase.logLevel>
+
+    <!--
+        `build.java.db.generateDatabase.package` (alias: `generateDatabase.package`)
+        
+        The Java package used by JOOQ to generate database code. See also
+        `build.java.db.generateDatabase.directory`.
+        
+        Default: ${build.java.package}.db
+    -->
+    <generateDatabase.package>${build.java.package}.db</generateDatabase.package>
+    <build.java.db.generateDatabase.package>${generateDatabase.package}</build.java.db.generateDatabase.package>
+
+    <!-- END properties section: database portion of the Java build -->
+
+    <!-- BEGIN properties section: Spring portion of the Java build -->
+
+    <!--
+        `build.java.spring.skip` (alias: `skipSpring`)
+        
+        Whether to skip the Spring portion of the Java build.
+        
+        Default: true (off by default)
+    -->
+    <skipSpring>true</skipSpring>
+    <build.java.spring.skip>${skipSpring}</build.java.spring.skip>
+
+    <!--
+        `build.java.spring.withDepsClassifier` (alias: `fatJarClassifier`)
+        
+        The classifier of the main artifact with dependencies.
+        
+        Default: with-deps
+    -->
+    <fatJarClassifier>with-deps</fatJarClassifier>
+    <build.java.spring.withDepsClassifier>${fatJarClassifier}</build.java.spring.withDepsClassifier>
+
+    <!--
+        `build.java.spring.generateSwagger.skip` (alias: `skipSwagger`)
+        
+        Whether to skip the generateSwagger step, which generates Spring Boot
+        code from a Swagger specification.
+        
+        Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
+    -->
+    <skipSwagger>${build.java.spring.skip}</skipSwagger>
+    <build.java.spring.generateSwagger.skip>${skipSwagger}</build.java.spring.generateSwagger.skip>
+
+    <!-- 
+        `build.java.spring.generateSwagger.api` (alias: `generateSwagger.api`)
+        
+        Java package for the Spring API code.
+        
+        Default: ${build.java.spring.generateSwagger.base}.api
+    -->
+    <generateSwagger.api>${build.java.spring.generateSwagger.base}.api</generateSwagger.api>
+    <build.java.spring.generateSwagger.api>${generateSwagger.api}</build.java.spring.generateSwagger.api>
+
+    <!-- 
+        `build.java.spring.generateSwagger.base` (alias: `generateSwagger.base`)
+        
+        Base Java package for the Spring code.
+        
+        Default: ${build.java.package}
+    -->
+    <generateSwagger.base>${build.java.package}</generateSwagger.base>
+    <build.java.spring.generateSwagger.base>${generateSwagger.base}</build.java.spring.generateSwagger.base>
+
+    <!-- 
+        `build.java.spring.generateSwagger.config` (alias: `generateSwagger.config`)
+        
+        Java package for the Spring config code.
+        
+        Default: ${build.java.spring.generateSwagger.base}.config
+    -->
+    <generateSwagger.config>${build.java.spring.generateSwagger.base}.config</generateSwagger.config>
+    <build.java.spring.generateSwagger.config>${generateSwagger.config}</build.java.spring.generateSwagger.config>
+
+    <!-- 
+        `build.java.spring.generateSwagger.groupId`
+        
+        The groupId for swagger-codegen-maven-plugin. Currently most of our API
+        specifications are Swagger 2, so the default is io.swagger; set to
+        io.swagger.codegen.v3 for an OpenAPI 3 specification.
+        
+        Default: io.swagger (set to io.swagger.codegen.v3 for OpenAPI 3)
+    -->
+    <build.java.spring.generateSwagger.groupId>io.swagger</build.java.spring.generateSwagger.groupId>
+
+    <!-- 
+        `build.java.spring.generateSwagger.invoker` (alias: `generateSwagger.invoker`)
+        
+        Java package for the Spring invoker code.
+        
+        Default: ${build.java.spring.generateSwagger.base}
+    -->
+    <generateSwagger.invoker>${build.java.spring.generateSwagger.base}</generateSwagger.invoker>
+    <build.java.spring.generateSwagger.invoker>${generateSwagger.invoker}</build.java.spring.generateSwagger.invoker>
+
+    <!-- 
+        `build.java.spring.generateSwagger.model` (alias: `generateSwagger.model`)
+        
+        Java package for the Spring model code.
+        
+        Default: ${build.java.spring.generateSwagger.base}.model
+    -->
+    <generateSwagger.model>${build.java.spring.generateSwagger.base}.model</generateSwagger.model>
+    <build.java.spring.generateSwagger.model>${generateSwagger.model}</build.java.spring.generateSwagger.model>
+
+    <!-- 
+        `build.java.spring.generateSwagger.spec` (alias: `generateSwagger.spec`)
+        
+        Path to the Swagger specification file.
+        
+        Default: ${dir.resources}/swagger/swagger.yaml
+    -->
+    <generateSwagger.spec>${dir.resources}/swagger/swagger.yaml</generateSwagger.spec>
+    <build.java.spring.generateSwagger.spec>${generateSwagger.spec}</build.java.spring.generateSwagger.spec>
+
+    <!--
+        `build.java.spring.postprocessSwagger.skip` (alias: `skipSwaggerPostprocess`)
+        
+        Whether to skip the postprocessSwagger step, which post-processes the
+        Spring Boot code generated in the generateSwagger step.
+        
+        Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
+    -->
+    <skipSwaggerPostprocess>${build.java.spring.skip}</skipSwaggerPostprocess>
+    <build.java.spring.postprocessSwagger.skip>${skipSwaggerPostprocess}</build.java.spring.postprocessSwagger.skip>
+
+    <!--
+        `build.java.spring.repackageJar.skip` (alias: `skipJarWithDeps`)
+        
+        Whether to skip the repackageJar step, which creates a main artifact
+        with dependencies with Spring Boot.
+        
+        Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
+    -->
+    <skipJarWithDeps>${build.java.spring.skip}</skipJarWithDeps>
+    <build.java.spring.repackageJar.skip>${skipJarWithDeps}</build.java.spring.repackageJar.skip>
+
+    <!-- END properties section: Spring portion of the Java build -->
+
+    <!-- BEGIN properties section: Docker build -->
+
+    <!--
+        `build.docker.skip` (alias: `skipDocker`)
+        
+        Whether to skip the Docker build's steps.
+        
+        Default: true (the Docker build is off)
+    -->
+    <skipDocker>true</skipDocker>
+    <build.docker.skip>${skipDocker}</build.docker.skip>
+
+    <!--
+        `build.docker.user` (alias: `docker.user`)
+        
+        The Docker Hub user or organization.
+        
+        Default: lockss
+    -->
+    <docker.user>lockss</docker.user>
+    <build.docker.user>${docker.user}</build.docker.user>
+
+    <!--
+        `build.docker.project` (alias: `docker.project`)
+        
+        The Docker Hub project.
+        
+        Default: ${project.artifactId}
+    -->
+    <docker.project>${project.artifactId}</docker.project>
+    <build.docker.project>${docker.project}</build.docker.project>
+
+    <!--
+        `build.docker.repository` (alias: `docker.repo`)
+        
+        The Docker Hub repository.
+        
+        Default: ${build.docker.user}/${build.docker.project}
+    -->
+    <docker.repo>${build.docker.user}/${build.docker.project}</docker.repo>
+    <build.docker.repository>${docker.repo}</build.docker.repository>
+
+    <!--
+        `build.docker.tag` (alias: `docker.tag`)
+        
+        The Docker image tag (for steps not explicitly labeled as 'latest').
+        
+        Default: ${project.version}
+    -->
+    <docker.tag>${project.version}</docker.tag>
+    <build.docker.tag>${docker.tag}</build.docker.tag>
+
+    <!--
+        `build.docker.dockerBuild.skip` (alias: `skipDockerBuild`)
+        
+        Whether to skip the dockerBuild step, which builds a Docker image
+        and tags it with the current version.
+        
+        Default: true (the Docker build step is off)
+    -->
+    <skipDockerBuild>true</skipDockerBuild>
+    <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
+
+    <!--
+        `build.docker.dockerTagLatest.skip` (alias: `skipDockerTagLatest`)
+        
+        Whether to skip the dockerTagLatest step, which tags the Docker image as
+        'latest'.
+        
+        Default: true (the Docker image is not tagged as latest)
+    -->
+    <skipDockerTagLatest>true</skipDockerTagLatest>
+    <build.docker.dockerTagLatest.skip>${skipDockerTagLatest}</build.docker.dockerTagLatest.skip>
+
+    <!--
+        `build.docker.dockerPush.skip` (alias: `skipDockerPush`)
+        
+        Whether to skip the dockerPush step, which pushes the Docker image to
+        Docker Hub with the current version.
+        
+        Default: true (the Docker image is not pushed)
+    -->
+    <skipDockerPush>true</skipDockerPush>
+    <build.docker.dockerPush.skip>${skipDockerPush}</build.docker.dockerPush.skip>
+
+    <!--
+        `build.docker.dockerPushLatest.skip` (alias: `skipDockerPushLatest`)
+        
+        Whether to skip the dockerPushLatest step, which pushes the Docker image
+        to Docker Hub as 'latest'.
+        
+        Default: true (the Docker image is not pushed as latest)
+    -->
+    <skipDockerPushLatest>true</skipDockerPushLatest>
+    <build.docker.dockerPushLatest.skip>${skipDockerPushLatest}</build.docker.dockerPushLatest.skip>
+
+    <!-- END properties section: Docker build -->
+
+    <!-- BEGIN properties section: plugin versions -->
+
+    <version.plugin.build-helper-maven-plugin>3.0.0</version.plugin.build-helper-maven-plugin>
+    <version.plugin.buildnumber-maven-plugin>1.3</version.plugin.buildnumber-maven-plugin>
+    <version.plugin.dockerfile-maven-plugin>1.4.10</version.plugin.dockerfile-maven-plugin>
+    <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin>
+    <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin>
+    <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin>
+    <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
+    <version.plugin.maven-compiler-plugin>3.8.0</version.plugin.maven-compiler-plugin>
+    <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
+    <version.plugin.maven-enforcer-plugin>3.0.0-M2</version.plugin.maven-enforcer-plugin>
+    <version.plugin.maven-javadoc-plugin>3.0.1</version.plugin.maven-javadoc-plugin>
+    <version.plugin.maven-jar-plugin>3.1.1</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin>
+    <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
+    <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
+    <version.plugin.maven-source-plugin>3.0.1</version.plugin.maven-source-plugin>
+    <version.plugin.maven-surefire-plugin>2.19.1</version.plugin.maven-surefire-plugin><!-- upgradeable to 2.22.1 -->
+    <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
+    <version.plugin.swagger-codegen-maven-plugin>2.4.0</version.plugin.swagger-codegen-maven-plugin><!-- upgradeable to 3.0.3 -->
+
+    <!-- END properties section: plugin versions -->
+
+    <!-- BEGIN properties section: Docker image versions -->
+
+    <version.docker.lockss-spring>2.5</version.docker.lockss-spring>
+
+    <!-- END properties section: Docker image versions -->
+
+    <!-- BEGIN properties section: grouped versions -->
+
+    <version.group.activemq>5.15.8</version.group.activemq>
+    <version.group.antlr>4.7.2</version.group.antlr>
+    <version.group.bouncycastle>1.60</version.group.bouncycastle>
+    <version.group.derby>10.14.2.0</version.group.derby>
+    <version.group.flyway>5.2.4</version.group.flyway>
+    <version.group.hadoop>2.9.2</version.group.hadoop><!-- upgradeable to 3.0.3 (lockss-hdfs) or 3.1.2 -->
+    <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
+    <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
+    <version.group.icu4j>63.1</version.group.icu4j>
+    <version.group.jackson>2.9.8</version.group.jackson>
+    <version.group.jooq>3.11.7</version.group.jooq>
+    <version.group.junit4>4.12</version.group.junit4>
+    <version.group.junit5-jupiter>5.1.0</version.group.junit5-jupiter><!-- upgradeable to 5.3.2 -->
+    <version.group.junit5-platform>1.1.0</version.group.junit5-platform><!-- upgradeable to 1.3.2 -->
+    <version.group.log4j>2.11.1</version.group.log4j>
+    <version.group.maven>3.6.0</version.group.maven>
+    <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
+    <version.group.pdfbox>1.8.16</version.group.pdfbox>
+    <version.group.solr>6.6.5</version.group.solr><!-- upgradeable 7.6.0 -->
+    <version.group.slf4j>1.7.25</version.group.slf4j>
+    <version.group.spring>4.3.18.RELEASE</version.group.spring><!-- upgradeable -->
+    <version.group.spring-boot>1.5.17.RELEASE</version.group.spring-boot><!-- upgradeable -->
+    <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
+    <version.group.truezip>7.7.10</version.group.truezip>
+
+    <!-- END properties section: grouped versions -->
+
+    <!-- BEGIN properties section: dependency versions -->
+
+    <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding><!-- FIXME -->
+
+    <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
+    <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
+    <version.dependency.castor>0.9.4.2</version.dependency.castor>
+    <version.dependency.commons-beanutils>1.9.3</version.dependency.commons-beanutils>
+    <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
+    <version.dependency.commons-codec>1.12</version.dependency.commons-codec>
+    <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
+    <version.dependency.commons-collections4>4.3</version.dependency.commons-collections4>
+    <version.dependency.commons-compress>1.18</version.dependency.commons-compress>
+    <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration>
+    <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- upgradeable to 2.1 -->
+    <version.dependency.commons-fileupload>1.4</version.dependency.commons-fileupload>
+    <version.dependency.commons-io>2.6</version.dependency.commons-io>
+    <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
+    <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
+    <version.dependency.commons-lang3>3.8.1</version.dependency.commons-lang3>
+    <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
+    <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
+    <version.dependency.commons-validator>1.6</version.dependency.commons-validator>
+    <version.dependency.h2>1.4.197</version.dependency.h2>
+    <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
+    <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
+    <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
+    <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
+
+    <!-- END properties section: dependency versions -->
+
+    <!-- BEGIN properties section: LOCKSS versions -->
+
+    <!--
+        `build.releasename`
+        
+        A special property with the version string matching that of the classic
+        LOCKSS daemon (lockss-daemon).
+    -->
+    <build.releasename>2.0-alpha</build.releasename>
+
+    <version.lockss.lockss-configuration-service>2.0.1.0</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.0.2.0</version.lockss.lockss-core>
+    <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
+    <version.lockss.lockss-junit4-bundle>1.2.0</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.2.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-metadata-extraction-service>2.0.1.0</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.0.3.0</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.0.0.0</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
+    <version.lockss.lockss-repository-client>2.0.6.0</version.lockss.lockss-repository-client>
+    <version.lockss.lockss-repository-core>2.0.12.0</version.lockss.lockss-repository-core>
+    <version.lockss.lockss-repository-service>2.0.8.0</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.0.8.0</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-tdb-tools>1.2.0</version.lockss.lockss-tdb-tools>
+    <version.lockss.lockss-tdbxml-maven-plugin>1.2.0</version.lockss.lockss-tdbxml-maven-plugin>
+    <version.lockss.lockss-util>1.7.0</version.lockss.lockss-util>
+
+    <!-- END properties section: LOCKSS versions -->
+
+    <!-- BEGIN properties section: Java-related Maven internals -->
+
+    <maven.compiler.source>${build.java.version}</maven.compiler.source>
+    <maven.compiler.target>${build.java.version}</maven.compiler.target>
+    <maven.compiler.useIncrementalCompilation>${build.java.incremental}</maven.compiler.useIncrementalCompilation>
+    <mainClass>${build.java.mainClass}</mainClass>
+    
+    <!-- END properties section: Java-related Maven internals -->
+
+    <!-- BEGIN properties section: encoding-related Maven internals -->
+
+    <project.build.sourceEncoding>${build.encoding}</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>${build.encoding}</project.reporting.outputEncoding>
+
+    <!-- END properties section: encoding-related Maven internals -->
+
+    <!-- BEGIN properties section: date/time-related Maven internals -->
+
+    <!--<maven.build.timestamp.format>...</maven.build.timestamp.format>-->
+<!--     <maven.build.timestamp.format>dd-MMM-yy' 'HH:mm:ss' 'zzz</maven.build.timestamp.format> -->
+
+    <!-- END properties section: date/time-related Maven internals -->
+
+    <!-- BEGIN properties section: Git-related -->
+
     <gitHost>github.com</gitHost>
     <gitGroupId>lockss</gitGroupId>
     <gitProjectId>${project.artifactId}</gitProjectId>
-    <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitProjectId}.git</scmConnection>
-    <scmDeveloperConnection>scm:git:${gitSshUser}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
-    <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
 
-    <!--
-        Build related
-    -->
-    
-    <!--
-         skipTestJar
-         
-         Set to false to generate a test JAR
-         (target/${project.artifactId}.${project.version}-tests.jar). Default:
-         true (meaning a test JAR is not generated by default).
-    -->
-    <skipTestJar>true</skipTestJar>
-
-    <!--
-        skipJavadoc
-        
-        Set to false to generate a Javadoc JAR. Default: true (meaning a
-        Javadoc JAR is not generated by default).
-    -->
-    <skipJavadoc>true</skipJavadoc>
-
-    <!--
-        skipSources
-        
-        Set to false to generate a Sources JAR. Default: true (meaning a
-        Sources JAR is not generated by default).
-    -->
-    <skipSources>true</skipSources>
-    
-    <!--
-        skipGpg
-        
-        Set to false to sign build artifacts with GnuPG. Default: true (meaning
-        artifacts are not signed with GnuPG by default).
-    -->
-    <skipGpg>true</skipGpg>
-    
-    <!--
-        skipDocker
-        
-        Set to false if the project requires Docker processing in general.
-        Specific Docker-related activities are controlled with skipDockerBuild,
-        skipDockerTag, skipDockerPush, and other properties. Default: true
-        (meaning Docker processing is disabled by default).
-    -->
-    <skipDocker>true</skipDocker>
-    
-    <!--
-        skipDockerBuild
-        
-        Set to false to build a Docker image (if skipDocker is also set to
-        false). Default: true (meaning the build of a Docker image is disabled
-        by default even if skipDocker is false). 
-    -->
-    <skipDockerBuild>true</skipDockerBuild>
-    
-    <!--
-        skipDockerTag
-        
-        Set to false to tag the Docker image with ${dockerTag} (if skipDocker
-        is also set to false). Default: value of ${skipDockerBuild} (meaning
-        that if a Docker build is requested, then an image tag is requested).
-    -->    
-    <skipDockerTag>${skipDockerBuild}</skipDockerTag>
-
-    <!--
-        skipDockerPush
-        
-        Set to false to push the Docker image to Docker Hub (if skipDocker is
-        also set to false). Default: true (meaning that the Docker image is not
-        pushed to Docker Hub by default, even if skipDocker is false).
-    -->
-    <skipDockerPush>true</skipDockerPush>
-
-    <!--
-        skipDeploy
-        
-        Set to false to enable the deployment of artifacts during the deploy
-        phase. Useful to prevent accidental deployment without using an approved
-        production profile, or if repeating a non-snapshot deploy phase for side
-        effects (because one can only deploy a non-snapshot ${project.version}
-        once). Default: true (meaning that deployment of artifacts is disabled
-        by default).  
-    -->
-    <skipDeploy>true</skipDeploy>
-
-    <!--
-        skipDeployEmail
-        
-        If set to false, an e-mail is sent from ${deployEmailFrom} to
-        ${deployEmailTo} at the end of the deploy phase. By default, this has
-        the same value as ${skipDeploy}. See also deployEmailFailOnError.
-    -->
-    <skipDeployEmail>${skipDeploy}</skipDeployEmail>
-
-    <!--
-        Spring / Spring Boot related
-    -->
-    
-    <!--
-        skipSpringBootRepackage
-        
-        Set to false if the project is a Spring Boot project. Currently the only
-        aspect of this is that the Spring Boot Maven Plugin's repackage goal is
-        executed. Default: true (meaning that, by default, a project is not a
-        Spring Boot project and the repackage goal of the Spring Boot plugin is
-        not executed).
-    -->
-    <skipSpringBootRepackage>true</skipSpringBootRepackage><!-- set to false in child that requires Spring Boot processing -->
-
-    <!-- 
-        springServicePort
-        
-        If this is a Spring Boot app with a service port, set the port in this
-        variable. (Needed to parameterize the Docker image, ARG SVC_PORT.)
-    -->
-    <springServicePort>UNDEFINED</springServicePort> <!-- set in child -->
-
-    <!--
-        skipEtags
-
-        Set to false to generate emacs TAGS file in generate-resources phase
-    -->
-    <skipEtags>true</skipEtags>
-
-    <!-- Maven related: Maven internals -->
-    <plugin.version.maven-antrun-plugin>1.8</plugin.version.maven-antrun-plugin>
-    <plugin.version.maven-compiler-plugin>3.7.0</plugin.version.maven-compiler-plugin>
-    <plugin.version.maven-deploy-plugin>2.8.2</plugin.version.maven-deploy-plugin>
-    <plugin.version.maven-gpg-plugin>1.6</plugin.version.maven-gpg-plugin>
-    <plugin.version.maven-jar-plugin>3.1.0</plugin.version.maven-jar-plugin>
-    <plugin.version.maven-javadoc-plugin>3.0.0</plugin.version.maven-javadoc-plugin>
-    <plugin.version.maven-source-plugin>3.0.1</plugin.version.maven-source-plugin>
-    <plugin.version.maven-surefire-plugin>2.19.1</plugin.version.maven-surefire-plugin>
-
-    <!-- Maven related: key plugins -->
-    <plugin.version.dockerfile-maven-plugin>1.4.0</plugin.version.dockerfile-maven-plugin>
-    <plugin.version.exec-maven-plugin>1.6.0</plugin.version.exec-maven-plugin>
-    <plugin.version.maven-postman-plugin>0.1.6</plugin.version.maven-postman-plugin>
-    <plugin.version.nexus-staging-maven-plugin>1.6.8</plugin.version.nexus-staging-maven-plugin>
-    <plugin.version.git-commit-id-plugin>2.2.5</plugin.version.git-commit-id-plugin>
-    <plugin.version.swagger-codegen-maven-plugin>2.3.1</plugin.version.swagger-codegen-maven-plugin>
-
-    <!--  Docker related -->
-    <dockerPrefix>lockss</dockerPrefix>
-    <dockerRepository>${dockerPrefix}/${project.artifactId}</dockerRepository>
-    <dockerTag>${project.version}</dockerTag>
-    <dockerServicePort>${springServicePort}</dockerServicePort>
-
-    <!-- Ant related -->
-    <ant.datetime.iso8601Date>yyyy-MM-dd</ant.datetime.iso8601Date>
-    <ant.datetime.iso8601Time>HH:mm:ss</ant.datetime.iso8601Time>
-    <ant.datetime.iso8601Timestamp>${ant.datetime.iso8601Date}'T'${ant.datetime.iso8601Time}XXX</ant.datetime.iso8601Timestamp>
-
-    <!-- Our own -->
-    <skipTests>false</skipTests>
-    <skipIntegrationTests>true</skipIntegrationTests>
-    <loglevel>info</loglevel>
-    <rootloglevel></rootloglevel>
-    <tmpdir>${java.io.tmpdir}</tmpdir>
-    <keeptempfiles>false</keeptempfiles>
-    <outputtofile>true</outputtofile>
-    <trimstack>false</trimstack>
-    <file.buildinfo>${basedir}/target/build-info</file.buildinfo>
-    <file.classpath.compile>${basedir}/target/compile-classpath</file.classpath.compile>
-    <file.classpath.runtime>${basedir}/target/run-classpath</file.classpath.runtime>
-    <file.classpath.test>${basedir}/target/test-classpath</file.classpath.test>
-    <fatJarClassifier>with-deps</fatJarClassifier>
-    
-    <!-- Mail related -->
-    <deployEmailFrom>buildmaster@lockss.org</deployEmailFrom>
-    <deployEmailTo>dev-notify@lockss.org</deployEmailTo>
-    <deployEmailFailOnError>true</deployEmailFailOnError>
-
-    <!-- Bundle versions -->
-    <build.releasename>1.75.0</build.releasename>
-    <lockss.core.version>1.2.0-SNAPSHOT</lockss.core.version>
-    <lockss.core.bundleVersion>${lockss.core.version}</lockss.core.bundleVersion>
-    <lockss.spring-boot.version>1.5.17.RELEASE</lockss.spring-boot.version>
-    <lockss.spring.version>4.3.18.RELEASE</lockss.spring.version>
-    <lockss.springfox.version>2.6.1</lockss.springfox.version>
-    <lockss.spring.bundleVersion>1.8.0-SNAPSHOT</lockss.spring.bundleVersion>
-    <lockss.hamcrest.version>1.3</lockss.hamcrest.version>
-    <lockss.junit4.version>4.12</lockss.junit4.version>
-    <lockss.junit4.bundleVersion>1.2.0-SNAPSHOT</lockss.junit4.bundleVersion>
-    <lockss.junit5-jupiter.version>5.1.0</lockss.junit5-jupiter.version>
-    <lockss.junit5-platform.version>1.1.0</lockss.junit5-platform.version>
-    <lockss.junit5.bundleVersion>1.2.0-SNAPSHOT</lockss.junit5.bundleVersion>
-
-    <!-- Versions -->
-    <lockss.configuration-service.version>1.1.0-SNAPSHOT</lockss.configuration-service.version>
-    <lockss.metadataextractor-common.version>1.3.0-SNAPSHOT</lockss.metadataextractor-common.version>
-    <lockss.metadata-extraction-service.version>1.1.0-SNAPSHOT</lockss.metadata-extraction-service.version>
-    <lockss.metadata-service.version>1.0.0-SNAPSHOT</lockss.metadata-service.version>
-    <lockss.plugins.version>20180327</lockss.plugins.version>
-    <lockss.repository-client.version>1.6.0-SNAPSHOT</lockss.repository-client.version>
-    <lockss.repository-core.version>1.12.0-SNAPSHOT</lockss.repository-core.version>
-    <lockss.repository-service.version>1.8.0-SNAPSHOT</lockss.repository-service.version>
-    <lockss.tdb-tools.version>1.2.0-SNAPSHOT</lockss.tdb-tools.version>
-    <lockss.tdbxml-maven-plugin.version>1.2.0-SNAPSHOT</lockss.tdbxml-maven-plugin.version>
-    <lockss.util.version>1.7.0-SNAPSHOT</lockss.util.version>
-
-    <!-- 3rd party library versions -->
-    <!-- If the slfj4 version is changed to 1.8.x or later,
-         lockss.log4j.slf4j.binding should be changed to log4j-slf4j18-impl -->
-    <lockss.slf4j.version>1.7.25</lockss.slf4j.version>
-    <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding>
-    <lockss.activemq.version>5.15.3</lockss.activemq.version>
-
-    <lockss.version.jackson>2.9.7</lockss.version.jackson>
+    <!-- END properties section: Git-related -->
 
   </properties>
 
+  <!-- END properties -->
+  
+  <!-- BEGIN repositories -->
+  
   <repositories>
+  
+    <!-- BEGIN repository lockss-legacy -->
+  
+    <repository>
+      <id>lockss-legacy</id>
+      <name>LOCKSS Legacy JARs</name>
+      <url>https://github.com/lockss/lockss-legacy-jars/raw/master/maven2</url>
+      <releases>
+        <enabled>${repository.enabled.lockss-legacy}</enabled>
+        <updatePolicy>${repository.update.lockss-legacy}</updatePolicy>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
+      </snapshots>
+    </repository>
+
+    <!-- END repository lockss-legacy -->
+  
+    <!-- BEGIN repository ossrh-snapshots -->
   
     <repository>
       <id>ossrh-snapshots</id>
       <name>Sonatype OSSRH Snapshots</name>
       <url>https://oss.sonatype.org/service/local/repositories/snapshots/content</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
       <releases>
         <enabled>false</enabled>
+        <updatePolicy>never</updatePolicy>
       </releases>
+      <snapshots>
+        <enabled>true</enabled>
+        <updatePolicy>${repository.update.ossrh-snapshots}</updatePolicy>
+      </snapshots>
     </repository>
+  
+    <!-- END repository ossrh-snapshots -->
   
   </repositories>
 
+  <!-- END repositories -->
+  
+  <!-- BEGIN pluginRepositories -->
+
+   <pluginRepositories>
+
+    <!-- BEGIN pluginRepository ossrh-snapshots -->
+  
+     <pluginRepository>
+       <id>ossrh-snapshots</id>
+       <name>Sonatype OSSRH Snapshots</name>
+       <url>https://oss.sonatype.org/service/local/repositories/snapshots/content</url>
+       <releases>
+         <enabled>false</enabled>
+         <updatePolicy>never</updatePolicy>
+       </releases>
+       <snapshots>
+         <enabled>true</enabled>
+         <updatePolicy>${pluginRepository.update.ossrh-snapshots}</updatePolicy>
+       </snapshots>
+     </pluginRepository>
+
+    <!-- END pluginRepository ossrh-snapshots -->
+
+   </pluginRepositories>
+
+  <!-- END pluginRepositories -->
+  
   <!-- BEGIN build -->
 
+  <!--
+      OVERVIEW OF THE BUILD
+      
+      This POM file defines multiple build trails:
+      
+      - An info build, responsible for gathering and outputting information
+        about the build environment. On by default (`build.info.skip` set
+        to false).
+      - A Java build, responsible for building, testing and packaging a Java
+        codebase, which is made of several portions (see below). On by default
+        (`build.java.skip` set to false).
+      - A Docker build, responsible for building Docker images. Off by default
+        (`build.docker.skip` set to true).
+
+      The Java build contains multiple portions:
+      
+      - An ANTLR portion, responsible for generating parsers from grammars.
+        Off by default (`build.antlr.skip` set to true).
+      - A database portion, responsible for migrating a database schema with
+        Flyway and generating database object code with JOOQ. Off by default
+        (`build.java.db.skip` set to true).
+      - A Spring portion, responsible for generating Spring Boot code from
+        a Swagger specification and doing some post-processing. Off by default
+        (`build.java.spring.skip` set to true).
+      - A main Java portion, responsible for compiling the main code and unit
+        tests, running the unit tests with JUnit, building the main artifact,
+        and optionally build the tests, Javadoc and sources artifacts.
+
+      PHASE BY PHASE OVERVIEW
+      
+      Validate phase:
+      
+      - Check early that the Docker daemon is running, if it is needed later
+        (always)
+      
+      Initialize phase:
+      
+      - Gather Git properties (unless `build.info.gitProperties.skip` is
+        true)
+      - Generate the build info file (unless `build.info.buildInfo.skip` is
+        true)
+      - Generate the classpath files (unless `build.info.classpathFiles.skip` is
+        true)
+
+      Generate-sources phase:
+
+      - Add src/generated/java to source directories (always)
+      - Generate parser code with ANTLR (if
+        `build.java.antlr.generateAntlr.skip` is false)
+      - Process database migration code with Flyway (if
+        `build.java.db.migrateDatabase.skip` is false)
+      - Generate database object code with JOOQ (if
+        `build.java.db.generateDatabase.skip` is false)
+      - Generate Spring Boot code from Swagger specification with Swagger
+        Codegen (if `build.java.spring.generateSwagger.skip` is false)
+      - Post-process the code generated in the generateSwagger step with custom
+        scripts (if `build.java.spring.generateSwagger.skip` is false)
+
+      Process-sources phase:
+      
+      - Build a tags file with Etags (if build.java.buildEtags.skip is false)
+
+      Compile phase:
+      
+      - Build the main Java source tree (unless
+        `build.java.compileMain.skip` is true)
+
+      Test-compile phase:
+
+      - Build the test source tree (unless
+        `build.java.compileTests.skip` is true)
+
+      Test phase:
+      
+      - Run JUnit tests with Maven Surefire Plugin (unless `skipTests` is true)
+
+      Package phase:
+      
+      - Build main artifact (unless `build.java.jarMain.skip` is true)
+      - Build tests artifact (if `build.java.jarTests.skip` is false)
+      - Create a main artifact with dependencies with Spring Boot (if
+        `build.java.spring.repackageJar.skip` is false)
+      - Build sources artifact (if `build.java.jarMainSources.skip` is false)
+      - Build test sources artifact (if `build.java.jarTestSources.skip`
+        is false)
+      - Build Javadoc artifact (if `build.java.jarMainJavadoc.skip` is false)
+      - Build test Javadoc artifact (if `build.java.jarTestJavadoc.skip`
+        is false)
+      - Create symbolic links to the main artifact, tests artifact, and main
+        artifact with dependencies (if the respective artifacts are built above)
+      - Build and tag Docker image (if `build.docker.dockerBuild.skip` is false)
+      - Tag Docker image as latest (if `build.docker.dockerTagLatest.skip` is
+        false)
+
+      Verify phase:
+
+      - Sign artifacts with GnuPG (unless `build.java.signArtifacts.skip` is
+        true)
+
+      Deploy phase:
+
+      - Push artifacts to Maven repository (if
+        `build.java.deployMavenCentral.skip` is false)
+      - Push Docker image to Docker Hub (if `build.docker.dockerPush.skip` is
+        false)
+      - Push Docker image to Docker Hub as latest (if
+        `build.docker.dockerPushLatest.skip` is false)
+      - Send deploy mail (if `build.java.deployMail.skip` is false)
+
+      Clean phase of the clean lifecycle:
+      
+      - Also clean the src/main/generated directory
+  -->
   <build>
+    <defaultGoal>package</defaultGoal>
   
     <!-- BEGIN plugins -->
 
     <plugins>
-
-      <!-- BEGIN plugin maven-surefire-plugin -->
-    
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${plugin.version.maven-surefire-plugin}</version>
-        <configuration>
-          <skipTests>${skipTests}</skipTests>
-          <includes>
-            <include>**/Test*.java</include>
-            <include>**/Func*.java</include>
-          </includes>
-          <excludes>
-            <!-- SOAP tests waiting for Jetty upgrade -->
-            <exclude>**/ws/*/Func*.java</exclude>
-            <!-- Default excludes -->
-            <exclude>**/*$*</exclude>
-          </excludes>
-          <redirectTestOutputToFile>${outputtofile}</redirectTestOutputToFile>
-          <forkCount>${test.fork.count}</forkCount>
-          <reuseForks>false</reuseForks>
-          <trimStackTrace>${trimstack}</trimStackTrace>
-          <systemPropertyVariables>
-            <java.io.tmpdir>${tmpdir}</java.io.tmpdir>$>
-            <org.lockss.keepTempFiles>${keeptempfiles}</org.lockss.keepTempFiles>
-            <org.lockss.unitTesting>true</org.lockss.unitTesting>
-            <org.lockss.defaultLogLevel>${loglevel}</org.lockss.defaultLogLevel>
-            <org.lockss.defaultRootLogLevel>${rootloglevel}</org.lockss.defaultRootLogLevel>
-          </systemPropertyVariables>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>${lockss.junit5-platform.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${lockss.junit5-jupiter.version}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>${lockss.junit5-jupiter.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
-
-      <!-- END plugin maven-surefire-plugin -->
-
-      <!-- BEGIN plugin maven-compiler-plugin -->
-
-      <!-- For useIncrementalCompilation=false -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${plugin.version.maven-compiler-plugin}</version>
-        <configuration>
-          <useIncrementalCompilation>false</useIncrementalCompilation>
-        </configuration>
-      </plugin>
-
-      <!-- END plugin maven-compiler-plugin -->
 
       <!-- BEGIN plugin git-commit-id-plugin -->
 
       <plugin>
         <groupId>pl.project13.maven</groupId>
         <artifactId>git-commit-id-plugin</artifactId>
-        <version>${plugin.version.git-commit-id-plugin}</version>
+        <version>${version.plugin.git-commit-id-plugin}</version>
         <executions>
 
-          <!-- BEGIN execution generate-git-properties -->
+          <!-- BEGIN step gitProperties -->
 
           <execution>
-            <id>generate-git-properties</id>
-            <phase>validate</phase>
+            <id>gitProperties</id>
+            <phase>initialize</phase>
             <goals>
               <goal>revision</goal>
-            </goals>   
+            </goals>
             <configuration>
+              <skip>${build.info.gitProperties.skip}</skip>
               <generateGitPropertiesFile>true</generateGitPropertiesFile>
               <skipPoms>false</skipPoms>
             </configuration>
 
           </execution>
 
-          <!-- END execution generate-git-properties -->
+          <!-- END step gitProperties -->
 
         </executions>
       </plugin>
       
       <!-- END plugin git-commit-id-plugin -->
 
+      <!-- BEGIN plugin buildnumber-maven-plugin -->
+
+      <plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>buildnumber-maven-plugin</artifactId>
+	<version>${version.plugin.buildnumber-maven-plugin}</version>
+	<inherited>true</inherited>
+	<executions>
+	
+	  <!-- BEGIN step generateTimestamp -->
+	
+	  <execution>
+            <id>generateTimestamp</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>create-timestamp</goal>
+            </goals>
+            <configuration>
+              <timestampFormat>dd-MMM-yy' 'HH:mm:ss' 'zzz</timestampFormat>
+              <timestampPropertyName>local.build.timestamp</timestampPropertyName>
+            </configuration>
+	  </execution>
+
+	  <!-- END step generateTimestamp -->
+
+	  <!-- BEGIN step generateRawTimestamp -->
+
+	  <execution>
+            <id>generateRawTimestamp</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>create-timestamp</goal>
+            </goals>
+            <configuration>
+              <timestampPropertyName>build.rawtimestamp</timestampPropertyName>
+            </configuration>
+	  </execution>
+
+	  <!-- END step generateRawTimestamp -->
+
+	</executions>
+      </plugin>
+
+      <!-- END plugin buildnumber-maven-plugin -->
+
+      <!-- BEGIN plugin build-helper-maven-plugin -->
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>${version.plugin.build-helper-maven-plugin}</version>
+        <executions>
+
+        <!-- BEGIN step addGeneratedSources -->
+
+          <execution>
+            <id>addGeneratedSources</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>${dir.generated.java}</source>
+              </sources>
+            </configuration>
+          </execution>
+
+        <!-- END step addGeneratedSources -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin build-helper-maven-plugin -->
+
+      <!-- BEGIN plugin antlr4-maven-plugin -->
+
+      <plugin>
+        <groupId>org.antlr</groupId>
+        <artifactId>antlr4-maven-plugin</artifactId>
+        <version>${version.group.antlr}</version>
+        <executions>
+
+          <!-- BEGIN step generateAntlr -->
+
+          <execution>
+            <id>generateAntlr</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>antlr4</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.antlr.generateAntlr.skip}</skip>
+              <outputDirectory>${dir.generated.java}</outputDirectory>
+            </configuration>
+          </execution>
+
+          <!-- END step generateAntlr -->
+
+        </executions>
+      </plugin>
+    
+      <!-- END plugin antlr4-maven-plugin -->
+
+      <!-- BEGIN plugin flyway-maven-plugin -->
+
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>${version.group.flyway}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${version.dependency.h2}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+        
+          <!-- BEGIN step migrateDatabase -->
+
+          <execution>
+            <id>migrateDatabase</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>migrate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.db.migrateDatabase.skip}</skip>
+              <url>${build.java.db.url}</url>
+              <schemas>${build.java.db.schema}</schemas>
+              <locations>${build.java.db.migrateDatabase.locations}</locations>
+            </configuration>
+          </execution>
+
+          <!-- END step migrateDatabase -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin flyway-maven-plugin -->
+
+      <!-- BEGIN plugin jooq-codegen-maven -->
+
+      <plugin>
+        <groupId>org.jooq</groupId>
+        <artifactId>jooq-codegen-maven</artifactId>
+        <version>${version.group.jooq}</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${version.dependency.h2}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+        
+          <!-- BEGIN step generateDatabase -->
+
+          <execution>
+            <id>generateDatabase</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.db.generateDatabase.skip}</skip>
+              <logging>${build.java.db.generateDatabase.logLevel}</logging>
+              <jdbc>
+                <driver>org.h2.Driver</driver>
+                <url>${build.java.db.url}</url>
+              </jdbc>
+              <generator>
+                <database>
+                  <name>org.jooq.meta.h2.H2Database</name>
+                  <inputSchema>${build.java.db.schema}</inputSchema>
+                  <includes>${build.java.db.generateDatabase.includes}</includes>
+                  <excludes>${build.java.db.generateDatabase.excludes}</excludes>
+                </database>
+                <target>
+                  <directory>${build.java.db.generateDatabase.directory}</directory>
+                  <packageName>${build.java.db.generateDatabase.package}</packageName>
+                </target>
+              </generator>
+            </configuration>
+          </execution>
+        
+          <!-- END step generateDatabase -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin jooq-codegen-maven -->
+
+      <!-- BEGIN plugin swagger-codegen-maven-plugin -->
+
+      <plugin>
+        <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <version>${version.plugin.swagger-codegen-maven-plugin}</version>
+        <executions>
+        
+          <!-- BEGIN step generateSwagger -->
+
+          <execution>
+            <id>generateSwagger</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwagger.skip}</skip>
+              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+              <language>spring</language>
+              <output>${project.basedir}</output>
+              <configOptions>
+                <sourceFolder>src/generated/java</sourceFolder><!-- goes with $output -->
+                <basePackage>${build.java.spring.generateSwagger.base}</basePackage>
+                <apiPackage>${build.java.spring.generateSwagger.api}</apiPackage>
+                <configPackage>${build.java.spring.generateSwagger.config}</configPackage>
+                <invokerPackage>${build.java.spring.generateSwagger.invoker}</invokerPackage>
+                <modelPackage>${build.java.spring.generateSwagger.model}</modelPackage>
+                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                <java8>true</java8>
+                <delegatePattern>true</delegatePattern>
+                <swaggerDocketConfig>true</swaggerDocketConfig>
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwagger -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin swagger-codegen-maven-plugin -->
+
+      <!-- BEGIN plugin maven-compiler-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.plugin.maven-compiler-plugin}</version>
+        <executions>
+
+          <!-- BEGIN step compileMain -->
+
+          <execution>
+            <id>default-compile</id>
+            <phase>NONE</phase><!-- compileMain supersedes default-compile -->
+          </execution>
+          <execution>
+            <id>compileMain</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <skipMain>${build.java.compileMain.skip}</skipMain>            
+            </configuration>
+          </execution>
+        
+          <!-- END step compileMain -->
+
+          <!-- BEGIN step compileTests -->
+
+          <execution>
+            <id>default-testCompile</id>
+            <phase>NONE</phase><!-- compileTests supersedes default-testCompile -->
+          </execution>
+          <execution>
+            <id>compileTests</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <skipMain>${build.java.compileTests.skip}</skipMain>            
+            </configuration>
+          </execution>
+        
+          <!-- END step compileTests -->
+
+        </executions>
+
+      </plugin>
+
+      <!-- END plugin maven-compiler-plugin -->
+
+      <!-- BEGIN plugin maven-surefire-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.plugin.maven-surefire-plugin}</version>
+        <dependencies>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>${version.group.junit5-platform}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+        </dependencies>
+        <executions>
+        
+          <!-- BEGIN step runTests -->
+
+          <execution>
+            <id>default-test</id>
+            <phase>NONE</phase><!-- runTests supersedes default-test -->
+          </execution>
+          <execution>
+            <id>runTests</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <skipTests>${build.java.runTests.skip}</skipTests>
+              <includes>
+                <include>**/Test*.java</include>
+                <include>**/Func*.java</include>
+              </includes>
+              <excludes>
+                <!-- SOAP tests waiting for Jetty upgrade -->
+                <exclude>**/ws/*/Func*.java</exclude>
+                <!-- Default excludes -->
+                <exclude>**/*$*</exclude>
+              </excludes>
+              <redirectTestOutputToFile>${build.java.runTests.redirectTestOutputToFile}</redirectTestOutputToFile>
+              <forkCount>${build.java.runTests.forkCount}</forkCount>
+              <reuseForks>false</reuseForks>
+              <trimStackTrace>${build.java.runTests.trimStackTrace}</trimStackTrace>
+              <systemPropertyVariables>
+                <java.io.tmpdir>${dir.temporary}</java.io.tmpdir>$>
+                <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
+                <org.lockss.unitTesting>true</org.lockss.unitTesting>
+                <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
+                <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
+              </systemPropertyVariables>
+            </configuration>
+          </execution>
+        
+          <!-- END step runTests -->
+        
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-surefire-plugin -->
+
+      <!-- BEGIN plugin maven-jar-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>${version.plugin.maven-jar-plugin}</version>
+        <executions>
+
+          <!-- BEGIN step jarMain -->
+
+          <execution>
+            <id>default-jar</id>
+            <phase>NONE</phase><!-- jarMain supersedes default-jar -->
+          </execution>
+          <execution>
+            <id>jarMain</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarMain.skip}</skip><!-- probably doesn't have any effect -->
+              <skipIfEmpty>true</skipIfEmpty>
+              <archive>
+                <manifest>
+                  <mainClass>${build.java.mainClass}</mainClass>
+                </manifest>
+              </archive>
+            </configuration>
+          </execution>
+
+          <!-- END step jarMain -->
+
+          <!-- BEGIN step jarTests -->
+
+          <execution>
+            <id>jarTests</id>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarTests.skip}</skip>
+              <skipIfEmpty>true</skipIfEmpty>
+            </configuration>
+          </execution>
+
+          <!-- END step jarTests -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-jar-plugin -->
+
+      <!-- BEGIN plugin spring-boot-maven-plugin -->
+
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${version.group.spring-boot}</version>
+        <executions>
+
+          <!-- BEGIN step repackageJar -->
+
+          <execution>
+            <id>repackageJar</id>
+            <phase>package</phase>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.repackageJar.skip}</skip>
+              <classifier>${build.java.spring.withDepsClassifier}</classifier>
+              <mainClass>${build.java.mainClass}</mainClass>
+            </configuration>
+          </execution>
+
+          <!-- END step repackageJar -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin spring-boot-maven-plugin -->
+
+      <!-- BEGIN plugin maven-source-plugin -->
+
+      <!--  See https://central.sonatype.org/pages/apache-maven.html#javadoc-and-sources-attachments -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>${version.plugin.maven-source-plugin}</version>
+        <executions>
+        
+          <!-- BEGIN step jarMainSources -->
+          
+          <execution>
+            <id>jarMainSources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+            <configuration>
+              <skipSource>${build.java.jarMainSources.skip}</skipSource>
+            </configuration>
+          </execution>
+        
+          <!-- END step jarMainSources -->
+          
+          <!-- BEGIN step jarTestSources -->
+          
+          <execution>
+            <id>jarTestSources</id>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar-no-fork</goal>
+            </goals>
+            <configuration>
+              <skipSource>${build.java.jarTestSources.skip}</skipSource>
+            </configuration>
+          </execution>
+        
+          <!-- END step jarTestSources -->
+          
+        </executions>
+      </plugin>
+        
+      <!-- END plugin maven-source-plugin -->
+
+      <!-- BEGIN plugin maven-javadoc-plugin -->
+
+      <!--  See https://central.sonatype.org/pages/apache-maven.html#javadoc-and-sources-attachments -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>${version.plugin.maven-javadoc-plugin}</version>
+        <executions>
+
+          <!-- BEGIN step jarMainJavadoc -->
+
+          <execution>
+            <id>jarMainJavadoc</id>
+            <phase>package</phase>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarMainJavadoc.skip}</skip>
+              <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
+              <header>${build.java.jarJavadoc.header}</header>
+            </configuration>
+          </execution>
+
+          <!-- END step jarMainJavadoc -->
+
+          <!-- BEGIN step jarTestJavadoc -->
+
+          <execution>
+            <id>jarTestJavadoc</id>
+            <phase>package</phase>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarTestJavadoc.skip}</skip>
+              <outputDirectory>${project.reporting.outputDirectory}/testapidocs</outputDirectory>
+              <header>${build.java.jarJavadoc.header}</header>
+            </configuration>
+          </execution>
+
+          <!-- END step jarTestJavadoc -->
+
+        </executions>
+        <configuration>
+          <doclint>none</doclint>
+        </configuration>
+      </plugin>
+
+      <!-- END plugin maven-javadoc-plugin -->
+
+      <!-- BEGIN plugin maven-gpg-plugin -->
+
+      <!--  See https://central.sonatype.org/pages/apache-maven.html#gpg-signed-components -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>${version.plugin.maven-gpg-plugin}</version>
+        <executions>
+
+          <!-- BEGIN step signArtifacts -->
+
+          <execution>
+            <id>signArtifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.signArtifacts.skip}</skip>
+            </configuration>
+          </execution>
+          
+          <!-- END step signArtifacts -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-gpg-plugin -->
+
+      <!-- BEGIN plugin maven-deploy-plugin -->
+
+      <!-- See https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
+      <!-- See nexus-staging-maven-plugin -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${version.plugin.maven-deploy-plugin}</version>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <!-- END plugin maven-deploy-plugin -->
+
+      <!-- BEGIN plugin nexus-staging-maven-plugin -->
+
+      <!--  See https://central.sonatype.org/pages/apache-maven.html#distribution-management-and-authentication  -->
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>${version.plugin.nexus-staging-maven-plugin}</version>
+        <extensions>true</extensions>
+        <executions>
+
+          <!-- BEGIN step deployMavenCentral -->
+        
+          <execution>
+            <id>deployMavenCentral</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+            <configuration>
+              <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>
+              <serverId>ossrh</serverId>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <skipLocalStaging>true</skipLocalStaging>              
+              <autoReleaseAfterClose>true</autoReleaseAfterClose>
+            </configuration>
+          </execution>
+        
+          <!-- END step deployMavenCentral -->
+        
+        </executions>
+        
+      </plugin>
+          
+      <!-- END plugin nexus-staging-maven-plugin -->
+
+      <!-- BEGIN plugin exec-maven-plugin -->
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${version.plugin.exec-maven-plugin}</version>
+        <executions>
+        
+          <!-- BEGIN step postprocessSwagger -->
+        
+          <execution>
+            <id>postprocessSwagger</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.postprocessSwagger.skip}</skip>
+              <workingDirectory>${project.basedir}</workingDirectory>
+              <executable>${project.basedir}/scripts/swaggerProcessing.sh</executable>
+            </configuration>
+          </execution>
+
+          <!-- END step postprocessSwagger -->
+        
+          <!-- BEGIN step symlinkMain -->
+
+          <execution>
+            <id>symlinkMain</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarMain.skip}</skip>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}.${project.packaging}</argument>
+                <argument>${project.build.directory}/current.${project.packaging}</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <!-- END step symlinkMain -->
+        
+          <!-- BEGIN step symlinkTests -->
+        
+          <execution>
+            <id>symlinkTests</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.jarTests.skip}</skip>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}-tests.jar</argument>
+                <argument>${project.build.directory}/current-tests.jar</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <!-- END step symlinkTests -->
+        
+          <!-- BEGIN step symlinkWithDeps -->
+        
+          <execution>
+            <id>symlinkWithDeps</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.repackageJar.skip}</skip>
+              <executable>ln</executable>
+              <arguments>
+                <argument>-fnsv</argument>
+                <argument>${project.build.finalName}-${build.java.spring.withDepsClassifier}.jar</argument>
+                <argument>${project.build.directory}/current-${build.java.spring.withDepsClassifier}.jar</argument>
+              </arguments>
+            </configuration>
+          </execution>
+
+          <!-- END step symlinkWithDeps -->        
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin exec-maven-plugin -->
+
+      <!-- BEGIN plugin dockerfile-maven-plugin -->
+
+      <!-- must be after exec-maven-plugin which makes a needed symlink in package phase -->
+      <plugin>
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
+        <version>${version.plugin.dockerfile-maven-plugin}</version>
+        <configuration>
+          <skip>${build.docker.skip}</skip>
+          <repository>${build.docker.repository}</repository>
+        </configuration>
+        <executions>
+
+          <!-- BEGIN step dockerBuild -->
+
+          <execution>
+            <id>dockerBuild</id>
+            <phase>package</phase>
+            <goals>
+              <goal>build</goal>
+            </goals>
+            <configuration>
+              <skipBuild>${build.docker.dockerBuild.skip}</skipBuild>
+              <tag>${build.docker.tag}</tag>
+              <pullNewerImage>false</pullNewerImage>
+              <buildArgs>
+                <LOCKSS_SPRING_VERSION>${version.docker.lockss-spring}</LOCKSS_SPRING_VERSION><!-- probably obsolete -->
+                <LABEL_BUILD_DATE>${maven.build.timestamp}</LABEL_BUILD_DATE>
+                <LABEL_DESCRIPTION>${project.description}</LABEL_DESCRIPTION>
+                <LABEL_GIT_DIRTY>${git.dirty}</LABEL_GIT_DIRTY>
+                <LABEL_LOCKSS_RELEASE>${build.releasename}</LABEL_LOCKSS_RELEASE>
+                <LABEL_MAVEN_ARTIFACT>${project.artifactId}</LABEL_MAVEN_ARTIFACT>
+                <LABEL_MAVEN_GROUP>${project.groupId}</LABEL_MAVEN_GROUP>
+                <LABEL_MAVEN_VERSION>${project.version}</LABEL_MAVEN_VERSION>
+                <LABEL_NAME>${project.name}</LABEL_NAME>
+                <LABEL_URL>${project.url}</LABEL_URL>
+                <LABEL_VCS_REF>${git.commit.id}</LABEL_VCS_REF>
+                <LABEL_VCS_URL>${project.scm.url}</LABEL_VCS_URL>
+                <LABEL_VENDOR>${project.organization.name}</LABEL_VENDOR>
+                <LABEL_VERSION>${project.version}</LABEL_VERSION>
+              </buildArgs>
+            </configuration>
+          </execution>
+
+          <!-- END step dockerBuild -->
+
+          <!-- BEGIN step dockerTagLatest -->
+
+          <execution>
+            <id>dockerTagLatest</id>
+            <phase>install</phase>
+            <goals>
+              <goal>tag</goal>
+            </goals>
+            <configuration>
+              <skipTag>${build.docker.dockerTagLatest.skip}</skipTag>
+              <tag>latest</tag>
+            </configuration>
+          </execution>
+
+          <!-- END step dockerTagLatest -->
+
+          <!-- BEGIN step dockerPush -->
+
+          <execution>
+            <id>dockerPush</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>push</goal>
+            </goals>
+            <configuration>
+              <skipPush>${build.docker.dockerPush.skip}</skipPush>
+              <tag>${build.docker.tag}</tag>
+            </configuration>
+          </execution>
+
+          <!-- END step dockerPush -->
+
+          <!-- BEGIN step dockerPushLatest -->
+
+          <execution>
+            <id>dockerPushLatest</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>push</goal>
+            </goals>
+            <configuration>
+              <skipPush>${build.docker.dockerPushLatest.skip}</skipPush>
+              <tag>latest</tag>
+            </configuration>
+          </execution>
+
+          <!-- END step dockerPushLatest -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin dockerfile-maven-plugin -->
+
+      <!-- BEGIN plugin maven-postman-plugin -->
+
+      <plugin>
+        <groupId>ch.fortysix</groupId>
+        <artifactId>maven-postman-plugin</artifactId>
+        <version>${version.plugin.maven-postman-plugin}</version>
+        <executions>
+        
+          <!-- BEGIN step deployMail -->
+        
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>send-mail</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <multipartSupported>false</multipartSupported>
+              <mailcontenttype>text/plain</mailcontenttype>
+              <from>${build.java.deployMail.from}</from>
+              <receivers>
+                <receiver>${build.java.deployMail.to}</receiver>
+              </receivers>
+              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
+              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${local.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></textMessage>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
+        
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-postman-plugin -->
+
       <!-- BEGIN plugin maven-antrun-plugin -->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
-        <version>${plugin.version.maven-antrun-plugin}</version>
+        <version>${version.plugin.maven-antrun-plugin}</version>
         <dependencies>
           <dependency>
             <groupId>ant-contrib</groupId>
             <artifactId>ant-contrib</artifactId>
-            <version>20020829</version>
+            <version>${version.dependency.ant-contrib}</version>
           </dependency>  
         </dependencies>
         <executions>
 
-          <!-- BEGIN execution check-docker -->
-          
-          <!-- If Docker build needed, check early that Docker is running -->
+          <!-- BEGIN step local-publish-site -->
+
+	  <!-- Copy the site documentation to a subdirectory of
+	       ${dir.publishSite} (which must be set, e.g., in a profile in
+	       a user's settings.xml).  Done only if dir.publishSite has a
+	       value, and if javadoc is being generated.  Must follow the
+	       javadoc plugin in the pom as it must run after that, and
+	       it's in the same phase -->
           <execution>
-            <id>check-docker</id>
+            <id>local-publish-site</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+	      <!-- Even though the ant target itself is conditionalized,
+	           skip is needed to completely suppress the antrun
+	           invocation in FuncStateManager -->
+              <skip>${build.localPublishSite.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <available file="target/site"/>
+                    <isset property="dir.publishSite" />
+                    <or>
+                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
+                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <copy todir="${dir.publishSite}/${project.artifactId}" >
+                      <fileset dir="target/site" />
+                    </copy>
+                  </then>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step local-publish-site -->
+
+          <!-- BEGIN step checkDocker -->
+          
+          <execution>
+            <id>checkDocker</id>
             <phase>validate</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${build.docker.skip}</skip>
               <target>
                 <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
                 <if>
                   <and>
-                    <isfalse value="${skipDocker}" />
+                    <isfalse value="${build.docker.skip}" />
                     <or>
-                      <isfalse value="${skipDockerBuild}" />
-                      <isfalse value="${skipDockerTag}" />
-                      <isfalse value="${skipDockerPush}" />
+                      <isfalse value="${build.docker.dockerBuild.skip}" />
+                      <isfalse value="${build.docker.dockerTagLatest.skip}" />
+                      <isfalse value="${build.docker.dockerPush.skip}" />
+                      <isfalse value="${build.docker.dockerPushLatest.skip}" />
                     </or>
                   </and>
                   <then>
                     <echo message="Checking that Docker daemon is running..." />
-                    <exec executable="docker" output="/dev/null"
-                          failonerror="true" failifexecutionfails="true">
+                    <exec executable="docker"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
                       <arg value="info" />
-                    </exec>                  
+                    </exec>
                   </then>
                   <else>
                     <echo message="Not checking that Docker daemon is running." />
@@ -531,24 +2394,29 @@ POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
 
-          <!-- END execution check-docker -->
+          <!-- END step checkDocker -->
           
-          <!-- BEGIN execution generate-build-info -->
-          
-          <!-- Creates a build info file -->
+          <!-- BEGIN step buildInfo -->
+
           <execution>
-            <id>generate-build-info</id>
-            <phase>generate-resources</phase>
+            <id>buildInfo</id>
+            <phase>initialize</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${build.info.buildInfo.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
               <target>
+                <property environment="env" />
                 <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
                 <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
                   <isset property="env.HOSTNAME" />
                 </condition>
-                <propertyfile comment="Build information" file="${file.buildinfo}">
+		<mkdir dir="${dir.buildInfo}"/>
+                <propertyfile comment="Build information" file="${file.buildInfo}">
+                  <entry key="build.name" value="${project.name}" />
+                  <entry key="build.description" value="${project.description}" />
                   <entry key="build.groupId" value="${project.groupId}" />
                   <entry key="build.artifactId" value="${project.artifactId}" />
                   <entry key="build.version" value="${project.version}" />
@@ -557,9 +2425,8 @@ POSSIBILITY OF SUCH DAMAGE.
                   <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
                   <entry key="build.parent.version" value="${project.parent.version}" />
                   <entry key="build.parent.packaging" value="${project.parent.packaging}" />
-                  <entry key="build.date" type="date" pattern="${ant.datetime.iso8601Date}" value="now" />
-                  <entry key="build.time" type="date" pattern="${ant.datetime.iso8601Time}" value="now" />
-                  <entry key="build.timestamp" type="date" pattern="${ant.datetime.iso8601Timestamp}" value="now" />
+                  <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
+                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
                   <entry key="build.releasename" value="${build.releasename}" />
                   <entry key="build.host" value="${hostname}" />
                   <entry key="build.user.name" value="${user.name}" />
@@ -583,23 +2450,25 @@ POSSIBILITY OF SUCH DAMAGE.
                   <entry key="build.git.branch" value="${git.branch}" />
                   <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
                   <entry key="build.git.dirty" value="${git.dirty}" />
+                  <entry key="build.maven.timestamp" value="${maven.build.timestamp}" />
+                  <entry key="build.maven.build.version" value="${maven.build.version}" />
                 </propertyfile>
               </target>
             </configuration>
           </execution>
           
-          <!-- END execution generate-build-info -->
+          <!-- END step buildInfo -->
           
-          <!-- BEGIN execution generate-classpath-files -->
+          <!-- BEGIN step classpathFiles -->
           
-          <!-- Creates classpath files (and exports Maven properties) -->
           <execution>
-            <id>generate-classpath-files</id>
-            <phase>generate-sources</phase>
+            <id>classpathFiles</id>
+            <phase>initialize</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
+              <skip>${build.info.classpathFiles.skip}</skip>
               <exportAntProperties>true</exportAntProperties>
               <target>
                 <property name="compile_classpath"
@@ -618,23 +2487,24 @@ POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
           
-          <!-- END execution generate-classpath-files -->
+          <!-- END step classpathFiles -->
           
-          <!-- BEGIN execution build-etags -->
+          <!-- BEGIN step buildEtags -->
           
           <execution>
-            <id>build-etags</id>
-            <phase>generate-resources</phase>
+            <id>buildEtags</id>
+            <phase>process-sources</phase>
             <goals>
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>${skipEtags}</skip>
+              <skip>${build.java.buildEtags.skip}</skip>
               <target>
-		<apply executable="etags" dir="${basedir}"
+		<apply executable="etags"
+		       dir="${basedir}"
 		       relative="true"
 		       parallel="true">
-		  <arg value="-S"/>
+		  <arg value="-S" />
 		  <!--        <arg value="-o"/> -->
 		  <!--        <arg file="${etags.filename}"/> -->
 		  <fileset dir="${basedir}" includes="src/**/*.java"/>
@@ -643,309 +2513,47 @@ POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
 
-          <!-- END execution build-etags -->
+          <!-- END step buildEtags -->
           
         </executions>
       </plugin>
 
       <!-- END plugin maven-antrun-plugin -->
 
-      <!-- BEGIN plugin maven-jar-plugin -->
+      <!-- BEGIN plugin maven-clean-plugin -->
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${plugin.version.maven-jar-plugin}</version>
+        <artifactId>maven-clean-plugin</artifactId>
+        <version>${version.plugin.maven-clean-plugin}</version>
         <executions>
+
+          <!-- BEGIN step cleanGeneratedSources -->
+
           <execution>
+            <id>cleanGeneratedSources</id>
+            <phase>clean</phase>
             <goals>
-              <goal>test-jar</goal>
+              <goal>clean</goal>
             </goals>
             <configuration>
-              <skip>${skipTestJar}</skip>
-              <skipIfEmpty>true</skipIfEmpty>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-jar-plugin -->
-
-      <!-- BEGIN plugin exec-maven-plugin -->
-
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>${plugin.version.exec-maven-plugin}</version>
-        <executions>
-        
-          <!-- BEGIN execution symlink-jar -->
-        
-          <execution>
-            <id>symlink-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>ln</executable>
-              <arguments>
-                <argument>-fnsv</argument>
-                <argument>${project.build.finalName}.${project.packaging}</argument>
-                <argument>${basedir}/target/current.${project.packaging}</argument>
-              </arguments>
+              <filesets>
+                <fileset>
+                  <directory>${dir.generated}</directory>
+                  <includes>
+                    <include>*/**</include>
+                  </includes>
+                </fileset>
+              </filesets>
             </configuration>
           </execution>
 
-          <!-- END execution symlink-jar -->
-        
-          <!-- BEGIN execution symlink-test-jar -->
-        
-          <execution>
-            <id>symlink-test-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <skip>${skipTestJar}</skip>
-              <executable>ln</executable>
-              <arguments>
-                <argument>-fnsv</argument>
-                <argument>${project.build.finalName}-tests.${project.packaging}</argument>
-                <argument>${basedir}/target/current-tests.${project.packaging}</argument>
-              </arguments>
-              <skip>${skipTestJar}</skip>
-            </configuration>
-          </execution>
+          <!-- END step cleanGeneratedSources -->
 
-          <!-- END execution symlink-test-jar -->
-        
-          <!-- BEGIN execution symlink-with-deps-jar -->
-        
-          <execution>
-            <id>symlink-with-deps-jar</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <skip>${skipSpringBootRepackage}</skip>
-              <executable>ln</executable>
-              <arguments>
-                <argument>-fnsv</argument>
-                <argument>${project.build.finalName}-${fatJarClassifier}.${project.packaging}</argument>
-                <argument>${basedir}/target/current-${fatJarClassifier}.${project.packaging}</argument>
-              </arguments>
-            </configuration>
-          </execution>
-
-          <!-- END execution symlink-with-deps-jar -->        
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin exec-maven-plugin -->
-
-      <!-- BEGIN plugin maven-source-plugin -->
-
-      <!--  To deploy Source JARs to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-source-plugin</artifactId>
-        <version>${plugin.version.maven-source-plugin}</version>
-        <executions>
-          <execution>
-            <id>attach-sources</id>
-            <goals>
-              <goal>jar-no-fork</goal>
-            </goals>
-            <configuration>
-              <skipSource>${skipSources}</skipSource>
-            </configuration>
-          </execution>
         </executions>
       </plugin>
         
-      <!-- END plugin maven-source-plugin -->
-
-      <!-- BEGIN plugin maven-javadoc-plugin -->
-
-      <!--  To deploy Javadoc JARS to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-javadoc-plugin</artifactId>
-        <version>${plugin.version.maven-javadoc-plugin}</version>
-        <executions>
-          <execution>
-            <id>attach-javadocs</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.reporting.outputDirectory}/apidocs</outputDirectory>
-              <skip>${skipJavadoc}</skip>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <doclint>none</doclint>
-        </configuration>
-      </plugin>
-
-      <!-- END plugin maven-javadoc-plugin -->
-
-      <!-- BEGIN plugin maven-gpg-plugin -->
-
-      <!--  To deploy GPG-signed components to Maven Central; see http://central.sonatype.org/pages/apache-maven.html -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-gpg-plugin</artifactId>
-        <version>${plugin.version.maven-gpg-plugin}</version>
-        <executions>
-          <execution>
-            <id>sign-artifacts</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>sign</goal>
-            </goals>
-            <configuration>
-              <skip>${skipGpg}</skip>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-gpg-plugin -->
-
-      <!-- BEGIN plugin maven-deploy-plugin -->
-
-      <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-      <plugin>
-        <!-- see https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
-        <version>${plugin.version.maven-deploy-plugin}</version>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${plugin.version.nexus-staging-maven-plugin}</version>
-        <extensions>true</extensions>
-        <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-          <!-- Added by us to parameterize the build -->
-          <skipStaging>${skipDeploy}</skipStaging>
-        </configuration>
-      </plugin>
-          
-      <!-- END plugin maven-deploy-plugin -->
-
-      <!-- BEGIN plugin spring-boot-maven-plugin -->
-
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <version>${lockss.spring-boot.version}</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal><!-- package phase -->
-            </goals>
-            <configuration>
-              <skip>${skipSpringBootRepackage}</skip>
-              <classifier>${fatJarClassifier}</classifier>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- END plugin spring-boot-maven-plugin -->
-
-      <!-- BEGIN plugin dockerfile-maven-plugin -->
-
-      <plugin>
-        <groupId>com.spotify</groupId>
-        <artifactId>dockerfile-maven-plugin</artifactId>
-        <version>${plugin.version.dockerfile-maven-plugin}</version>
-        <executions>
-          <execution>
-            <id>docker-build-and-push</id>
-            <goals>
-              <goal>build</goal><!-- package phase -->
-              <goal>push</goal><!-- deploy phase -->
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <skip>${skipDocker}</skip>
-          <skipBuild>${skipDockerBuild}</skipBuild>
-          <skipTag>${skipDockerTag}</skipTag>
-          <skipPush>${skipDockerPush}</skipPush>
-          <repository>${dockerRepository}</repository>
-          <tag>${dockerTag}</tag>
-          <buildArgs>
-            <SVC_PORT>${dockerServicePort}</SVC_PORT>
-          </buildArgs>
-        </configuration>
-      </plugin>
-
-      <!-- END plugin dockerfile-maven-plugin -->
-
-      <!-- BEGIN plugin maven-postman-plugin -->
-
-      <plugin>
-        <groupId>ch.fortysix</groupId>
-        <artifactId>maven-postman-plugin</artifactId>
-        <version>${plugin.version.maven-postman-plugin}</version>
-        <executions>
-          <execution>
-            <id>send-deploy-mail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>send-mail</goal>
-            </goals>
-            <configuration>
-              <skip>${skipDeployEmail}</skip>
-              <failonerror>${deployEmailFailOnError}</failonerror>
-              <multipartSupported>false</multipartSupported>
-              <mailcontenttype>text/plain</mailcontenttype>
-              <from>${deployEmailFrom}</from>
-              <receivers>
-                <receiver>${deployEmailTo}</receiver>
-              </receivers>
-              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${maven.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp}
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></textMessage>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-postman-plugin -->
+      <!-- END plugin maven-clean-plugin -->
 
     </plugins>
   
@@ -955,44 +2563,382 @@ Local directory: ${user.dir}
   
   <!-- END build -->
 
+  <!-- BEGIN profiles -->
+
   <profiles>
   
+    <!-- BEGIN profile doSnapshot -->
+  
     <profile>
-      <id>lockss-release</id>
+      <id>doSnapshot</id>
 
       <properties>
-        <!-- skipTestJar remains true unless set to false in child -->
-        <skipJavadoc>false</skipJavadoc>
-        <skipSources>false</skipSources>
-        <skipGpg>false</skipGpg>
-        <skipDeploy>false</skipDeploy>
-        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
-        <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
-        <skipDockerPush>false</skipDockerPush>
+        <skipMainSources>true</skipMainSources><!-- build.java.jarMainSources.skip -->
+        <skipTestSources>${build.java.jarTests.skip}</skipTestSources><!-- build.java.jarTestSources.skip -->
+        <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
+        <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
+        <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
+        <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
+        <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
       </properties>
+      
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+        
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>${version.plugin.maven-enforcer-plugin}</version>
+            <executions>
+            
+              <!-- BEGIN step doSnapshot.checkPrerequisites -->
+            
+              <execution>
+                <id>doSnapshot.checkPrerequisites</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireSnapshotVersion>
+                      <message>Error: expected snapshot version, got ${project.version}</message>
+                    </requireSnapshotVersion>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doSnapshot.checkPrerequisites -->
+
+              <!-- BEGIN step doSnapshot.checkPrerequisitesInitialize -->
+            
+              <execution>
+                <id>doSnapshot.checkPrerequisitesInitialize</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>git.dirty</property>
+                      <message>Error: property git.dirty not set in snapshot build</message>
+                      <regex>^false$</regex>
+                      <regexMessage>Error: dirty Git state not allowed in snapshot build</regexMessage>
+                    </requireProperty>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doSnapshot.checkPrerequisitesInitialize -->
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     
     </profile>
   
+    <!-- END profile doSnapshot -->
+  
+    <!-- BEGIN profile doRelease -->
+  
     <profile>
-      <id>lockss-docker-latest</id>
+      <id>doRelease</id>
 
       <properties>
-        <skipTestJar>true</skipTestJar>
-        <skipTests>true</skipTests>
-        <skipJavadoc>true</skipJavadoc>
-        <skipSources>true</skipSources>
-        <skipGpg>true</skipGpg>
-        <skipDeploy>true</skipDeploy>
-        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
-        <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerTag>false</skipDockerTag>
-        <skipDockerPush>false</skipDockerPush>
-        <dockerTag>latest</dockerTag>
+        <skipMainSources>true</skipMainSources><!-- build.java.jarMainSources.skip -->
+        <skipTestSources>${build.java.jarTests.skip}</skipTestSources><!-- build.java.jarTestSources.skip -->
+        <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
+        <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
+        <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
+        <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
+        <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
+      </properties>
+      
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>${version.plugin.maven-enforcer-plugin}</version>
+            <executions>
+            
+              <!-- BEGIN step doRelease.checkPrerequisites -->
+            
+              <execution>
+                <id>doRelease.checkPrerequisites</id>
+                <phase>validate</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireReleaseVersion>
+                      <message>Error: expected release version, got ${project.version}</message>
+                    </requireReleaseVersion>
+                    <requireReleaseDeps>
+                      <onlyWhenRelease>true</onlyWhenRelease>
+                      <message>Error: snapshot dependencies not allowed in release build</message>
+                    </requireReleaseDeps>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doRelease.checkPrerequisites -->
+
+              <!-- BEGIN step doRelease.checkPrerequisitesInitialize -->
+            
+              <execution>
+                <id>doRelease.checkPrerequisitesInitialize</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>git.dirty</property>
+                      <message>Error: property git.dirty not set in release build</message>
+                      <regex>^false$</regex>
+                      <regexMessage>Error: dirty Git state not allowed in release build</regexMessage>
+                    </requireProperty>
+                  </rules>
+                </configuration>
+              </execution>
+
+              <!-- END step doRelease.checkPrerequisitesInitialize -->
+
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    
+    </profile>
+  
+    <!-- END profile doRelease -->
+  
+    <!-- BEGIN profile doJavadoc -->
+  
+    <profile>
+      <id>doJavadoc</id>
+      
+      <properties>
+        <skipInfo>true</skipInfo><!-- build.info.skip -->
+        <skipTests>true</skipTests><!-- build.java.runTests.skip -->
+        <skipMainJar>true</skipMainJar><!-- build.java.jarMain.skip -->
+        <skipJarTests>true</skipJarTests><!-- build.java.jarTests.skip -->
+        <skipJarWithDeps>true</skipJarWithDeps><!-- build.java.repackageJar.skip -->
+        <skipJavadoc>false</skipJavadoc><!-- build.java.javadoc.skip -->
+        <skipGpg>true</skipGpg><!-- build.java.signArtifacts.skip -->
+        <skipMavenCentral>true</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipDeployMail>true</skipDeployMail><!-- build.java.deployMail.skip -->
+        <skipDocker>true</skipDocker><!-- build.docker.skip -->
+      </properties>
+      
+      <build>
+        <defaultGoal>package</defaultGoal>
+      </build>
+      
+    </profile>
+      
+    <!-- END profile doJavadoc -->
+
+    <!-- BEGIN profile doRestApiDocs -->
+  
+    <profile>
+      <id>doRestApiDocs</id>
+      
+      <properties>
+        <build.info.skip>true</build.info.skip>
+        <build.java.skip>true</build.java.skip>
+        <build.docker.skip>true</build.docker.skip>
       </properties>
 
-    </profile>
+      <build>
+        <defaultGoal>generate-sources</defaultGoal>
+      
+        <plugins>
+        
+          <!-- To create a pretty REST API diagram from src/main/resources/swagger/swagger.yaml -->
+          <plugin>
+            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>${version.plugin.swagger-codegen-maven-plugin}</version>
+            <executions>
+              <execution>
+                <id>doRestApiDocs.swaggerCodegen</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+                  <language>html</language>
+                  <output>${project.build.directory}/generated-sources/swagger/html</output>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
     
+        </plugins>
+        
+      </build>
+      
+    </profile>
+      
+    <!-- END profile doRestApiDocs -->
+
+    <!-- BEGIN profile doDockerBuild -->
+
+    <profile>
+      <id>doDockerBuild</id>
+      
+      <properties>
+        <skipCompileTests>true</skipCompileTests>
+        <skipTests>true</skipTests>
+        <skipJarTests>true</skipJarTests>
+        <skipMainSources>true</skipMainSources>
+        <skipTestSources>true</skipTestSources>
+        <skipMainJavadoc>true</skipMainJavadoc>
+        <skipTestJavadoc>true</skipTestJavadoc>
+        <skipGpg>true</skipGpg>
+        <skipMavenCentral>true</skipMavenCentral>
+        <skipDeployMail>true</skipDeployMail>
+        <skipDocker>false</skipDocker>
+        <skipDockerBuild>false</skipDockerBuild>
+        <skipDockerPush>false</skipDockerPush>
+     </properties>
+      
+      <build>
+        <defaultGoal>package</defaultGoal>
+      </build>
+
+    </profile>
+  
+    <!-- END profile doDockerBuild -->
+  
+    <!-- BEGIN profile doPythonClient -->
+  
+    <profile>
+      <id>doPythonClient</id>
+      
+      <properties>
+        <skipInfo>true</skipInfo>
+        <skipJava>true</skipJava>
+        <skipDocker>true</skipDocker>
+        
+        <build.python.project>${gitProjectId}-python</build.python.project>
+        <build.python.url>https://${gitHost}/${gitGroupId}/${build.python.project}</build.python.url>
+        <dir.generated.python>${dir.generated}/python</dir.generated.python>
+      </properties>
+
+      <build>
+        <defaultGoal>generate-sources</defaultGoal>
+      
+        <plugins>
+        
+          <!-- BEGIN plugin build-helper-maven-plugin -->
+
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <version>${version.plugin.build-helper-maven-plugin}</version>
+            <executions>
+
+              <!-- BEGIN step doPythonClient.setPythonPackage -->
+
+              <execution>
+                <id>doPythonClient.setPythonPackage</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>regex-property</goal>
+                </goals>
+                <configuration>
+                  <name>build.python.package</name>
+                  <value>${project.description}</value>
+                  <regex>[ ]+</regex>
+                  <replacement>_</replacement>
+                  <toLowerCase>true</toLowerCase>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.setPythonPackage -->
+
+              <!-- BEGIN step doPythonClient.setPythonVersion -->
+
+              <execution>
+                <id>doPythonClient.setPythonVersion</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>regex-property</goal>
+                </goals>
+                <configuration>
+                  <name>build.python.version</name>
+                  <value>${project.version}</value>
+                  <regex>-SNAPSHOT$</regex>
+                  <replacement>-dev</replacement>
+                  <failIfNoMatch>false</failIfNoMatch>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.setPythonVersion -->
+
+            </executions>
+          </plugin>
+
+          <!-- BEGIN plugin swagger-codegen-maven-plugin -->
+
+          <plugin>
+            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <artifactId>swagger-codegen-maven-plugin</artifactId>
+            <version>${version.plugin.swagger-codegen-maven-plugin}</version>
+            <executions>
+
+              <!-- BEGIN step doPythonClient.swaggerCodegen -->
+
+              <execution>
+              <id>doPythonClient.swaggerCodegen</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>generate</goal>
+                </goals>
+                <configuration>
+                  <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+                  <language>python</language>
+                  <output>${dir.generated.python}</output>
+                  <configOptions>
+                    <projectName>${build.python.project}</projectName>                  
+                    <packageName>${build.python.package}</packageName>
+                    <packageVersion>${build.python.version}</packageVersion>
+                    <packageUrl>${build.python.url}</packageUrl>
+                  </configOptions>
+                </configuration>
+              </execution>
+
+              <!-- END step doPythonClient.swaggerCodegen -->
+
+            </executions>
+          </plugin>
+    
+          <!-- END plugin swagger-codegen-maven-plugin -->
+
+        </plugins>
+        
+      </build>
+      
+    </profile>
+      
+    <!-- END profile doPythonClient -->
+  
+    <!-- BEGIN profile travis-maven-central -->
+
     <!-- 
     
         travis-maven-central profile
@@ -1005,16 +2951,24 @@ Local directory: ${user.dir}
       <id>travis-maven-central</id>
 
       <properties>
-        <skipTests>true</skipTests>
-        <!-- skipTestJar remains true unless set to false in child -->
-        <skipJavadoc>false</skipJavadoc>
-        <skipSources>false</skipSources>
-        <skipGpg>false</skipGpg>
-        <skipDeploy>false</skipDeploy>
-        <skipDocker>true</skipDocker>
+        <build.java.runTests.skip>true</build.java.runTests.skip>
+        <build.java.jarMainSources.skip>false</build.java.jarMainSources.skip>
+        <build.java.jarMainJavadoc.skip>false</build.java.jarMainJavadoc.skip>
+        <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
+        <build.docker.skip>true</build.docker.skip>
+        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
+        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
       </properties>
-    
+      
+      <build>
+        <defaultGoal>deploy</defaultGoal>
+      </build>
+
     </profile>
+  
+    <!-- END profile travis-maven-central -->
+  
+    <!-- BEGIN profile travis-docker-hub -->
   
     <!-- 
     
@@ -1028,51 +2982,28 @@ Local directory: ${user.dir}
       <id>travis-docker-hub</id>
 
       <properties>
-        <skipTests>true</skipTests>
-        <skipTestJar>true</skipTestJar>
-        <skipJavadoc>true</skipJavadoc>
-        <skipSources>true</skipSources>
-        <skipGpg>true</skipGpg>
-        <skipDeploy>true</skipDeploy>
-        <!-- skipDocker remains true unless Dockerfile processing enabled in child -->
-        <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerTag>${skipDockerBuild}</skipDockerTag><!--  if build then tag -->
-        <skipDockerPush>false</skipDockerPush>
+        <build.java.runTests.skip>true</build.java.runTests.skip>
+        <build.java.jarMainSources.skip>true</build.java.jarMainSources.skip>
+        <build.java.jarMainJavadoc.skip>true</build.java.jarMainJavadoc.skip>
+        <build.java.jarTestJavadoc.skip>true</build.java.jarTestJavadoc.skip>
+        <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
+        <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
+        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
+        <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
+        <!-- FIXME what of tagLatest, pushLatest? -->
       </properties>
-    
-    </profile>
-  
-    <profile>
-      <id>lockss-apis</id>
 
       <build>
-      
-        <plugins>
-        
-          <!-- To create a pretty REST API diagram from docs/swagger.yaml -->
-          <plugin>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-codegen-maven-plugin</artifactId>
-            <version>${plugin.version.swagger-codegen-maven-plugin}</version>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>generate</goal>
-                </goals>
-                <configuration>
-                  <inputSpec>docs/swagger.yaml</inputSpec>
-                  <language>html</language>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-    
-        </plugins>
-        
+        <defaultGoal>deploy</defaultGoal>
       </build>
-      
+
     </profile>
-      
+  
+    <!-- END profile travis-docker-hub -->
+  
   </profiles>
   
+  <!-- END profiles -->
+
 </project>

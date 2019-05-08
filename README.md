@@ -3,119 +3,113 @@
 `lockss-parent-pom` is a Maven POM file used to define and drive the build
 infrastructure common to LOCKSS projects.
 
-It can be used to make Java builds, with conditional build activities for
-LOCKSS Spring Boot services and Docker images, and optional build activities to
-deploy to Maven Central and Docker Hub, generate REST API documentation, and
-more.
-
-This Git repository uses a Git Flow layout, where the `master` branch contains
-stable releases and main development is carried out in the `develop` branch.
+*This Git repository uses a Git Flow layout, where the `master` branch contains
+stable releases and main development is carried out in the `develop` branch.*
 
 ## Build Overview
 
-### Default Build
+### Info Build
 
-By default, the build is a Java build, producing:
+The info build gathers and outputs information about the build environment.
 
-*   A main JAR.
-    *   Classifier: none.
-    *   Symbolic link: `target/current.jar`.
-*   A sources JAR.
-    *   Classifier `sources`.
-    *   Plugin: `maven-source-plugin`.
-    *   Suppress by setting `skipSources` to `true`.
-*   A Javadoc JAR.
-    *   Classifier `javadoc`.
-    *   Plugin: `maven-javadoc-plugin`.
-    *   Suppress by setting `skipJavadoc` to `true`.
+*   Driving property: `build.info.skip`
+*   Alias: `skipInfo`
+*   Default: `false` (info build is on by default)
 
-### Test JAR
+### Java Build
 
-If you set `skipTestJar` to `false`, the build also produces:
+The Java build compiles, tests and packages a Java project, with optional build
+sub-parts.
 
-*   A test JAR.
-    *   Classifier: `tests`.
-    *   Symbolic link: `target/current-tests.jar`.
+*   Driving property: `build.java.skip`
+*   Alias: `skipJava`
+*   Default: `true` (Java build is on by default)
 
-### Spring Boot Build
+#### ANTLR Portion
 
-If you set `skipSpringBootRepackage` to `false`, the project is assumed to be
-a LOCKSS Spring Boot service, and the build also produces:
+The Java build has an optional ANTLR portion, which generates parsers from ANTLR
+grammars in the `src/main/resources` tree.
 
-*   A JAR with dependencies.
-    *   Classifier: `with-deps`.
-    *   Plugin: `spring-boot-maven-plugin`.
-    *   Symbolic link: `target/current-with-deps.jar`.
+*   Driving property: `build.java.antlr.skip`
+*   Alias: `skipAntlr`
+*   Default: `false` (ANTLR portion is off by default)
 
-Note that `skipSpringBootRepackage` may be renamed in a future version.
+#### Database Portion
+
+The Java build has an optional database portion, which can process the
+versioning of a database schema with Flyway migrations in
+`src/main/resources/db`, and generate database object code with JOOQ in the
+`src/generated/java` tree.
+
+*   Driving property: `build.java.db.skip`
+*   Alias: `skipDb`
+*   Default: `false` (database portion is off by default)
+
+#### Spring Portion
+
+The Java build has an optional Spring portion which can generate a Spring
+application with Swagger Codegen from a Swagger 2 or OpenAPI 3 specification in
+`src/main/resources/swagger/swagger.yaml` into the `src/generated/java` tree,
+and generate a JAR with dependencies ("fat JAR" or "über JAR") for Spring Boot.
+
+*   Driving property: `build.java.spring.skip`
+*   Alias: `skipSpring`
+*   Default: `false` (Spring portion is off by default)
 
 ### Docker Build
 
-If you set `skipDocker` to `false`, the project is assumed to have a
-`Dockerfile`, and the build also produces:
+The Docker build packages the Java project as a Docker image, from a
+`Dockerfile` specification.
 
-*   A Docker image.
-    *   Docker must be running. This is checked in the `validate` phase by a
-        plugin execution named `check-docker`.
-    *   This type of Docker build requires two build arguments.
-        *   Set `dockerServicePort` to the REST service port.
+*   Driving property: `build.docker.skip`
+*   Alias: `skipDocker`
+*   Default: `true` (Docker build is off by default)
 
-### GPG Signing
+## Profile-Based Tasks
 
-If `skipGpg` is set to `false`, the project's artifacts are also signed with
-GnuPG.
+Various canned operations, like doing releases or running a tool over the
+project, are packaged as profiles.
 
-### Release Profile
+### Doing a Snapshot Release
 
-The `lockss-release` profile 
+To perform a snapshot release:
+
+```
+mvn -U -P doSnapshot
+```
+
+### Doing a Release
+
+To perform a release:
+
+```
+mvn -U -P doRelease
+```
+
+### Generating REST API Documentation
+
+To generate an HTML page documenting the REST API described by the Swagger 2 or
+OpenAPI 3 specification in `src/main/resources/swagger/swagger.yaml`:
+
+```
+mvn -P doRestApiDocs
+```
+
+The result is in `target/generated-sources/swagger/index.html`.
 
 ## Inheriting from `lockss-parent-pom`
 
-A project inheriting from `lockss-parent-pom` will typically look like this:
+A project inheriting from `lockss-parent-pom` but not under the auspices of the
+LOCKSS Program should override the following sections:
 
-```
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
+*   `<url>`
+*   `<inceptionYear>`
+*   `<organization>`
+*   `<licenses>`
+*   `<developers>`
+*   `<contributors>`
 
-  <parent>
-    <groupId>org.lockss</groupId>
-    <artifactId>lockss-parent-pom</artifactId>
-    <version>...</version>
-  </parent>
-
-  <groupId>...</groupId>
-  <artifactId>...</artifactId>
-  <version>...</version>
-  <packaging>jar</packaging>
-
-  <!-- Must be in every lockss-parent-pom descendant -->
-  <scm>
-    <connection>${scmConnection}</connection>
-    <developerConnection>${scmDeveloperConnection}</developerConnection>
-    <url>${scmUrl}</url>
-  </scm>
-
-  <properties>
-    <!-- ... properties ... -->
-  </properties>
-
-  <dependencies>
-    <!-- ... dependencies ... -->
-  </dependencies>
-
-  <build>
-    <!-- ... build ... -->
-  </build>
-
-</project>
-```
-
-### `<scm>` Section
-
-All descendant projects must have a copy of the `<scm>` section:
+All descendant projects must include the `<scm>` section:
 
 ```
   <!-- Must be in every lockss-parent-pom descendant -->
@@ -129,65 +123,59 @@ All descendant projects must have a copy of the `<scm>` section:
 The default assumption is a project hosted on GitHub, under the organization
 name `lockss`, with a project name matching the Maven project artifact ID, with
 `scmConnection`, `scmDeveloperConnection` and `scmUrl` assembled from
-`gitSshUsername`, `gitHost`, `gitGroupId` and `gitProjectId` like so:
+`gitSshUsername`, `gitHost`, `gitGroupId`, `gitProjectId` and
+`gitParentProjectId` (see details in the file).
+
+### Enabling the ANTLR Portion
+
+To enable the ANTLR portion, set:
 
 ```
-    <gitSshUsername>git</gitSshUsername>
-    <gitHost>github.com</gitHost>
-    <gitGroupId>lockss</gitGroupId>
-    <gitProjectId>${project.artifactId}</gitProjectId>
-    <scmConnection>scm:git:git://${gitHost}/${gitGroupId}/${gitProjectId}.git</scmConnection>
-    <scmDeveloperConnection>scm:git:${gitSshUsername}@${gitHost}:${gitGroupId}/${gitProjectId}.git</scmDeveloperConnection>
-    <scmUrl>https://${gitHost}/${gitGroupId}/${gitProjectId}</scmUrl>
+    <build.java.antlr.skip>false</build.java.antlr.skip>
 ```
 
-Projects whose Maven project artifact ID does not match the Git project name
-need to set `gitProjectId`, as well as `gitGroupId` if under a different GitHub
-user name or organization name.
+### Enabling the Spring Portion
 
-### `<licenses>` Section
-
-By default, descendant projects inherit a `<licenses>` section containing the
-LOCKSS Program's preferred software license (3-Clause BSD License):
+To enable the Spring portion, set:
 
 ```
-  <licenses>
-    <license>
-      <name>3-Clause BSD License</name>
-      <url>https://opensource.org/licenses/BSD-3-Clause</url>
-    </license>
-  </licenses>
+    <build.java.spring.skip>false</build.java.spring.skip>
 ```
 
-If your descendant project uses other licensing, you will need to define your
-own `<licenses>` section.
-
-### Organizational Boilerplate
-
-By default, descendant projects inherit the LOCKSS Program's organizational
-boilerplate (project URL, project inception year, organization name and URL,
-list of developers and contributors):
+and supply a package name and main class name, e.g.:
 
 ```
-  <url>https://www.lockss.org/</url>
-  <inceptionYear>2000</inceptionYear>
-  
-  <organization>
-    <name>LOCKSS Program</name>
-    <url>https://www.lockss.org/</url>
-  </organization>
-  
-  <developers>
-    <!-- ... list of LOCKSS Program developers ... -->
-  </developers>
-
-  <contributors>
-    <!-- ... list of LOCKSS Program contributors ... -->
-  </contributors>
+    <build.java.package>com.exmaple.app</build.java.package>
+    <build.java.mainClass>${build.java.package}.MyApplication</build.java.mainClass>
 ```
 
-If your descendant project does not fall under the LOCKSS Program, you will need
-to define your own organizational boilerplate accordingly.
+### Enabling the Docker Build
+
+To enable the Docker build, set:
+
+```
+    <build.docker.skip>false</build.docker.skip>
+```
+
+and optionally supply a service port if your application is listening on one,
+e.g.:
+
+```
+    <build.docker.dockerBuild.servicePort>12345</build.docker.dockerBuild.servicePort>
+```
+
+## Pre-Defined Properties
+
+Various directories and file paths are parameterized as `dir.*` and `file.*`
+respectively.
+
+Many version numbers are parameterized as `version.group.*` (multi-JAR projects
+with grouped versioning: JUnit, Spring, Jackson, etc.), `version.plugin.*`
+(Maven plugins), `version.lockss.*` (LOCKSS components), and
+`version.dependency.*` (typical dependencies: Apache
+Commons, etc.).
+
+See the `<properties>` section for details.
 
 ## Style Guide
 
