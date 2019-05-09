@@ -1157,19 +1157,19 @@ POSSIBILITY OF SUCH DAMAGE.
     -->
     <build.releasename>2.0-beta</build.releasename>
 
-    <version.lockss.lockss-configuration-service>3.0.2.0-SNAPSHOT</version.lockss.lockss-configuration-service>
-    <version.lockss.lockss-core>3.0.3.0-SNAPSHOT</version.lockss.lockss-core>
+    <version.lockss.lockss-configuration-service>2.0.2.0-SNAPSHOT</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.0.3.0-SNAPSHOT</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
     <version.lockss.lockss-junit4-bundle>1.2.0</version.lockss.lockss-junit4-bundle>
     <version.lockss.lockss-junit5-bundle>1.2.0</version.lockss.lockss-junit5-bundle>
-    <version.lockss.lockss-metadata-extraction-service>3.0.2.0-SNAPSHOT</version.lockss.lockss-metadata-extraction-service>
-    <version.lockss.lockss-metadataextractor-common>3.0.4.0-SNAPSHOT</version.lockss.lockss-metadataextractor-common>
-    <version.lockss.lockss-metadata-service>3.0.1.0-SNAPSHOT</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-metadata-extraction-service>2.0.2.0-SNAPSHOT</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.0.4.0-SNAPSHOT</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.0.1.0-SNAPSHOT</version.lockss.lockss-metadata-service>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-repository-client>3.0.7.0-SNAPSHOT</version.lockss.lockss-repository-client>
-    <version.lockss.lockss-repository-core>3.0.13.0-SNAPSHOT</version.lockss.lockss-repository-core>
-    <version.lockss.lockss-repository-service>3.0.9.0-SNAPSHOT</version.lockss.lockss-repository-service>
-    <version.lockss.lockss-spring-bundle>3.0.9.0-SNAPSHOT</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-repository-client>2.0.7.0-SNAPSHOT</version.lockss.lockss-repository-client>
+    <version.lockss.lockss-repository-core>2.0.13.0-SNAPSHOT</version.lockss.lockss-repository-core>
+    <version.lockss.lockss-repository-service>2.0.9.0-SNAPSHOT</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.0.9.0-SNAPSHOT</version.lockss.lockss-spring-bundle>
     <version.lockss.lockss-tdb-tools>1.2.0</version.lockss.lockss-tdb-tools>
     <version.lockss.lockss-tdbxml-maven-plugin>1.2.0</version.lockss.lockss-tdbxml-maven-plugin>
     <version.lockss.lockss-util>1.7.0</version.lockss.lockss-util>
@@ -2606,6 +2606,7 @@ Local directory: ${user.dir}
                 <configuration>
                   <rules>
                     <requireSnapshotVersion>
+                      <failWhenParentIsRelease>false</failWhenParentIsRelease>
                       <message>Error: expected snapshot version, got ${project.version}</message>
                     </requireSnapshotVersion>
                   </rules>
