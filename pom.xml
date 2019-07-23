@@ -1208,6 +1208,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- END properties section: Git-related -->
 
+    <!-- BEGIN properties section: JProfiler-related -->
+
+    <!-- To run unit tests with JProfiler set this to
+	 "-agentpath:<path_to_jprofiler>/bin/linux-x64/libjprofilerti=<options>",
+	 where <options> can include:
+	   port=8849  (default port for JProfiler agent connection)
+	   nowait     (don't wait for connection from GUI)
+	   offline    (collect data for later analysis)
+    -->
+
+    <jprofiler.agentpath></jprofiler.agentpath>
+
+    <!-- END properties section: JProfiler-related -->
+
   </properties>
 
   <!-- END properties -->
@@ -1762,6 +1776,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>test</goal>
             </goals>
             <configuration>
+	      <argLine>${jprofiler.agentpath}</argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
                 <include>**/Test*.java</include>
