@@ -1173,7 +1173,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-tdb-processor>1.3.0-SNAPSHOT</version.lockss.lockss-tdb-processor>
     <version.lockss.lockss-tdb-tools>${version.lockss.lockss-tdb-processor}</version.lockss.lockss-tdb-tools><!-- deprecated; renamed -->
     <version.lockss.lockss-tdbxml-maven-plugin>1.3.0-SNAPSHOT</version.lockss.lockss-tdbxml-maven-plugin>
-    <version.lockss.lockss-util>1.8.0-SNAPSHOT</version.lockss.lockss-util>
+    <version.lockss.lockss-util>1.8.0-SNAPSHOT</version.lockss.lockss-util><!-- aggregator -->
+    <version.lockss.lockss-util-core>1.8.0-SNAPSHOT</version.lockss.lockss-util-core>
+    <version.lockss.lockss-util-rest>1.0.0-SNAPSHOT</version.lockss.lockss-util-rest>
 
     <!-- END properties section: LOCKSS versions -->
 
