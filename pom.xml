@@ -1143,6 +1143,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
+    <version.dependency.json-path>2.4.0</version.dependency.json-path>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
 
     <!-- END properties section: dependency versions -->
@@ -1165,7 +1166,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-metadata-extraction-service>2.0.2.0-SNAPSHOT</version.lockss.lockss-metadata-extraction-service>
     <version.lockss.lockss-metadataextractor-common>2.0.4.0-SNAPSHOT</version.lockss.lockss-metadataextractor-common>
     <version.lockss.lockss-metadata-service>2.0.1.0-SNAPSHOT</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-plugin-compat>1.2.0-SNAPSHOT</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
+    <version.lockss.lockss-plugins-archetype>1.0.0-SNAPSHOT</version.lockss.lockss-plugins-archetype>
     <version.lockss.lockss-repository-client>2.0.7.0-SNAPSHOT</version.lockss.lockss-repository-client>
     <version.lockss.lockss-repository-core>2.0.13.0-SNAPSHOT</version.lockss.lockss-repository-core>
     <version.lockss.lockss-repository-service>2.0.9.0-SNAPSHOT</version.lockss.lockss-repository-service>
@@ -3036,7 +3039,9 @@ Local directory: ${user.dir}
         <version.lockss.lockss-metadata-extraction-service>2.0.1.0</version.lockss.lockss-metadata-extraction-service>
         <version.lockss.lockss-metadataextractor-common>2.0.3.0</version.lockss.lockss-metadataextractor-common>
         <version.lockss.lockss-metadata-service>2.0.0.0</version.lockss.lockss-metadata-service>
+        <version.lockss.lockss-plugin-compat>1.2.0</version.lockss.lockss-plugin-compat>
         <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
+        <version.lockss.lockss-plugins-archetype>1.0.0-SNAPSHOT</version.lockss.lockss-plugins-archetype>
         <version.lockss.lockss-repository-client>2.0.6.0</version.lockss.lockss-repository-client>
         <version.lockss.lockss-repository-core>2.0.12.0</version.lockss.lockss-repository-core>
         <version.lockss.lockss-repository-service>2.0.8.0</version.lockss.lockss-repository-service>
