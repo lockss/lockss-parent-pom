@@ -1888,6 +1888,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <skip>${build.java.spring.repackageJar.skip}</skip>
               <classifier>${build.java.spring.withDepsClassifier}</classifier>
               <mainClass>${build.java.mainClass}</mainClass>
+              <layout>ZIP</layout>
             </configuration>
           </execution>
 
