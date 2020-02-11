@@ -3044,7 +3044,7 @@ Local directory: ${user.dir}
         <version.lockss.lockss-plugin-compat>1.2.0</version.lockss.lockss-plugin-compat>
         <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
         <version.lockss.lockss-plugins-archetype>1.0.0</version.lockss.lockss-plugins-archetype>
-        <version.lockss.lockss-repository-tools>2.0.7.0</version.lockss.lockss-repository-tools>
+        <version.lockss.lockss-repository-tools>2.0.7.1</version.lockss.lockss-repository-tools>
         <version.lockss.lockss-repository-client>${version.lockss.lockss-repository-tools}</version.lockss.lockss-repository-client><!-- deprecated; renamed -->
         <version.lockss.lockss-repository-core>2.0.13.0</version.lockss.lockss-repository-core>
         <version.lockss.lockss-repository-service>2.0.9.0</version.lockss.lockss-repository-service>
