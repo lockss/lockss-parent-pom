@@ -1799,6 +1799,11 @@ POSSIBILITY OF SUCH DAMAGE.
               <reuseForks>false</reuseForks>
               <trimStackTrace>${build.java.runTests.trimStackTrace}</trimStackTrace>
               <systemPropertyVariables>
+                <!-- Tests may generate many SecureRandom instances which may
+                     block for a long time reading entropy from /dev/random. See
+                     https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6202721
+                     for an explanation of the extra "./" -->
+                <java.security.egd>file:/dev/./urandom</java.security.egd>
                 <java.io.tmpdir>${dir.temporary}</java.io.tmpdir>$>
                 <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
                 <org.lockss.unitTesting>true</org.lockss.unitTesting>
