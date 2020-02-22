@@ -1071,7 +1071,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-javadoc-plugin>3.0.1</version.plugin.maven-javadoc-plugin>
     <version.plugin.maven-jar-plugin>3.1.1</version.plugin.maven-jar-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin>
-    <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
+    <version.plugin.maven-plugin-plugin>3.6.3</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
     <version.plugin.maven-source-plugin>3.0.1</version.plugin.maven-source-plugin>
     <version.plugin.maven-surefire-plugin>2.19.1</version.plugin.maven-surefire-plugin><!-- upgradeable to 2.22.1 -->
