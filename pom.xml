@@ -1124,7 +1124,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.3</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.12</version.dependency.commons-codec>
+    <version.dependency.commons-codec>1.14</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.3</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.18</version.dependency.commons-compress>
