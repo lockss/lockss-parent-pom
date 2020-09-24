@@ -2845,7 +2845,7 @@ Local directory: ${user.dir}
         <skipTestJavadoc>true</skipTestJavadoc>
         <skipGpg>true</skipGpg>
         <skipMavenCentral>true</skipMavenCentral>
-        <skipDeployMail>true</skipDeployMail>
+        <skipDeployMail>false</skipDeployMail>
         <skipDocker>false</skipDocker>
         <skipDockerBuild>false</skipDockerBuild>
         <skipDockerPush>false</skipDockerPush>
