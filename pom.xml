@@ -2297,13 +2297,17 @@ POSSIBILITY OF SUCH DAMAGE.
                 <receiver>${build.java.deployMail.to}</receiver>
               </receivers>
               <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} version ${project.version} was deployed around ${local.build.timestamp}.
+              <textMessage><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
 
 BUILD CONTEXT:
 Project: ${project.groupId}:${project.artifactId}:${project.version}
 Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Skipped JAR upload: ${build.java.deployMavenCentral.skip}
+Skipped Docker upload: ${build.docker.dockerPush.skip}
+
+GIT CONTEXT:
 Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (${git.branch})
+Git repository: ${git.remote.origin.url} (branch: ${git.branch})
 Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
 
 JAVA CONTEXT:
