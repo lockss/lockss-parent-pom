@@ -6,3 +6,6 @@
 # IntelliJ
 .idea/
 *.iml
+
+/pom.xml.bak
+/*/pom.xml.bak
