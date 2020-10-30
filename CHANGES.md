@@ -1,5 +1,9 @@
 # Release Notes
 
+## Major Changes Since 1.11.0
+
+*   (highlights go here)
+
 ## 1.11.0
 
 ### Features
