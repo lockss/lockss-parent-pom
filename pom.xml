@@ -66,41 +66,59 @@ POSSIBILITY OF SUCH DAMAGE.
   -->
   <developers>
     <developer>
-      <id>fergaloy</id>
-      <name>Fernando García-Loygorri</name>
-      <email>fergaloy@lockss.org</email>
-      <organization>LOCKSS Program</organization>
-      <organizationUrl>https://www.lockss.org/</organizationUrl>
-    </developer>
-    <developer>
       <id>clairegriffin</id>
       <name>Claire Griffin</name>
-      <email>clairetg@stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>thibgc</id>
       <name>Thib Guicherd-Callin</name>
-      <email>thib@cs.stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>tlipkis</id>
       <name>Tom Lipkis</name>
-      <email>tal@lockss.org</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>dlvargas</id>
       <name>Daniel Vargas</name>
-      <email>dlvargas@stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
   </developers>
+  
+  <contributors>
+    <contributor>
+      <name>Fernando García-Loygorri</name>
+      <roles>
+       <role>Developer</role>
+       <role>Alumni</role>
+      </roles>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>Pacific/Honolulu</timezone>
+    </contributor>
+  </contributors>
 
   <scm>
     <connection>scm:git:https://${gitHost}/${gitGroupId}/${gitProjectId}.git</connection>
