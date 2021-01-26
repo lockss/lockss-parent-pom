@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-Copyright (c) 2000-2020, Board of Trustees of Leland Stanford Jr. University
+Copyright (c) 2000-2021, Board of Trustees of Leland Stanford Jr. University
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -1159,6 +1159,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-validator>1.7</version.dependency.commons-validator>
     <version.dependency.h2>1.4.200</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
+    <version.dependency.jackson-databind>${version.group.jackson}.8</version.dependency.jackson-databind>
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.json-path>2.4.0</version.dependency.json-path>
