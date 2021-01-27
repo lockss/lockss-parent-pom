@@ -1186,6 +1186,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-metadata-extraction-service>2.0.4.0-SNAPSHOT</version.lockss.lockss-metadata-extraction-service>
     <version.lockss.lockss-metadataextractor-common>2.0.6.0-SNAPSHOT</version.lockss.lockss-metadataextractor-common>
     <version.lockss.lockss-metadata-service>2.0.3.0-SNAPSHOT</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-poller>2.0.3.0-SNAPSHOT</version.lockss.lockss-poller>
     <version.lockss.lockss-plugin-compat>1.2.0-SNAPSHOT</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
     <version.lockss.lockss-plugins-archetype>1.0.0-SNAPSHOT</version.lockss.lockss-plugins-archetype>
@@ -3072,6 +3073,7 @@ Local directory: ${user.dir}
         <version.lockss.lockss-metadata-extraction-service>2.0.3.0</version.lockss.lockss-metadata-extraction-service>
         <version.lockss.lockss-metadataextractor-common>2.0.5.0</version.lockss.lockss-metadataextractor-common>
         <version.lockss.lockss-metadata-service>2.0.2.0</version.lockss.lockss-metadata-service>
+        <version.lockss.lockss-poller>2.0.2.0</version.lockss.lockss-poller>
         <version.lockss.lockss-plugin-compat>1.2.0</version.lockss.lockss-plugin-compat>
         <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
         <version.lockss.lockss-plugins-archetype>1.0.0</version.lockss.lockss-plugins-archetype>
