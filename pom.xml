@@ -1130,6 +1130,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.spring-boot>1.5.17.RELEASE</version.group.spring-boot><!-- upgradeable -->
     <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
     <version.group.truezip>7.7.10</version.group.truezip>
+    <version.group.xoai>4.2.0</version.group.xoai>
 
     <!-- END properties section: grouped versions -->
 
