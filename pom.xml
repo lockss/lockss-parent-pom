@@ -541,7 +541,7 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: false
     -->
-    <trimstack>true</trimstack>
+    <trimstack>false</trimstack>
     <build.java.runTests.trimStackTrace>${trimstack}</build.java.runTests.trimStackTrace>
 
     <!--
