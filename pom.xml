@@ -1807,6 +1807,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>test</goal>
             </goals>
             <configuration>
+              <runOrder>balanced</runOrder>
 	      <argLine>${jprofiler.agentpath}</argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
