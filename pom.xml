@@ -477,7 +477,7 @@ POSSIBILITY OF SUCH DAMAGE.
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipCompileMain>${build.java.skip}</skipCompileMain>
-    <build.java.compileMain.skip>${skipCompile}</build.java.compileMain.skip>
+    <build.java.compileMain.skip>${skipCompileMain}</build.java.compileMain.skip>
 
     <!--
         `build.java.compileTests.skip` (alias: `skipCompileTests`)
