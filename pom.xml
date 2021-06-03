@@ -1721,6 +1721,11 @@ POSSIBILITY OF SUCH DAMAGE.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.plugin.maven-compiler-plugin}</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-XDenableSunApiLintControl</arg>
+          </compilerArgs>
+        </configuration>
         <executions>
 
           <!-- BEGIN step compileMain -->
