@@ -1082,6 +1082,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin><!-- now version 3.0.0 -->
     <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin><!-- now version 4.0.3 -->
     <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin><!-- now version 3.0.0 -->
+    <version.plugin.maven-archetype-plugin>3.0.1</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
@@ -1850,6 +1851,24 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <!-- END plugin maven-surefire-plugin -->
+
+      <!-- BEGIN plugin maven-archetype-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-archetype-plugin</artifactId>
+        <version>${version.plugin.maven-archetype-plugin}</version>
+        <executions>
+
+          <execution>
+            <id>default-jar</id>
+            <phase>NONE</phase><!-- maven-jar-plugin:jarMain supersedes maven-archetype-plugin:default-jar -->
+          </execution>
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-archetype-plugin -->
 
       <!-- BEGIN plugin maven-jar-plugin -->
 
