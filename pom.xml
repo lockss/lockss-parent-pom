@@ -38,7 +38,7 @@ POSSIBILITY OF SUCH DAMAGE.
   
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.12.1</version>
+  <version>1.13.0</version>
   <packaging>pom</packaging>
   
   <name>lockss-parent-pom</name>
@@ -66,41 +66,59 @@ POSSIBILITY OF SUCH DAMAGE.
   -->
   <developers>
     <developer>
-      <id>fergaloy</id>
-      <name>Fernando García-Loygorri</name>
-      <email>fergaloy@lockss.org</email>
-      <organization>LOCKSS Program</organization>
-      <organizationUrl>https://www.lockss.org/</organizationUrl>
-    </developer>
-    <developer>
       <id>clairegriffin</id>
       <name>Claire Griffin</name>
-      <email>clairetg@stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>thibgc</id>
       <name>Thib Guicherd-Callin</name>
-      <email>thib@cs.stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>tlipkis</id>
       <name>Tom Lipkis</name>
-      <email>tal@lockss.org</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
     <developer>
       <id>dlvargas</id>
       <name>Daniel Vargas</name>
-      <email>dlvargas@stanford.edu</email>
+      <roles>
+       <role>Developer</role>
+      </roles>
       <organization>LOCKSS Program</organization>
       <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>America/Los_Angeles</timezone>
     </developer>
   </developers>
+  
+  <contributors>
+    <contributor>
+      <name>Fernando García-Loygorri</name>
+      <roles>
+       <role>Developer</role>
+       <role>Alumni</role>
+      </roles>
+      <organization>LOCKSS Program</organization>
+      <organizationUrl>https://www.lockss.org/</organizationUrl>
+      <timezone>Pacific/Honolulu</timezone>
+    </contributor>
+  </contributors>
 
   <scm>
     <connection>scm:git:https://${gitHost}/${gitGroupId}/${gitProjectId}.git</connection>
@@ -459,7 +477,7 @@ POSSIBILITY OF SUCH DAMAGE.
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipCompileMain>${build.java.skip}</skipCompileMain>
-    <build.java.compileMain.skip>${skipCompile}</build.java.compileMain.skip>
+    <build.java.compileMain.skip>${skipCompileMain}</build.java.compileMain.skip>
 
     <!--
         `build.java.compileTests.skip` (alias: `skipCompileTests`)
@@ -523,7 +541,7 @@ POSSIBILITY OF SUCH DAMAGE.
         
         Default: false
     -->
-    <trimstack>true</trimstack>
+    <trimstack>false</trimstack>
     <build.java.runTests.trimStackTrace>${trimstack}</build.java.runTests.trimStackTrace>
 
     <!--
@@ -1058,50 +1076,51 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: plugin versions -->
 
-    <version.plugin.build-helper-maven-plugin>3.0.0</version.plugin.build-helper-maven-plugin>
-    <version.plugin.buildnumber-maven-plugin>1.3</version.plugin.buildnumber-maven-plugin>
-    <version.plugin.dockerfile-maven-plugin>1.4.10</version.plugin.dockerfile-maven-plugin>
-    <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin>
-    <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin>
-    <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin>
+    <version.plugin.build-helper-maven-plugin>3.2.0</version.plugin.build-helper-maven-plugin>
+    <version.plugin.buildnumber-maven-plugin>1.4</version.plugin.buildnumber-maven-plugin>
+    <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
+    <version.plugin.exec-maven-plugin>1.6.0</version.plugin.exec-maven-plugin><!-- now version 3.0.0 -->
+    <version.plugin.git-commit-id-plugin>2.2.6</version.plugin.git-commit-id-plugin><!-- now version 4.0.3 -->
+    <version.plugin.maven-antrun-plugin>1.8</version.plugin.maven-antrun-plugin><!-- now version 3.0.0 -->
+    <version.plugin.maven-archetype-plugin>3.0.1</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
-    <version.plugin.maven-compiler-plugin>3.8.0</version.plugin.maven-compiler-plugin>
+    <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
-    <version.plugin.maven-enforcer-plugin>3.0.0-M2</version.plugin.maven-enforcer-plugin>
-    <version.plugin.maven-javadoc-plugin>3.0.1</version.plugin.maven-javadoc-plugin>
-    <version.plugin.maven-jar-plugin>3.1.1</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-enforcer-plugin>3.0.0-M3</version.plugin.maven-enforcer-plugin>
+    <version.plugin.maven-javadoc-plugin>3.2.0</version.plugin.maven-javadoc-plugin>
+    <version.plugin.maven-jar-plugin>3.2.0</version.plugin.maven-jar-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin>
     <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
-    <version.plugin.maven-source-plugin>3.0.1</version.plugin.maven-source-plugin>
-    <version.plugin.maven-surefire-plugin>2.19.1</version.plugin.maven-surefire-plugin><!-- upgradeable to 2.22.1 -->
+    <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
+    <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
-    <version.plugin.swagger-codegen-maven-plugin>2.4.0</version.plugin.swagger-codegen-maven-plugin><!-- upgradeable to 3.0.3 -->
+    <version.plugin.swagger-codegen-maven-plugin>2.4.18</version.plugin.swagger-codegen-maven-plugin>
 
     <!-- END properties section: plugin versions -->
 
     <!-- BEGIN properties section: Docker image versions -->
 
-    <version.docker.lockss-spring>2.6.1</version.docker.lockss-spring>
+    <version.docker.lockss-spring>2.7.0</version.docker.lockss-spring>
 
     <!-- END properties section: Docker image versions -->
 
     <!-- BEGIN properties section: grouped versions -->
 
-    <version.group.activemq>5.15.8</version.group.activemq>
+    <version.group.activemq>5.16.0</version.group.activemq>
     <version.group.antlr>4.7.2</version.group.antlr>
-    <version.group.bouncycastle>1.60</version.group.bouncycastle>
-    <version.group.derby>10.14.2.0</version.group.derby>
+    <version.group.bouncycastle>1.67</version.group.bouncycastle>
+    <version.group.derby>10.14.2.0</version.group.derby><!-- subsequent versions are for Java 9 and higher -->
     <version.group.flyway>5.2.4</version.group.flyway>
     <version.group.hadoop>3.2.0</version.group.hadoop><!-- upgradeable to 3.0.3 (lockss-hdfs) or 3.1.2 -->
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
-    <version.group.icu4j>63.1</version.group.icu4j>
+    <version.group.icu4j>68.1</version.group.icu4j>
     <version.group.jackson>2.9.10</version.group.jackson>
     <version.group.jooq>3.11.7</version.group.jooq>
-    <version.group.junit4>4.12</version.group.junit4>
-    <version.group.junit5-jupiter>5.1.0</version.group.junit5-jupiter><!-- upgradeable to 5.3.2 -->
-    <version.group.junit5-platform>1.1.0</version.group.junit5-platform><!-- upgradeable to 1.3.2 -->
+    <version.group.junit4>4.13.1</version.group.junit4>
+    <version.group.junit5-jupiter>5.7.1</version.group.junit5-jupiter>
+    <version.group.junit5-platform>1.7.1</version.group.junit5-platform>
     <version.group.log4j>2.13.2</version.group.log4j>
     <version.group.maven>3.6.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
@@ -1112,6 +1131,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.spring-boot>1.5.17.RELEASE</version.group.spring-boot><!-- upgradeable -->
     <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
     <version.group.truezip>7.7.10</version.group.truezip>
+    <version.group.xoai>4.2.0</version.group.xoai>
 
     <!-- END properties section: grouped versions -->
 
@@ -1122,23 +1142,24 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
-    <version.dependency.commons-beanutils>1.9.3</version.dependency.commons-beanutils>
+    <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.14</version.dependency.commons-codec>
+    <version.dependency.commons-codec>1.15</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
-    <version.dependency.commons-collections4>4.3</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.18</version.dependency.commons-compress>
+    <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
+    <version.dependency.commons-compress>1.20</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- upgradeable to 2.1 -->
     <version.dependency.commons-fileupload>1.4</version.dependency.commons-fileupload>
-    <version.dependency.commons-io>2.6</version.dependency.commons-io>
+    <version.dependency.commons-io>2.8.0</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
-    <version.dependency.commons-lang3>3.8.1</version.dependency.commons-lang3>
+    <version.dependency.commons-lang3>3.11</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
-    <version.dependency.commons-validator>1.6</version.dependency.commons-validator>
-    <version.dependency.h2>1.4.197</version.dependency.h2>
+    <version.dependency.commons-text>1.9</version.dependency.commons-text>
+    <version.dependency.commons-validator>1.7</version.dependency.commons-validator>
+    <version.dependency.h2>1.4.200</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}.8</version.dependency.jackson-databind>
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
@@ -1157,32 +1178,32 @@ POSSIBILITY OF SUCH DAMAGE.
         A special property with the version string matching that of the classic
         LOCKSS daemon (lockss-daemon).
     -->
-    <build.releasename>2.0-alpha3</build.releasename>
+    <build.releasename>2.0-alpha4</build.releasename>
 
-    <version.lockss.lockss-configuration-service>2.0.4.1</version.lockss.lockss-configuration-service>
-    <version.lockss.lockss-core>2.0.4.0</version.lockss.lockss-core>
+    <version.lockss.lockss-configuration-service>2.5.0</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.5.0</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-    <version.lockss.lockss-junit4-bundle>1.3.0</version.lockss.lockss-junit4-bundle>
-    <version.lockss.lockss-junit5-bundle>1.3.0</version.lockss.lockss-junit5-bundle>
-    <version.lockss.lockss-metadata-extraction-service>2.0.3.1</version.lockss.lockss-metadata-extraction-service>
-    <version.lockss.lockss-metadataextractor-common>2.0.5.0</version.lockss.lockss-metadataextractor-common>
-    <version.lockss.lockss-metadata-service>2.0.2.1</version.lockss.lockss-metadata-service>
-    <version.lockss.lockss-poller>2.0.2.1</version.lockss.lockss-poller>
-    <version.lockss.lockss-plugin-compat>1.2.0-SNAPSHOT</version.lockss.lockss-plugin-compat>
+    <version.lockss.lockss-junit4-bundle>1.4.0</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.4.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-metadata-extraction-service>2.4.0</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.6.0</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.3.0</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-poller>2.3.0</version.lockss.lockss-poller>
+    <version.lockss.lockss-plugin-compat>1.2.0</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-plugins-archetype>1.0.0-SNAPSHOT</version.lockss.lockss-plugins-archetype>
-    <version.lockss.lockss-repository-tools>2.0.8.0</version.lockss.lockss-repository-tools>
+    <version.lockss.lockss-plugins-archetype>1.0.0</version.lockss.lockss-plugins-archetype>
+    <version.lockss.lockss-repository-tools>2.9.0</version.lockss.lockss-repository-tools>
     <version.lockss.lockss-repository-client>${version.lockss.lockss-repository-tools}</version.lockss.lockss-repository-client><!-- deprecated; renamed -->
-    <version.lockss.lockss-repository-core>2.0.14.1</version.lockss.lockss-repository-core>
-    <version.lockss.lockss-repository-service>2.0.10.1</version.lockss.lockss-repository-service>
-    <version.lockss.lockss-spring-bundle>2.0.10.0</version.lockss.lockss-spring-bundle>
-    <version.lockss.lockss-tdb-processor>1.3.0</version.lockss.lockss-tdb-processor>
+    <version.lockss.lockss-repository-core>2.15.0</version.lockss.lockss-repository-core>
+    <version.lockss.lockss-repository-service>2.11.0</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.11.0</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-tdb-processor>1.4.0</version.lockss.lockss-tdb-processor>
     <version.lockss.lockss-tdb-tools>${version.lockss.lockss-tdb-processor}</version.lockss.lockss-tdb-tools><!-- deprecated; renamed -->
-    <version.lockss.lockss-tdbxml-maven-plugin>1.4.0</version.lockss.lockss-tdbxml-maven-plugin>
-    <version.lockss.lockss-util>1.10.0</version.lockss.lockss-util><!-- deprecated -->
-    <version.lockss.lockss-util-core>1.9.0</version.lockss.lockss-util-core>
-    <version.lockss.lockss-util-entities>1.1.0</version.lockss.lockss-util-entities>
-    <version.lockss.lockss-util-rest>1.1.1</version.lockss.lockss-util-rest>
+    <version.lockss.lockss-tdbxml-maven-plugin>1.5.0</version.lockss.lockss-tdbxml-maven-plugin>
+    <version.lockss.lockss-util>1.11.0</version.lockss.lockss-util><!-- deprecated -->
+    <version.lockss.lockss-util-core>1.10.0</version.lockss.lockss-util-core>
+    <version.lockss.lockss-util-entities>1.2.0</version.lockss.lockss-util-entities>
+    <version.lockss.lockss-util-rest>1.2.0</version.lockss.lockss-util-rest>
 
     <!-- END properties section: LOCKSS versions -->
 
@@ -1701,6 +1722,11 @@ POSSIBILITY OF SUCH DAMAGE.
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>${version.plugin.maven-compiler-plugin}</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-XDenableSunApiLintControl</arg>
+          </compilerArgs>
+        </configuration>
         <executions>
 
           <!-- BEGIN step compileMain -->
@@ -1735,7 +1761,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>testCompile</goal>
             </goals>
             <configuration>
-              <skipMain>${build.java.compileTests.skip}</skipMain>            
+              <skip>${build.java.compileTests.skip}</skip>
             </configuration>
           </execution>
         
@@ -1754,11 +1780,13 @@ POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-surefire-plugin</artifactId>
         <version>${version.plugin.maven-surefire-plugin}</version>
         <dependencies>
+<!--
           <dependency>
             <groupId>org.junit.platform</groupId>
             <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>${version.group.junit5-platform}</version>
+            <version>1.3.2</version>
           </dependency>
+-->
           <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
@@ -1785,6 +1813,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>test</goal>
             </goals>
             <configuration>
+              <runOrder>balanced</runOrder>
 	      <argLine>${jprofiler.agentpath}</argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
@@ -1822,6 +1851,24 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <!-- END plugin maven-surefire-plugin -->
+
+      <!-- BEGIN plugin maven-archetype-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-archetype-plugin</artifactId>
+        <version>${version.plugin.maven-archetype-plugin}</version>
+        <executions>
+
+          <execution>
+            <id>default-jar</id>
+            <phase>NONE</phase><!-- maven-jar-plugin:jarMain supersedes maven-archetype-plugin:default-jar -->
+          </execution>
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-archetype-plugin -->
 
       <!-- BEGIN plugin maven-jar-plugin -->
 
@@ -3045,31 +3092,31 @@ Local directory: ${user.dir}
       <id>useReleaseVersions</id>
 
       <properties>
-        <build.releasename>2.0-alpha2</build.releasename>
-        <version.lockss.lockss-configuration-service>2.0.3.0</version.lockss.lockss-configuration-service>
-        <version.lockss.lockss-core>2.0.3.0</version.lockss.lockss-core>
+        <build.releasename>2.0-alpha3</build.releasename>
+        <version.lockss.lockss-configuration-service>2.0.4.0</version.lockss.lockss-configuration-service>
+        <version.lockss.lockss-core>2.0.4.0</version.lockss.lockss-core>
         <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-        <version.lockss.lockss-junit4-bundle>1.2.0</version.lockss.lockss-junit4-bundle>
-        <version.lockss.lockss-junit5-bundle>1.2.0</version.lockss.lockss-junit5-bundle>
-        <version.lockss.lockss-metadata-extraction-service>2.0.2.0</version.lockss.lockss-metadata-extraction-service>
-        <version.lockss.lockss-metadataextractor-common>2.0.4.0</version.lockss.lockss-metadataextractor-common>
-        <version.lockss.lockss-metadata-service>2.0.1.0</version.lockss.lockss-metadata-service>
-        <version.lockss.lockss-poller>2.0.1.0</version.lockss.lockss-poller>
+        <version.lockss.lockss-junit4-bundle>1.3.0</version.lockss.lockss-junit4-bundle>
+        <version.lockss.lockss-junit5-bundle>1.3.0</version.lockss.lockss-junit5-bundle>
+        <version.lockss.lockss-metadata-extraction-service>2.0.3.0</version.lockss.lockss-metadata-extraction-service>
+        <version.lockss.lockss-metadataextractor-common>2.0.5.0</version.lockss.lockss-metadataextractor-common>
+        <version.lockss.lockss-metadata-service>2.0.2.0</version.lockss.lockss-metadata-service>
+        <version.lockss.lockss-poller>2.0.2.0</version.lockss.lockss-poller>
         <version.lockss.lockss-plugin-compat>1.2.0</version.lockss.lockss-plugin-compat>
         <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
         <version.lockss.lockss-plugins-archetype>1.0.0</version.lockss.lockss-plugins-archetype>
-        <version.lockss.lockss-repository-tools>2.0.7.1</version.lockss.lockss-repository-tools>
+        <version.lockss.lockss-repository-tools>2.0.8.0</version.lockss.lockss-repository-tools>
         <version.lockss.lockss-repository-client>${version.lockss.lockss-repository-tools}</version.lockss.lockss-repository-client><!-- deprecated; renamed -->
-        <version.lockss.lockss-repository-core>2.0.13.0</version.lockss.lockss-repository-core>
-        <version.lockss.lockss-repository-service>2.0.9.0</version.lockss.lockss-repository-service>
-        <version.lockss.lockss-spring-bundle>2.0.9.0</version.lockss.lockss-spring-bundle>
-        <version.lockss.lockss-tdb-processor>1.2.0</version.lockss.lockss-tdb-processor>
+        <version.lockss.lockss-repository-core>2.0.14.0</version.lockss.lockss-repository-core>
+        <version.lockss.lockss-repository-service>2.0.10.0</version.lockss.lockss-repository-service>
+        <version.lockss.lockss-spring-bundle>2.0.10.0</version.lockss.lockss-spring-bundle>
+        <version.lockss.lockss-tdb-processor>1.3.0</version.lockss.lockss-tdb-processor>
         <version.lockss.lockss-tdb-tools>${version.lockss.lockss-tdb-processor}</version.lockss.lockss-tdb-tools><!-- deprecated; renamed -->
-        <version.lockss.lockss-tdbxml-maven-plugin>1.3.0</version.lockss.lockss-tdbxml-maven-plugin>
-        <version.lockss.lockss-util>1.9.0</version.lockss.lockss-util><!-- deprecated -->
-        <version.lockss.lockss-util-core>1.8.0</version.lockss.lockss-util-core>
-        <version.lockss.lockss-util-entities>1.0.0</version.lockss.lockss-util-entities>
-        <version.lockss.lockss-util-rest>1.0.0</version.lockss.lockss-util-rest>
+        <version.lockss.lockss-tdbxml-maven-plugin>1.4.0</version.lockss.lockss-tdbxml-maven-plugin>
+        <version.lockss.lockss-util>1.10.0</version.lockss.lockss-util><!-- deprecated -->
+        <version.lockss.lockss-util-core>1.9.0</version.lockss.lockss-util-core>
+        <version.lockss.lockss-util-entities>1.1.0</version.lockss.lockss-util-entities>
+        <version.lockss.lockss-util-rest>1.1.0</version.lockss.lockss-util-rest>
       </properties>
 
     </profile>

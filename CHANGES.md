@@ -1,8 +1,24 @@
-# Release Notes
+# `lockss-parent-pom` Release Notes
 
-## Major Changes Since 1.11.0
+## Changes Since 1.12.0
 
-*   (highlights go here)
+*   ...
+
+## 1.12.1
+
+### Security
+
+*   Same as 1.12.0 with Jackson-Databind version set to 2.9.10.8, for dependent projects that wish to re-release out of an abundance of caution (CVE-2021-20190).
+
+## 1.12.0
+
+### Features
+
+*   ...
+
+### Fixes
+
+*   ...
 
 ## 1.11.0
 
