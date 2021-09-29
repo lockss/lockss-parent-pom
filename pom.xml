@@ -1117,6 +1117,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
     <version.group.icu4j>68.1</version.group.icu4j>
     <version.group.jackson>2.9.10</version.group.jackson>
+    <version.group.jonix>8.0.1</version.group.jonix>
     <version.group.jooq>3.14.11</version.group.jooq>
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.7.2</version.group.junit5-jupiter>
