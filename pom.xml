@@ -1144,7 +1144,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
-    <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
+    <version.dependency.commons-cli>1.5.0</version.dependency.commons-cli>
     <version.dependency.commons-codec>1.15</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
