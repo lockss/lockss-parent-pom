@@ -1117,6 +1117,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
     <version.group.icu4j>68.1</version.group.icu4j>
     <version.group.jackson>2.9.10</version.group.jackson>
+    <version.group.jonix>8.0.1</version.group.jonix>
     <version.group.jooq>3.14.11</version.group.jooq>
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.7.2</version.group.junit5-jupiter>
@@ -1143,12 +1144,13 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
-    <version.dependency.commons-cli>1.4</version.dependency.commons-cli>
+    <version.dependency.commons-cli>1.5.0</version.dependency.commons-cli>
     <version.dependency.commons-codec>1.15</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.21</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration>
+    <version.dependency.commons-csv>1.9.0</version.dependency.commons-csv>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- upgradeable to 2.1 -->
     <version.dependency.commons-fileupload>1.4</version.dependency.commons-fileupload>
     <version.dependency.commons-io>2.11.0</version.dependency.commons-io>
@@ -1178,7 +1180,7 @@ POSSIBILITY OF SUCH DAMAGE.
         A special property with the version string matching that of the classic
         LOCKSS daemon (lockss-daemon).
     -->
-    <build.releasename>2.0-beta1-SNAPSHOT</build.releasename>
+    <build.releasename>2.0-alpha5-SNAPSHOT</build.releasename>
 
     <version.lockss.lockss-configuration-service>2.6.0-SNAPSHOT</version.lockss.lockss-configuration-service>
     <version.lockss.lockss-core>2.6.0-SNAPSHOT</version.lockss.lockss-core>
