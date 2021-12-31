@@ -1835,7 +1835,7 @@ POSSIBILITY OF SUCH DAMAGE.
                      https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6202721
                      for an explanation of the extra "./" -->
                 <java.security.egd>file:/dev/./urandom</java.security.egd>
-                <java.io.tmpdir>${dir.temporary}</java.io.tmpdir>$>
+                <java.io.tmpdir>${dir.test.temp}</java.io.tmpdir>$>
                 <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
                 <org.lockss.unitTesting>true</org.lockss.unitTesting>
                 <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
@@ -2381,6 +2381,11 @@ Local directory: ${user.dir}
 
       <!-- BEGIN plugin maven-antrun-plugin -->
 
+      <!-- This plugin must appear *after* surefire, as it contains a
+           test phase execution that should run after the tests.
+           (There is no post-test phase so we have to rely on plugin
+           ordering. -->
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-antrun-plugin</artifactId>
@@ -2393,6 +2398,41 @@ Local directory: ${user.dir}
           </dependency>  
         </dependencies>
         <executions>
+
+          <!-- Create a subdir of java.io.tmpdir to use for tests -->
+	  <execution>
+            <id>pre-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.runTests.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <tempfile property="dir.test.temp" destDir="${dir.temporary}"
+                          prefix="testtmp"/>
+                <echo>Creating test temp dir: ${dir.test.temp}</echo>
+                <mkdir dir="${dir.test.temp}" />
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Delete the subdir of java.io.tmpdir used for tests -->
+	  <execution>
+            <id>post-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.runTests.skip}</skip>
+              <target>
+                <echo>Deleting test temp dir: ${dir.test.temp}</echo>
+                <delete dir="${dir.test.temp}" />
+              </target>
+            </configuration>
+          </execution>
 
           <!-- BEGIN step local-publish-site -->
 
