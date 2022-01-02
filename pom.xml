@@ -523,6 +523,10 @@ POSSIBILITY OF SUCH DAMAGE.
     <keeptempfiles>false</keeptempfiles>
     <build.java.runTests.keepTempFiles>${keeptempfiles}</build.java.runTests.keepTempFiles>
 
+    <!-- Reset to false if tests are run and a testtemp dir is
+         created, which should be deleted -->
+    <build.delTestTempDir.skip>true</build.delTestTempDir.skip>
+
     <!--
         `build.java.runTests.redirectTestOutputToFile` (alias: `outputtofile`)
         
@@ -2410,10 +2414,22 @@ Local directory: ${user.dir}
               <skip>${build.java.runTests.skip}</skip>
               <exportAntProperties>true</exportAntProperties>
               <target>
-                <tempfile property="dir.test.temp" destDir="${dir.temporary}"
-                          prefix="testtmp"/>
-                <echo>Creating test temp dir: ${dir.test.temp}</echo>
-                <mkdir dir="${dir.test.temp}" />
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <isfalse value="${build.java.runTests.keepTempFiles}" />
+                  <then>
+                    <tempfile property="dir.test.temp"
+                              destDir="${dir.temporary}"
+                              prefix="testtmp"/>
+                    <echo>Creating test temp dir: ${dir.test.temp}</echo>
+                    <mkdir dir="${dir.test.temp}" />
+                    <property name="build.delTestTempDir.skip" value="false" />
+                  </then>
+                  <else>
+                    <property name="dir.test.temp" value="${dir.temporary}" />
+                    <property name="build.delTestTempDir.skip" value="true" />
+                  </else>
+                </if>
               </target>
             </configuration>
           </execution>
@@ -2426,7 +2442,7 @@ Local directory: ${user.dir}
               <goal>run</goal>
             </goals>
             <configuration>
-              <skip>${build.java.runTests.skip}</skip>
+              <skip>${build.delTestTempDir.skip}</skip>
               <target>
                 <echo>Deleting test temp dir: ${dir.test.temp}</echo>
                 <delete dir="${dir.test.temp}" />
