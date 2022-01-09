@@ -1113,13 +1113,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <version.group.activemq>5.16.2</version.group.activemq>
     <version.group.antlr>4.9.2</version.group.antlr>
-    <version.group.bouncycastle>1.67</version.group.bouncycastle>
+    <version.group.bouncycastle>1.70</version.group.bouncycastle>
     <version.group.derby>10.14.2.0</version.group.derby><!-- subsequent versions are for Java 9 and higher -->
     <version.group.flyway>5.2.4</version.group.flyway><!-- now 7.10.0 -->
     <version.group.hadoop>3.3.1</version.group.hadoop>
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
-    <version.group.icu4j>68.1</version.group.icu4j>
+    <version.group.icu4j>70.1</version.group.icu4j>
     <version.group.jackson>2.9.10</version.group.jackson>
     <version.group.jooq>3.14.11</version.group.jooq>
     <version.group.junit4>4.13.2</version.group.junit4>
