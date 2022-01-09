@@ -1174,6 +1174,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
     <version.dependency.marc4j>2.9.2</version.dependency.marc4j>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
+    <version.dependency.xmlunit>1.6</version.dependency.xmlunit>
 
     <!-- END properties section: dependency versions -->
 
