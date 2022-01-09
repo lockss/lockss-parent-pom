@@ -1171,7 +1171,8 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jonix>8.0.1</version.dependency.jonix><!-- keep at 8.0.1 while classic daemon is Java 8 -->
     <version.dependency.json-path>2.6.0</version.dependency.json-path>
-    <version.dependency.marc4j>2.9.1</version.dependency.marc4j>
+    <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
+    <version.dependency.marc4j>2.9.2</version.dependency.marc4j>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
 
     <!-- END properties section: dependency versions -->
