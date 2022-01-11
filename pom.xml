@@ -1111,8 +1111,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: grouped versions -->
 
-    <version.group.activemq>5.16.2</version.group.activemq>
-    <version.group.antlr>4.9.2</version.group.antlr>
+    <version.group.activemq>5.16.3</version.group.activemq>
+    <version.group.antlr>4.9.3</version.group.antlr>
     <version.group.bouncycastle>1.70</version.group.bouncycastle>
     <version.group.derby>10.14.2.0</version.group.derby><!-- subsequent versions are for Java 9 and higher -->
     <version.group.flyway>5.2.4</version.group.flyway><!-- now 7.10.0 -->
