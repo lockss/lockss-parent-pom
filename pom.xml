@@ -3180,6 +3180,15 @@ Local directory: ${user.dir}
   
     <!-- END profile useReleaseVersions -->
   
+    <!-- Empty profile just to avoid annoying
+           WARNING The requested profile "skip-hdfs-tests" could not be
+           activated because it does not exist
+         message when building projects other than repocore (which defines
+         this profile), if skip-hdfs-tests is activated in settings.xml -->
+    <profile>
+      <id>skip-hdfs-tests</id>
+    </profile>
+
   </profiles>
   
   <!-- END profiles -->
