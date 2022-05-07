@@ -2,7 +2,6 @@
 <!--
 
 Copyright (c) 2000-2022, Board of Trustees of Leland Stanford Jr. University
-All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -1125,7 +1124,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.7.2</version.group.junit5-jupiter>
     <version.group.junit5-platform>1.7.2</version.group.junit5-platform>
-    <version.group.log4j>2.17.1</version.group.log4j>
+    <version.group.log4j>2.17.2</version.group.log4j>
     <version.group.maven>3.6.1</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.pdfbox>1.8.16</version.group.pdfbox>
