@@ -1168,6 +1168,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jackson-databind>${version.group.jackson}.8</version.dependency.jackson-databind>
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
+    <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
     <version.dependency.jonix>8.0.1</version.dependency.jonix><!-- keep at 8.0.1 while classic daemon is Java 8 -->
     <version.dependency.json-path>2.6.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
