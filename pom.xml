@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
   
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.15.0-SNAPSHOT</version>
+  <version>1.15.1-SNAPSHOT</version>
   <packaging>pom</packaging>
   
   <name>lockss-parent-pom</name>
@@ -1201,7 +1201,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
     <version.lockss.lockss-plugins-archetype>1.2.0-SNAPSHOT</version.lockss.lockss-plugins-archetype>
     <version.lockss.lockss-repository-tools>2.11.0-SNAPSHOT</version.lockss.lockss-repository-tools>
-    <version.lockss.lockss-repository-core>2.17.0-SNAPSHOT</version.lockss.lockss-repository-core>
+    <version.lockss.lockss-repository-core>2.17.1-SNAPSHOT</version.lockss.lockss-repository-core>
     <version.lockss.lockss-repository-service>2.13.1-SNAPSHOT</version.lockss.lockss-repository-service>
     <version.lockss.lockss-spring-bundle>2.13.0-SNAPSHOT</version.lockss.lockss-spring-bundle>
     <version.lockss.lockss-tdb-processor>1.6.0-SNAPSHOT</version.lockss.lockss-tdb-processor>
