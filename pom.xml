@@ -324,6 +324,15 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.info.gitProperties.skip>${skipGitProperties}</build.info.gitProperties.skip>
 
     <!--
+        `build.info.gitProperties.required`
+
+        Whether to fail if the git properties can't be found (no .git dir)
+
+        Default: false
+    -->
+    <build.info.gitProperties.required>false</build.info.gitProperties.required>
+
+    <!--
         `build.info.buildInfo.skip` (alias: `skipBuildInfo`)
         
         Whether to skip the buildInfo step, which generates a build info file.
@@ -1471,6 +1480,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <skip>${build.info.gitProperties.skip}</skip>
+              <failOnNoGitDirectory>${build.info.gitProperties.required}</failOnNoGitDirectory>
               <generateGitPropertiesFile>true</generateGitPropertiesFile>
               <skipPoms>false</skipPoms>
             </configuration>
