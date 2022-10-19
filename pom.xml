@@ -1179,7 +1179,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>8.0.1</version.dependency.jonix><!-- keep at 8.0.1 while classic daemon is Java 8 -->
+    <version.dependency.jonix>2022-08</version.dependency.jonix>
     <version.dependency.json-path>2.7.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
     <version.dependency.marc4j>2.9.2</version.dependency.marc4j>
