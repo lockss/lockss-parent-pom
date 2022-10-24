@@ -1218,6 +1218,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-util-core>1.12.0-SNAPSHOT</version.lockss.lockss-util-core>
     <version.lockss.lockss-util-entities>1.4.0-SNAPSHOT</version.lockss.lockss-util-entities>
     <version.lockss.lockss-util-rest>1.4.0-SNAPSHOT</version.lockss.lockss-util-rest>
+    <version.lockss.lockss-plugin-compat>1.4.0-SNAPSHOT</version.lockss.lockss-plugin-compat>
 
     <!-- END properties section: LOCKSS versions -->
 
