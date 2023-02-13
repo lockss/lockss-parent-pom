@@ -1104,6 +1104,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin><!-- now 3.0.1 -->
     <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
+    <version.plugin.maven-resources-plugin>2.6</version.plugin.maven-resources-plugin>
     <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
     <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
@@ -1463,7 +1464,7 @@ POSSIBILITY OF SUCH DAMAGE.
       <plugins>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>2.6</version>
+          <version>${version.plugin.maven-resources-plugin}</version>
         </plugin>
       </plugins>
     </pluginManagement>
