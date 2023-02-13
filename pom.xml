@@ -1459,6 +1459,15 @@ POSSIBILITY OF SUCH DAMAGE.
       - Also clean the src/main/generated directory
   -->
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <artifactId>maven-resources-plugin</artifactId>
+          <version>2.6</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+
     <defaultGoal>package</defaultGoal>
   
     <!-- BEGIN plugins -->
@@ -2724,7 +2733,6 @@ Local directory: ${user.dir}
     </plugins>
   
     <!-- END plugins -->
-
   </build>
   
   <!-- END build -->
