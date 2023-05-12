@@ -1198,7 +1198,7 @@ POSSIBILITY OF SUCH DAMAGE.
         A special property with the version string matching that of the classic
         LOCKSS daemon (lockss-daemon).
     -->
-    <build.releasename>2.0.70-beta1</build.releasename>
+    <build.releasename>2.0.70-alpha7</build.releasename>
 
     <version.lockss.lockss-configuration-service>2.8.0-SNAPSHOT</version.lockss.lockss-configuration-service>
     <version.lockss.lockss-core>2.8.0-SNAPSHOT</version.lockss.lockss-core>
