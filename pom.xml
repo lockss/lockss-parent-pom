@@ -2450,7 +2450,7 @@ Local directory: ${user.dir}
                     <tempfile property="dir.test.temp"
                               destDir="${dir.temporary}"
                               prefix="testtmp"/>
-                    <echo>Creating test temp dir: ${dir.test.temp}</echo>
+                    <echo level="info">Creating test temp dir: ${dir.test.temp}</echo>
                     <mkdir dir="${dir.test.temp}" />
                     <property name="build.delTestTempDir.skip" value="false" />
                   </then>
@@ -2473,7 +2473,7 @@ Local directory: ${user.dir}
             <configuration>
               <skip>${build.delTestTempDir.skip}</skip>
               <target>
-                <echo>Deleting test temp dir: ${dir.test.temp}</echo>
+                <echo level="info">Deleting test temp dir: ${dir.test.temp}</echo>
                 <delete dir="${dir.test.temp}" />
               </target>
             </configuration>
@@ -2545,7 +2545,7 @@ Local directory: ${user.dir}
                     </or>
                   </and>
                   <then>
-                    <echo message="Checking that Docker daemon is running..." />
+                    <echo level="info" message="Checking that Docker daemon is running..." />
                     <exec executable="docker"
                           output="/dev/null"
                           failonerror="true"
@@ -2554,7 +2554,7 @@ Local directory: ${user.dir}
                     </exec>
                   </then>
                   <else>
-                    <echo message="Not checking that Docker daemon is running." />
+                    <echo level="info" message="Not checking that Docker daemon is running." />
                   </else>
                 </if>
               </target>
