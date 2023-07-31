@@ -531,10 +531,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <keeptempfiles>false</keeptempfiles>
     <build.java.runTests.keepTempFiles>${keeptempfiles}</build.java.runTests.keepTempFiles>
 
-    <!-- Reset to false if tests are run and a testtemp dir is
-         created, which should be deleted -->
-    <build.delTestTempDir.skip>true</build.delTestTempDir.skip>
-
     <!--
         `build.java.runTests.redirectTestOutputToFile` (alias: `outputtofile`)
         
