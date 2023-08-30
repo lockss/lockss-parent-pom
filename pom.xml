@@ -1751,8 +1751,6 @@ POSSIBILITY OF SUCH DAMAGE.
             <!-- Needed by lockss-core -->
             <arg>--add-exports</arg><arg>java.base/sun.net=ALL-UNNAMED</arg>
             <arg>--add-exports</arg><arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
-            <arg>--add-exports</arg><arg>java.base/sun.security.action=ALL-UNNAMED</arg>
-            <arg>--add-exports</arg><arg>java.xml/com.sun.org.apache.xerces.internal.impl.xpath.regex=ALL-UNNAMED</arg>
 
           </compilerArgs>
         </configuration>
