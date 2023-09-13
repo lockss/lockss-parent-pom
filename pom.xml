@@ -1149,7 +1149,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding><!-- FIXME -->
 
-    <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
@@ -1174,7 +1173,9 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}.1</version.dependency.jackson-databind>
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
-    <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
+    <version.dependency.jakarta.activation>2.1.2</version.dependency.jakarta.activation><!-- jakarta.activation:activation -->
+    <version.dependency.jakarta.mail>2.1.2</version.dependency.jakarta.mail>
+    <version.dependency.angus.mail>2.0.2</version.dependency.angus.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
     <version.dependency.jonix>2023-05</version.dependency.jonix>
     <version.dependency.json-path>2.8.0</version.dependency.json-path>
