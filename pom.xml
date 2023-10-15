@@ -1748,9 +1748,6 @@ POSSIBILITY OF SUCH DAMAGE.
         <configuration>
           <compilerArgs>
             <arg>-XDenableSunApiLintControl</arg>
-            <!-- Needed by lockss-core -->
-            <arg>--add-exports</arg><arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
-
           </compilerArgs>
         </configuration>
         <executions>
