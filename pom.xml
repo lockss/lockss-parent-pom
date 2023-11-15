@@ -460,7 +460,7 @@ POSSIBILITY OF SUCH DAMAGE.
         The preferred Java version. Used for `maven.compiler.source`,
         `maven.compiler.target`.
 
-        Default: 1.8
+        Default: 11
     -->
     <javaVersion>11</javaVersion>
     <build.java.version>${javaVersion}</build.java.version>
@@ -1102,7 +1102,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
     <version.plugin.maven-resources-plugin>2.6</version.plugin.maven-resources-plugin>
     <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
-    <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
+    <version.plugin.maven-surefire-plugin>3.2.2</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
     <version.plugin.swagger-codegen-maven-plugin>2.4.21</version.plugin.swagger-codegen-maven-plugin>
 
@@ -1129,8 +1129,8 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.jackson>2.12.7</version.group.jackson>
     <version.group.jooq>3.14.15</version.group.jooq><!-- 3.14.15 is the last Java 8 version before 3.15 -->
     <version.group.junit4>4.13.2</version.group.junit4>
-    <version.group.junit5-jupiter>5.7.2</version.group.junit5-jupiter>
-    <version.group.junit5-platform>1.7.2</version.group.junit5-platform>
+    <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
+    <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
     <version.group.log4j>2.20.0</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
@@ -1171,7 +1171,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
     <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
     <version.dependency.commons-validator>1.7</version.dependency.commons-validator>
-    <version.dependency.h2>2.2.220</version.dependency.h2>
+    <version.dependency.h2>2.2.224</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}.1</version.dependency.jackson-databind>
     <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
@@ -2719,12 +2719,12 @@ Local directory: ${user.dir}
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.7.1.1</version>
+        <version>4.8.1.0</version>
         <dependencies>
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.7.2</version>
+            <version>4.8.1</version>
           </dependency>
         </dependencies>
       </plugin>
