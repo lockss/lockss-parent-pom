@@ -1131,12 +1131,12 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
     <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
-    <version.group.log4j>2.20.0</version.group.log4j>
+    <version.group.log4j>2.21.1</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.pdfbox>1.8.17</version.group.pdfbox>
     <version.group.solr>8.11.2</version.group.solr>
-    <version.group.slf4j>1.7.25</version.group.slf4j>
+    <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
     <version.group.spring>5.2.12.RELEASE</version.group.spring><!-- upgradeable -->
     <version.group.spring-boot>2.3.7.RELEASE</version.group.spring-boot><!-- upgradeable -->
     <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
