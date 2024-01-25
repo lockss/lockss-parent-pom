@@ -462,7 +462,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
         Default: 11
     -->
-    <javaVersion>11</javaVersion>
+    <javaVersion>17</javaVersion>
     <build.java.version>${javaVersion}</build.java.version>
 
     <!--
