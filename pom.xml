@@ -1134,6 +1134,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.log4j>2.21.1</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
+    <version.group.mockserver>5.15.0</version.group.mockserver>
     <version.group.pdfbox>1.8.17</version.group.pdfbox>
     <version.group.solr>8.11.2</version.group.solr>
     <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
