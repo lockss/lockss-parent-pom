@@ -1116,7 +1116,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: grouped versions -->
 
-    <version.group.activemq>5.18.3</version.group.activemq>
+    <version.group.activemq>6.0.1</version.group.activemq>
     <version.group.antlr>4.9.3</version.group.antlr><!-- 4.9.3 is the last Java 8 version before 4.10 -->
     <version.group.bouncycastle>1.76</version.group.bouncycastle>
     <version.group.bouncycastle.variant>jdk18on</version.group.bouncycastle.variant>
