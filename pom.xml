@@ -1840,7 +1840,10 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <runOrder>balanced</runOrder>
-	      <argLine>${jprofiler.agentpath}</argLine>
+	      <argLine>
+            ${jprofiler.agentpath}
+            --add-opens java.base/java.util=ALL-UNNAMED
+          </argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
                 <include>**/Test*.java</include>
