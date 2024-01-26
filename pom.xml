@@ -1140,7 +1140,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
     <version.group.spring>6.1.3</version.group.spring>
     <version.group.spring-boot>3.2.2</version.group.spring-boot>
-    <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
+    <version.group.springfox>3.0.0</version.group.springfox><!-- upgradeable to 2.9.2 -->
     <version.group.truezip>7.7.10</version.group.truezip>
     <version.group.xoai>4.2.0</version.group.xoai>
 
