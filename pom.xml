@@ -1140,7 +1140,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
     <version.group.spring>6.1.3</version.group.spring>
     <version.group.spring-boot>3.2.2</version.group.spring-boot>
-    <version.group.springfox>3.0.0</version.group.springfox><!-- upgradeable to 2.9.2 -->
     <version.group.truezip>7.7.10</version.group.truezip>
     <version.group.xoai>4.2.0</version.group.xoai>
 
@@ -1183,6 +1182,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jsoup>1.16.2</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
     <version.dependency.postgresql>42.6.0</version.dependency.postgresql>
+    <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
     <version.dependency.xmlunit>1.6</version.dependency.xmlunit>
 
@@ -1729,7 +1729,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                 <java8>true</java8>
                 <delegatePattern>true</delegatePattern>
-                <swaggerDocketConfig>true</swaggerDocketConfig>
+                <swaggerDocketConfig>false</swaggerDocketConfig>
               </configOptions>
             </configuration>
           </execution>
