@@ -1728,6 +1728,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <modelPackage>${build.java.spring.generateSwagger.model}</modelPackage>
                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                 <java8>true</java8>
+                <jakarta>true</jakarta>
                 <delegatePattern>true</delegatePattern>
                 <swaggerDocketConfig>false</swaggerDocketConfig>
               </configOptions>
