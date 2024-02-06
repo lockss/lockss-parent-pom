@@ -1104,7 +1104,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
     <version.plugin.maven-surefire-plugin>3.2.2</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
-    <version.plugin.swagger-codegen-maven-plugin>2.4.21</version.plugin.swagger-codegen-maven-plugin>
+    <version.plugin.swagger-codegen-maven-plugin>2.4.39</version.plugin.swagger-codegen-maven-plugin>
 
     <!-- END properties section: plugin versions -->
 
