@@ -1730,7 +1730,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <java8>true</java8>
                 <jakarta>true</jakarta>
                 <delegatePattern>true</delegatePattern>
-                <swaggerDocketConfig>false</swaggerDocketConfig>
+                <swaggerDocketConfig>true</swaggerDocketConfig>
               </configOptions>
             </configuration>
           </execution>
