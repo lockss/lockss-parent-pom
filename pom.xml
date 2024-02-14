@@ -187,6 +187,10 @@ POSSIBILITY OF SUCH DAMAGE.
     <tmpdir>${java.io.tmpdir}</tmpdir>
     <dir.temporary>${tmpdir}</dir.temporary>
 
+    <!-- If the tmpdir you usually use is mounted -noexec, set this property
+         (e.g., in your settings.xml) to a tmpdir that isn't mounted -noexec -->
+    <dir.executableTemp></dir.executableTemp>
+
     <!-- END properties section: directories -->
 
     <!-- BEGIN properties section: files -->
@@ -1154,7 +1158,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.6.0</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.16.0</version.dependency.commons-codec>
+    <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.25.0</version.dependency.commons-compress>
@@ -1869,6 +1873,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <java.io.tmpdir>${dir.test.temp}</java.io.tmpdir>$>
                 <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
                 <org.lockss.unitTesting>true</org.lockss.unitTesting>
+                <org.lockss.executableTempDir>${dir.executableTemp}</org.lockss.executableTempDir>
                 <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
                 <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
               </systemPropertyVariables>
