@@ -932,7 +932,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
         Default: io.swagger (set to io.swagger.codegen.v3 for OpenAPI 3)
     -->
-    <build.java.spring.generateSwagger.groupId>io.swagger</build.java.spring.generateSwagger.groupId>
+    <build.java.spring.generateSwagger.groupId>io.swagger.codegen.v3</build.java.spring.generateSwagger.groupId>
 
     <!--
         `build.java.spring.generateSwagger.invoker` (alias: `generateSwagger.invoker`)
@@ -1108,7 +1108,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
     <version.plugin.maven-surefire-plugin>3.2.2</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
-    <version.plugin.swagger-codegen-maven-plugin>2.4.21</version.plugin.swagger-codegen-maven-plugin>
+    <version.plugin.swagger-codegen-maven-plugin>3.0.52</version.plugin.swagger-codegen-maven-plugin>
 
     <!-- END properties section: plugin versions -->
 
@@ -1143,7 +1143,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
     <version.group.spring>5.2.12.RELEASE</version.group.spring><!-- upgradeable -->
     <version.group.spring-boot>2.3.7.RELEASE</version.group.spring-boot><!-- upgradeable -->
-    <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
+    <version.group.springfox>3.0.0</version.group.springfox><!-- upgradeable to 2.9.2 -->
     <version.group.truezip>7.7.10</version.group.truezip>
     <version.group.xoai>4.2.0</version.group.xoai>
 
@@ -1158,7 +1158,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.6.0</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
+    <version.dependency.commons-codec>1.16.0</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.25.0</version.dependency.commons-compress>
