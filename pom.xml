@@ -1164,7 +1164,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-compress>1.25.0</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
     <version.dependency.commons-csv>1.10.0</version.dependency.commons-csv>
-    <version.dependency.commons-dbcp2>2.11.0</version.dependency.commons-dbcp2>
+    <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- now 3.2 -->
     <version.dependency.commons-fileupload>1.5</version.dependency.commons-fileupload>
     <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
