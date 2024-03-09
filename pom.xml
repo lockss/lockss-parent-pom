@@ -1876,6 +1876,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <org.lockss.executableTempDir>${dir.executableTemp}</org.lockss.executableTempDir>
                 <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
                 <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
+                <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
               </systemPropertyVariables>
             </configuration>
           </execution>
