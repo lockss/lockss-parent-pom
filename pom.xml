@@ -2755,6 +2755,7 @@ Local directory: ${user.dir}
                 <requireJavaVersion>
                   <version>[17.0,18.0)</version>
                 </requireJavaVersion>
+                <requireProfileIdsExist/>
               </rules>
             </configuration>
           </execution>
