@@ -2740,7 +2740,7 @@ Local directory: ${user.dir}
         </dependencies>
       </plugin>
 
-      <!-- Enforce Java 11 -->
+      <!-- Enforce Java 17 -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
