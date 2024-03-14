@@ -1845,7 +1845,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <runOrder>balanced</runOrder>
-          <!-- DLV: Added --add-opens to args in this Maven Surefire plugin execution for XStream support -->
+          <!-- DLV: Added add-opens to args in this Maven Surefire plugin execution for XStream support -->
 	      <argLine>
             ${jprofiler.agentpath}
             --add-opens java.base/java.util=ALL-UNNAMED
