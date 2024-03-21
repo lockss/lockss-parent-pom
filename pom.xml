@@ -2357,66 +2357,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin dockerfile-maven-plugin -->
 
-      <!-- BEGIN plugin maven-postman-plugin -->
-
-      <plugin>
-        <groupId>ch.fortysix</groupId>
-        <artifactId>maven-postman-plugin</artifactId>
-        <version>${version.plugin.maven-postman-plugin}</version>
-        <executions>
-
-          <!-- BEGIN step deployMail -->
-
-          <execution>
-            <id>deployMail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>send-mail</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.deployMail.skip}</skip>
-              <failonerror>${build.java.deployMail.failOnError}</failonerror>
-              <multipartSupported>false</multipartSupported>
-              <mailcontenttype>text/plain</mailcontenttype>
-              <from>${build.java.deployMail.from}</from>
-              <receivers>
-                <receiver>${build.java.deployMail.to}</receiver>
-              </receivers>
-              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
-Skipped JAR upload: ${build.java.deployMavenCentral.skip}
-Skipped Docker upload: ${build.docker.dockerPush.skip}
-
-GIT CONTEXT:
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (branch: ${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Host name: ${hostname}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></textMessage>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMail -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-postman-plugin -->
-
       <!-- BEGIN plugin maven-antrun-plugin -->
 
       <!-- This plugin must appear *after* surefire, as it contains a
@@ -2434,6 +2374,21 @@ Local directory: ${user.dir}
             <artifactId>ant-contrib</artifactId>
             <version>${version.dependency.ant-contrib}</version>
           </dependency>
+
+          <!-- javax.activation and javax.mail needed for ant mail target -->
+          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+          <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+          </dependency>
+
         </dependencies>
         <executions>
 
@@ -2686,6 +2641,52 @@ Local directory: ${user.dir}
           </execution>
 
           <!-- END step buildEtags -->
+
+          <!-- BEGIN step deployMail -->
+
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <target>
+                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
+                  <from address="${build.java.deployMail.from}"/>
+                  <to address="${build.java.deployMail.to}"/>
+                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Skipped JAR upload: ${build.java.deployMavenCentral.skip}
+Skipped Docker upload: ${build.docker.dockerPush.skip}
+
+GIT CONTEXT:
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (branch: ${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></message>
+                </mail>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
 
         </executions>
       </plugin>
