@@ -1094,7 +1094,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.maven-antrun-plugin>3.0.0</version.plugin.maven-antrun-plugin>
-    <version.plugin.maven-archetype-plugin>3.2.0</version.plugin.maven-archetype-plugin>
+    <version.plugin.maven-archetype-plugin>3.2.1</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
@@ -1475,6 +1475,16 @@ POSSIBILITY OF SUCH DAMAGE.
           <version>${version.plugin.maven-install-plugin}</version>
         </plugin>
 
+        <!-- BEGIN plugin maven-archetype-plugin -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>${version.plugin.maven-archetype-plugin}</version>
+        </plugin>
+
+        <!-- END plugin maven-archetype-plugin -->
+
         <!-- BEGIN plugin maven-jar-plugin -->
 
         <plugin>
@@ -1483,7 +1493,7 @@ POSSIBILITY OF SUCH DAMAGE.
           <version>${version.plugin.maven-jar-plugin}</version>
           <executions>
 
-            <!-- BEGIN step jarMain -->
+            <!-- BEGIN step default-jar -->
 
             <execution>
               <id>default-jar</id>
@@ -1498,7 +1508,7 @@ POSSIBILITY OF SUCH DAMAGE.
               </configuration>
             </execution>
 
-            <!-- END step jarMain -->
+            <!-- END step default-jar -->
 
             <!-- BEGIN step jarTests -->
 
@@ -1942,23 +1952,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin maven-surefire-plugin -->
 
-      <!-- BEGIN plugin maven-archetype-plugin -->
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-archetype-plugin</artifactId>
-        <version>${version.plugin.maven-archetype-plugin}</version>
-        <executions>
-
-          <execution>
-            <id>default-jar</id>
-            <phase>NONE</phase><!-- maven-jar-plugin:jarMain supersedes maven-archetype-plugin:default-jar -->
-          </execution>
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-archetype-plugin -->
 
       <!-- BEGIN plugin spring-boot-maven-plugin -->
 
