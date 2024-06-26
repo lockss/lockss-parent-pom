@@ -1100,7 +1100,8 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
     <version.plugin.maven-enforcer-plugin>3.0.0-M3</version.plugin.maven-enforcer-plugin>
     <version.plugin.maven-javadoc-plugin>3.3.0</version.plugin.maven-javadoc-plugin>
-    <version.plugin.maven-jar-plugin>3.2.0</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-jar-plugin>3.4.2</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-install-plugin>3.1.2</version.plugin.maven-install-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin><!-- now 3.0.1 -->
     <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
@@ -1467,6 +1468,58 @@ POSSIBILITY OF SUCH DAMAGE.
           <artifactId>maven-resources-plugin</artifactId>
           <version>${version.plugin.maven-resources-plugin}</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${version.plugin.maven-install-plugin}</version>
+        </plugin>
+
+        <!-- BEGIN plugin maven-jar-plugin -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.maven-jar-plugin}</version>
+          <executions>
+
+            <!-- BEGIN step jarMain -->
+
+            <execution>
+              <id>default-jar</id>
+              <phase>package</phase>
+              <configuration>
+                <skipIfEmpty>true</skipIfEmpty>
+                <archive>
+                  <manifest>
+                    <mainClass>${build.java.mainClass}</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </execution>
+
+            <!-- END step jarMain -->
+
+            <!-- BEGIN step jarTests -->
+
+            <execution>
+              <id>jarTests</id>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+              <configuration>
+                <skip>${build.java.jarTests.skip}</skip>
+                <skipIfEmpty>true</skipIfEmpty>
+              </configuration>
+            </execution>
+
+            <!-- END step jarTests -->
+
+          </executions>
+        </plugin>
+
+        <!-- END plugin maven-jar-plugin -->
+
       </plugins>
     </pluginManagement>
 
@@ -1906,59 +1959,6 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <!-- END plugin maven-archetype-plugin -->
-
-      <!-- BEGIN plugin maven-jar-plugin -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${version.plugin.maven-jar-plugin}</version>
-        <executions>
-
-          <!-- BEGIN step jarMain -->
-
-          <execution>
-            <id>default-jar</id>
-            <phase>NONE</phase><!-- jarMain supersedes default-jar -->
-          </execution>
-          <execution>
-            <id>jarMain</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.jarMain.skip}</skip><!-- probably doesn't have any effect -->
-              <skipIfEmpty>true</skipIfEmpty>
-              <archive>
-                <manifest>
-                  <mainClass>${build.java.mainClass}</mainClass>
-                </manifest>
-              </archive>
-            </configuration>
-          </execution>
-
-          <!-- END step jarMain -->
-
-          <!-- BEGIN step jarTests -->
-
-          <execution>
-            <id>jarTests</id>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.jarTests.skip}</skip>
-              <skipIfEmpty>true</skipIfEmpty>
-            </configuration>
-          </execution>
-
-          <!-- END step jarTests -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-jar-plugin -->
 
       <!-- BEGIN plugin spring-boot-maven-plugin -->
 
