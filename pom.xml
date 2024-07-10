@@ -3241,6 +3241,39 @@ Local directory: ${user.dir}
 
     <!-- END profile useReleaseVersions -->
 
+    <!-- profile "fast" speeds things up when recompiling after making
+         just code changes, by skipping all the unnecessary steps.  Do
+         not use this after "clean" or after making swagger changes, -->
+
+    <profile>
+      <id>fast</id>
+      <properties>
+        <skipTestPlugins>true</skipTestPlugins>
+        <skipEtags>true</skipEtags>
+        <maven.resources.skip>true</maven.resources.skip>
+        <skipBuildInfo>true</skipBuildInfo>
+        <skipClasspathFiles>true</skipClasspathFiles>
+        <skipAntlr>true</skipAntlr>
+        <skipGenAntlr>true</skipGenAntlr>
+        <skipBuildTdb>true</skipBuildTdb>
+      </properties>
+    </profile>
+
+    <!-- profile "incremental" enables incremental compilation,
+         causing only those classes that have changed to be
+         recompiled.  Do not use if changes to one class require
+         recompiling unchanged classes.  -->
+
+    <profile>
+      <id>incremental</id>
+      <!-- It's a mystery why maven thinks setting
+           useIncrementalCompilation> to false is the right way to
+           cause it to do incremental compilation. -->
+      <properties>
+	<maven.compiler.useIncrementalCompilation>false</maven.compiler.useIncrementalCompilation>
+      </properties>
+    </profile>
+
     <!-- Empty profile just to avoid annoying
            WARNING The requested profile "skip-hdfs-tests" could not be
            activated because it does not exist
