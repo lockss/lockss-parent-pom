@@ -1158,33 +1158,33 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
-    <version.dependency.commons-cli>1.6.0</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
+    <version.dependency.commons-cli>1.9.0</version.dependency.commons-cli>
+    <version.dependency.commons-codec>1.17.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.26.1</version.dependency.commons-compress>
+    <version.dependency.commons-compress>1.27.0</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
-    <version.dependency.commons-csv>1.10.0</version.dependency.commons-csv>
+    <version.dependency.commons-csv>1.11.0</version.dependency.commons-csv>
     <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- now 3.2 -->
     <version.dependency.commons-fileupload>1.5</version.dependency.commons-fileupload>
-    <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
+    <version.dependency.commons-io>2.16.1</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
     <version.dependency.commons-lang3>3.14.0</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
-    <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
-    <version.dependency.commons-validator>1.8.0</version.dependency.commons-validator>
+    <version.dependency.commons-text>1.12.0</version.dependency.commons-text>
+    <version.dependency.commons-validator>1.9.0</version.dependency.commons-validator>
     <version.dependency.h2>2.2.224</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>2023-10</version.dependency.jonix>
+    <version.dependency.jonix>2024-07</version.dependency.jonix>
     <version.dependency.json-path>2.8.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
-    <version.dependency.jsoup>1.16.2</version.dependency.jsoup>
+    <version.dependency.jsoup>1.18.1</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
     <version.dependency.postgresql>42.6.0</version.dependency.postgresql>
     <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
