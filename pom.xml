@@ -1136,7 +1136,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
     <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
-    <version.group.log4j>2.21.1</version.group.log4j>
+    <version.group.log4j>2.23.1</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.mockserver>5.15.0</version.group.mockserver>
@@ -1162,7 +1162,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-codec>1.17.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.27.0</version.dependency.commons-compress>
+    <version.dependency.commons-compress>1.27.1</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
     <version.dependency.commons-csv>1.11.0</version.dependency.commons-csv>
     <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
@@ -1182,7 +1182,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
     <version.dependency.jonix>2024-07</version.dependency.jonix>
-    <version.dependency.json-path>2.8.0</version.dependency.json-path>
+    <version.dependency.json-path>2.9.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
     <version.dependency.jsoup>1.18.1</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
