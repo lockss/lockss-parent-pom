@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-Copyright (c) 2000-2023, Board of Trustees of Leland Stanford Jr. University
+Copyright (c) 2000-2024, Board of Trustees of Leland Stanford Jr. University
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -34,17 +34,17 @@ POSSIBILITY OF SUCH DAMAGE.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.16.1</version>
+  <version>1.17.0</version>
   <packaging>pom</packaging>
-  
+
   <name>lockss-parent-pom</name>
   <description>Maven infrastructure common to LOCKSS projects</description>
   <url>https://www.lockss.org/</url>
   <inceptionYear>2000</inceptionYear>
-  
+
   <organization>
     <name>LOCKSS Program</name>
     <url>https://www.lockss.org/</url>
@@ -56,7 +56,7 @@ POSSIBILITY OF SUCH DAMAGE.
       <url>https://opensource.org/licenses/BSD-3-Clause</url>
     </license>
   </licenses>
-  
+
   <!--
       For each developer alphabetically by last name:
       - <id> is the GitHub username
@@ -105,7 +105,7 @@ POSSIBILITY OF SUCH DAMAGE.
       <timezone>America/Los_Angeles</timezone>
     </developer>
   </developers>
-  
+
   <contributors>
     <contributor>
       <name>Fernando García-Loygorri</name>
@@ -124,7 +124,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <developerConnection>scm:git:ssh://${gitHost}/${gitGroupId}/${gitProjectId}.git</developerConnection>
     <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
-  
+
   <distributionManagement>
 
     <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
@@ -140,17 +140,17 @@ POSSIBILITY OF SUCH DAMAGE.
   </distributionManagement>
 
   <!-- BEGIN properties -->
-  
+
   <properties>
 
     <!-- BEGIN properties section: directories -->
 
     <!--
         `dir.generated` (alias: `genDirs`)
-        
+
         The parent directory where generated code directories are located during
         generate-sources phases.
-        
+
         Default: ${project.basedir}/src/generated
     -->
     <genDirs>${project.basedir}/src/generated</genDirs>
@@ -158,10 +158,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `dir.generated.java` (alias: `generatedDir`)
-        
+
         The directory where Java code generated during the generate-sources
         phase should be output.
-        
+
         Default: ${dir.generated}/java
     -->
     <generatedDir>${project.basedir}/src/generated/java</generatedDir>
@@ -169,9 +169,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `dir.resources` (alias: `resourcesDir`)
-        
+
         The resources directory.
-        
+
         Default: ${project.basedir}/src/main/resources
     -->
     <resourcesDir>${project.basedir}/src/main/resources</resourcesDir>
@@ -179,13 +179,17 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `dir.temporary` (alias: `tmpdir`)
-        
+
         A temporary directory.
-        
+
         Default: ${java.io.tmpdir}
     -->
     <tmpdir>${java.io.tmpdir}</tmpdir>
     <dir.temporary>${tmpdir}</dir.temporary>
+
+    <!-- If the tmpdir you usually use is mounted -noexec, set this property
+         (e.g., in your settings.xml) to a tmpdir that isn't mounted -noexec -->
+    <dir.executableTemp></dir.executableTemp>
 
     <!-- END properties section: directories -->
 
@@ -193,9 +197,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `file.buidinfo`
-        
+
         The path to the build info file.
-        
+
         Default: ${project.build.outputDirectory}/org/lockss/componentresources/build.properties
     -->
 
@@ -204,27 +208,27 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `file.classpath.compile`
-        
+
         The path to the compile classpath file.
-        
+
         Default: ${project.build.directory}/compile-classpath
     -->
     <file.classpath.compile>${project.build.directory}/compile-classpath</file.classpath.compile>
 
     <!--
         `file.classpath.runtime`
-        
+
         The path to the runtime classpath file.
-        
+
         Default: ${project.build.directory}/run-classpath
     -->
     <file.classpath.runtime>${project.build.directory}/run-classpath</file.classpath.runtime>
 
     <!--
         `file.classpath.test`
-        
+
         The path to the test classpath file.
-        
+
         Default: ${project.build.directory}/test-classpath
     -->
     <file.classpath.test>${project.build.directory}/test-classpath</file.classpath.test>
@@ -235,50 +239,50 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `repository.enabled.lockss-legacy`
-        
+
         Whether the lockss-legacy repository is enabled. By default it is not,
         only some projects require access to the legacy JARs. See also
         `repository.update.lockss-legacy`.
-        
+
         Default: false (enabled in projects that need it)
     -->
     <repository.enabled.lockss-legacy>false</repository.enabled.lockss-legacy>
 
     <!--
         `pluginRepository.update.ossrh-snapshots`
-        
+
         The <updatePolicy> for the ossrh-snapshots plugin repository (see
         <pluginRepositories>). To use a different update policy than the Maven
         default of 'daily', use a profile in your settings.xml file with this
         property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
         minutes) or 'never'. See also `repository.update.ossrh-snapshots`.
-        
+
         Default: daily (the Maven default for a plugin repository)
     -->
     <pluginRepository.update.ossrh-snapshots>daily</pluginRepository.update.ossrh-snapshots>
 
     <!--
         `repository.update.lockss-legacy`
-        
+
         The <updatePolicy> for the lockss-legacy repository (see
         <repositories>). To use a different update policy than the Maven
         default of 'daily', use a profile in your settings.xml file with this
         property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
         minutes) or 'never'.
-        
+
         Default: daily (the Maven default for a repository)
     -->
     <repository.update.lockss-legacy>daily</repository.update.lockss-legacy>
 
     <!--
         `repository.update.ossrh-snapshots`
-        
+
         The <updatePolicy> for the ossrh-snapshots repository (see
         <repositories>). To use a different update policy than the Maven
         default of 'daily', use a profile in your settings.xml file with this
         property set to 'always', 'daily' (Maven default), 'interval:NNN' (in
         minutes) or 'never'. See also `pluginRepository.update.ossrh-snapshots`.
-        
+
         Default: daily (the Maven default for a repository)
     -->
     <repository.update.ossrh-snapshots>daily</repository.update.ossrh-snapshots>
@@ -304,9 +308,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.info.skip` (alias: `skipInfo`)
-        
+
         Whether to skip the info build's steps.
-        
+
         Default: false (the info build is on)
     -->
     <skipInfo>false</skipInfo>
@@ -314,10 +318,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.info.gitProperties.skip` (alias: `skipGitProperties`)
-        
+
         Whether to skip the gitProperties step which generates a file of Git
         properties with git-commit-id-plugin.
-        
+
         Default: ${build.info.skip} (on when the info build is on)
     -->
     <skipGitProperties>${build.info.skip}</skipGitProperties>
@@ -334,9 +338,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.info.buildInfo.skip` (alias: `skipBuildInfo`)
-        
+
         Whether to skip the buildInfo step, which generates a build info file.
-        
+
         Default: ${build.info.skip} (on when the info build is on)
     -->
     <skipBuildInfo>${build.info.skip}</skipBuildInfo>
@@ -344,37 +348,37 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.info.buildInfo.antDate`
-        
+
         A format string for Ant dates.
-        
+
         Default: yyyy-MM-dd (matches the old lockss-daemon build)
     -->
     <build.info.buildInfo.antDate>yyyy-MM-dd</build.info.buildInfo.antDate>
 
     <!--
         `build.info.buildInfo.antTime`
-        
+
         A format string for Ant times.
-        
+
         Default: HH:mm:ss (matches the old lockss-daemon build)
     -->
     <build.info.buildInfo.antTime>HH:mm:ss</build.info.buildInfo.antTime>
 
     <!--
         `build.info.buildInfo.antTimestamp`
-        
+
         A format string for Ant timestamps.
-        
+
         Default: ${build.info.buildInfo.antDate}'T'${build.info.buildInfo.antTime}XXX (matches the old lockss-daemon build)
     -->
     <build.info.buildInfo.antTimestamp>dd-MMM-yy' 'HH:mm:ss' 'zzz</build.info.buildInfo.antTimestamp>
 
     <!--
         `build.info.classpathFiles.skip` (alias: `skipClasspathFiles`)
-        
+
         Whether to skip the classpathFiles step, which generates files
         containing the various classpaths.
-        
+
         Default: ${build.info.skip} (on when the info build is on)
     -->
     <skipClasspathFiles>${build.info.skip}</skipClasspathFiles>
@@ -396,9 +400,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.skip` (alias: `skipJava`)
-        
+
         Whether to skip the Java build's steps.
-        
+
         Default: false (the Java build is on)
     -->
     <skipJava>false</skipJava>
@@ -406,10 +410,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.incremental` (alias: `useIncrementalCompilation`)
-        
+
         Whether to enable the incremental compilation feature. used for
-        `maven.compiler.useIncrementalCompilation`. 
-        
+        `maven.compiler.useIncrementalCompilation`.
+
         Default: true
     -->
     <useIncrementalCompilation>true</useIncrementalCompilation>
@@ -417,18 +421,18 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.mainClass`
-        
+
         The main class of this project.
-        
+
         Default: "" (empty string)
     -->
     <build.java.mainClass></build.java.mainClass>
 
     <!--
         `build.java.package` (alias: `javaPackage`)
-        
+
         The root Java package of this project.
-        
+
         Default: UNDEFINED!!!
     -->
     <javaPackage>UNDEFINED!!!</javaPackage>
@@ -436,9 +440,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.logLevel` (alias: `loglevel`)
-        
+
         The log level.
-        
+
         Default: info
     -->
     <loglevel>info</loglevel>
@@ -446,9 +450,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.rootLogLevel` (alias: `rootloglevel`)
-        
+
         The root log level.
-        
+
         Default: "" (empty string)
     -->
     <rootloglevel></rootloglevel>
@@ -456,21 +460,21 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.version` (alias: `javaVersion`)
-        
+
         The preferred Java version. Used for `maven.compiler.source`,
         `maven.compiler.target`.
 
-        Default: 1.8
+        Default: 11
     -->
-    <javaVersion>1.8</javaVersion>
+    <javaVersion>17</javaVersion>
     <build.java.version>${javaVersion}</build.java.version>
 
     <!--
         `build.java.buildEtags.skip` (alias: `skipEtags`)
-        
+
         Whether to skip the buildEtags step, which builds a tags file with Etags
         from all Java files under `src/`.
-        
+
         Default: true (the tags file is not built)
     -->
     <skipEtags>true</skipEtags>
@@ -478,10 +482,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.compileMain.skip` (alias: `skipCompileMain`)
-        
+
         Whether to skip the compileMain step, which compiles the main Java code
-        tree. 
-        
+        tree.
+
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipCompileMain>${build.java.skip}</skipCompileMain>
@@ -489,9 +493,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.compileTests.skip` (alias: `skipCompileTests`)
-        
+
         Whether to skip the compileTests step, which compiles the test tree.
-        
+
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipCompileTests>${build.java.skip}</skipCompileTests>
@@ -499,9 +503,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.runTests.skip` (alias: `skipTests`)
-        
+
         Whether to skip the runTests step, which runs the unit tests.
-        
+
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipTests>${build.java.skip}</skipTests>
@@ -509,13 +513,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.runTests.forkCount` (alias: `testForkCount`)
-        
+
         The number of VMs to fork in parallel in order to execute the tests.
         When terminated with "C", the number part is multiplied with the number
         of CPU cores. Floating point value are only accepted together with "C".
         If set to "0", no VM is forked and all tests are executed within the
         main process.
-        
+
         Default: 1.0C
     -->
     <testForkCount>1.0C</testForkCount>
@@ -523,9 +527,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.runTests.keepTempFiles` (alias: `keeptempfiles`)
-        
+
         Whether to keep temp files after tests run.
-        
+
         Default: false
     -->
     <keeptempfiles>false</keeptempfiles>
@@ -533,9 +537,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.runTests.redirectTestOutputToFile` (alias: `outputtofile`)
-        
+
         Whether to redirect the unit test standard output to a file.
-        
+
         Default: true
     -->
     <outputtofile>true</outputtofile>
@@ -543,10 +547,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.runTests.trimStackTrace` (alias: `trimstack`)
-        
+
         Whether to trim the stack trace in the reports to just the lines within
         the test, or show the full trace.
-        
+
         Default: false
     -->
     <trimstack>false</trimstack>
@@ -554,12 +558,12 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarMain.skip` (alias: `skipMainJar`)
-        
+
         Whether to skip the building of the main artifact.
-        
+
         Note that this likely has no effect; maven-jar-plugin's jar goal does
         not seem to have a <skip> parameter.
-        
+
         Default: ${build.java.skip} (on when the Java build is on)
     -->
     <skipMainJar>${build.java.skip}</skipMainJar>
@@ -567,9 +571,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarTests.skip` (alias: `skipTestJar`)
-        
+
         Whether to skip the building of the tests artifact.
-        
+
         Default: true (the tests artifact is not built)
     -->
     <skipTestJar>true</skipTestJar>
@@ -577,9 +581,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarMainSources.skip` (alias: `skipMainSources`)
-        
+
         Whether to skip the building of the sources artifact.
-        
+
         Default: true (the sources artifact is not built)
     -->
     <skipMainSources>true</skipMainSources>
@@ -587,9 +591,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarTestSources.skip` (alias: `skipTestSources`)
-        
+
         Whether to skip the building of the test sources artifact.
-        
+
         Default: ${build.java.jarTests.skip} (the test sources artifact is built when the tests artifact is built)
     -->
     <skipTestSources>${build.java.jarTests.skip}</skipTestSources>
@@ -597,9 +601,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarJavadoc.header` (alias: `javadocHeader`)
-        
+
         The Javadoc header string (used in jarJavadoc and jarTestJavadoc).
-        
+
         Default: Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${maven.build.timestamp} on&amp;nbsp;${hostname}
     -->
     <javadocHeader>Release&amp;nbsp;${build.releasename} Built&amp;nbsp;${local.build.timestamp} on&amp;nbsp;${hostname}</javadocHeader>
@@ -607,9 +611,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.javadoc.skip` (alias: `skipJavadoc`)
-        
+
         Whether to skip the building of the Javadoc artifacts.
-        
+
         Default: true (the Javadoc artifacts are not built)
     -->
     <skipJavadoc>true</skipJavadoc>
@@ -617,9 +621,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarMainJavadoc.skip` (alias: `skipMainJavadoc`)
-        
+
         Whether to skip the building of the main Javadoc artifact.
-        
+
         Default: ${build.java.javadoc.skip}
     -->
     <skipMainJavadoc>${build.java.javadoc.skip}</skipMainJavadoc>
@@ -627,9 +631,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.jarTestJavadoc.skip` (alias: `skipTestJavadoc`)
-        
+
         Whether to skip the building of the test Javadoc artifact.
-        
+
         Default: ${build.java.javadoc.skip}
     -->
     <skipTestJavadoc>${build.java.javadoc.skip}</skipTestJavadoc>
@@ -637,10 +641,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.signArtifacts.skip` (alias: `skipGpg`)
-        
+
         Whether to skip the signArtifacts step, which signs artifacts with
         GnuPG.
-        
+
         Default: true (the artifacts are not signed)
     -->
     <skipGpg>true</skipGpg>
@@ -648,10 +652,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.deployMavenCentral.skip` (alias: `skipMavenCentral`)
-        
+
         Whether to skip the deployMavenCentral step, which pushes artifacts to
         Maven Central.
-        
+
         Default: true (the artifacts are not pushed)
     -->
     <skipMavenCentral>true</skipMavenCentral>
@@ -659,10 +663,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.deployMail.skip` (alias: `skipDeployMail`)
-        
+
         Whether to skip the deployMail step, which sends e-mail out to indicate
         the end of the deploy phase.
-        
+
         Default: true (the e-mail is not sent)
     -->
     <skipDeployMail>true</skipDeployMail>
@@ -670,9 +674,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.deployMail.failOnError` (alias: `deployMail.fatal`)
-        
+
         Whether to fail if the deployMail step fails.
-        
+
         Default: true (the build fails if the deployMail step fails)
     -->
     <deployMail.fatal>true</deployMail.fatal>
@@ -680,9 +684,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.deployMail.from` (alias: `deployMail.from`)
-        
+
         The deploy mail's sender (From).
-        
+
         Default: buildmaster@lockss.org
     -->
     <deployMail.from>buildmaster@lockss.org</deployMail.from>
@@ -690,9 +694,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.deployMail.to` (alias: `deployMail.to`)
-        
+
         The deploy mail's recipient (To).
-        
+
         Default: dev-notify@lockss.org
     -->
     <deployMail.to>dev-notify@lockss.org</deployMail.to>
@@ -704,9 +708,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.antlr.skip` (alias: `skipAntlr`)
-        
+
         Whether to skip the ANTLR portion of the Java build.
-        
+
         Default: true (the ANTLR portion of the Java build is off)
     -->
     <skipAntlr>true</skipAntlr>
@@ -714,13 +718,13 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.antlr.generateAntlr.skip` (alias: `skipGenAntlr`)
-        
+
         Whether to skip the generateAntlr step which generates code from ANTLR
         grammars in src/main/antlr4.
-        
+
         Note: This doesn't actually work yet because the ANTLR Maven plugin has
         no idiomatic skip parameter: https://github.com/antlr/antlr4/issues/2448
-        
+
         Default: ${build.java.antlr.skip} (on when the ANTLR portion of the Java build is on)
     -->
     <skipGenAntlr>${build.java.antlr.skip}</skipGenAntlr>
@@ -732,9 +736,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.skip` (alias: `skipDb`)
-        
+
         Whether to skip the database portion of the Java build.
-        
+
         Default: true (the database portion of the Java build is off)
     -->
     <skipDb>true</skipDb>
@@ -742,29 +746,29 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.schema` (alias: `db.schema`)
-        
+
         The project's database schema name.
-        
+
         Default: UNDEFINED!!!
     -->
     <db.schema>UNDEFINED!!!</db.schema>
     <build.java.db.schema>${db.schema}</build.java.db.schema>
-    
+
     <!--
         `build.java.db.url` (alias: `db.url`)
-        
+
         The JDBC URL to be used by Flyway and JOOQ during the build.
-        
+
         Default: UNDEFINED!!!
     -->
     <db.url>jdbc:h2:${project.build.directory}/db-h2</db.url>
     <build.java.db.url>${db.url}</build.java.db.url>
-    
+
     <!--
         `build.java.db.migrateDatabase.skip` (alias: `skipFlyway`)
-        
+
         Whether to skip the migration of the database schema with Flyway.
-        
+
         Default: ${build.java.db.skip} (on when the database portion of the Java build is on)
     -->
     <skipFlyway>${build.java.db.skip}</skipFlyway>
@@ -772,9 +776,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.migrateDatabase.location` (alias: `migrateDatabase.location`)
-        
+
         The general Flyway migration path.
-        
+
         Default: filesystem:${dir.resources}/db/migration
     -->
     <migrateDatabase.location>filesystem:${dir.resources}/db/migration</migrateDatabase.location>
@@ -782,11 +786,11 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.migrateDatabase.locations` (alias: `migrateDatabase.locations`)
-        
+
         The comma-separated list of Flyway migration paths, including the
         general migration path `build.java.db.migrateDatabase` and DBMS-specific
         migration paths.
-        
+
         Default: filesystem:${dir.resources}/db/migration
     -->
     <migrateDatabase.locations>${build.java.db.migrateDatabase.location},${build.java.db.migrateDatabase.location}/h2</migrateDatabase.locations>
@@ -794,9 +798,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.skip` (alias: `skipJooq`)
-        
+
         Whether to skip the generation of database object code with JOOQ.
-        
+
         Default: ${build.java.db.skip} (on when the database portion of the Java build is on)
     -->
     <skipJooq>${build.java.db.skip}</skipJooq>
@@ -804,10 +808,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.directory` (alias: `generateDatabase.directory`)
-        
+
         The base directory under which JOOQ generates database code. See also
         `build.java.db.generateDatabase.package`.
-        
+
         Default: ${dir.generated.java}
     -->
     <generateDatabase.directory>${dir.generated.java}</generateDatabase.directory>
@@ -815,9 +819,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.excludes` (alias: `generateDatabase.excludes`)
-        
+
         JOOQ excludes string (https://flywaydb.org/documentation/maven/migrate).
-        
+
         Default: flyway_schema_history
     -->
     <generateDatabase.excludes>flyway_schema_history</generateDatabase.excludes>
@@ -825,9 +829,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.includes` (alias: `generateDatabase.includes`)
-        
+
         JOOQ includes string (https://flywaydb.org/documentation/maven/migrate).
-        
+
         Default: .*
     -->
     <generateDatabase.includes>.*</generateDatabase.includes>
@@ -835,9 +839,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.logLevel` (alias: `generateDatabase.logLevel`)
-        
+
         JOOQ log level (https://flywaydb.org/documentation/maven/migrate).
-        
+
         Default: WARN
     -->
     <generateDatabase.logLevel>WARN</generateDatabase.logLevel>
@@ -845,10 +849,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.db.generateDatabase.package` (alias: `generateDatabase.package`)
-        
+
         The Java package used by JOOQ to generate database code. See also
         `build.java.db.generateDatabase.directory`.
-        
+
         Default: ${build.java.package}.db
     -->
     <generateDatabase.package>${build.java.package}.db</generateDatabase.package>
@@ -860,9 +864,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.spring.skip` (alias: `skipSpring`)
-        
+
         Whether to skip the Spring portion of the Java build.
-        
+
         Default: true (off by default)
     -->
     <skipSpring>true</skipSpring>
@@ -870,9 +874,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.spring.withDepsClassifier` (alias: `fatJarClassifier`)
-        
+
         The classifier of the main artifact with dependencies.
-        
+
         Default: with-deps
     -->
     <fatJarClassifier>with-deps</fatJarClassifier>
@@ -880,81 +884,81 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.spring.generateSwagger.skip` (alias: `skipSwagger`)
-        
+
         Whether to skip the generateSwagger step, which generates Spring Boot
         code from a Swagger specification.
-        
+
         Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
     -->
     <skipSwagger>${build.java.spring.skip}</skipSwagger>
     <build.java.spring.generateSwagger.skip>${skipSwagger}</build.java.spring.generateSwagger.skip>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.api` (alias: `generateSwagger.api`)
-        
+
         Java package for the Spring API code.
-        
+
         Default: ${build.java.spring.generateSwagger.base}.api
     -->
     <generateSwagger.api>${build.java.spring.generateSwagger.base}.api</generateSwagger.api>
     <build.java.spring.generateSwagger.api>${generateSwagger.api}</build.java.spring.generateSwagger.api>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.base` (alias: `generateSwagger.base`)
-        
+
         Base Java package for the Spring code.
-        
+
         Default: ${build.java.package}
     -->
     <generateSwagger.base>${build.java.package}</generateSwagger.base>
     <build.java.spring.generateSwagger.base>${generateSwagger.base}</build.java.spring.generateSwagger.base>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.config` (alias: `generateSwagger.config`)
-        
+
         Java package for the Spring config code.
-        
+
         Default: ${build.java.spring.generateSwagger.base}.config
     -->
     <generateSwagger.config>${build.java.spring.generateSwagger.base}.config</generateSwagger.config>
     <build.java.spring.generateSwagger.config>${generateSwagger.config}</build.java.spring.generateSwagger.config>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.groupId`
-        
+
         The groupId for swagger-codegen-maven-plugin. Currently most of our API
         specifications are Swagger 2, so the default is io.swagger; set to
         io.swagger.codegen.v3 for an OpenAPI 3 specification.
-        
+
         Default: io.swagger (set to io.swagger.codegen.v3 for OpenAPI 3)
     -->
-    <build.java.spring.generateSwagger.groupId>io.swagger</build.java.spring.generateSwagger.groupId>
+    <build.java.spring.generateSwagger.groupId>io.swagger.codegen.v3</build.java.spring.generateSwagger.groupId>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.invoker` (alias: `generateSwagger.invoker`)
-        
+
         Java package for the Spring invoker code.
-        
+
         Default: ${build.java.spring.generateSwagger.base}
     -->
     <generateSwagger.invoker>${build.java.spring.generateSwagger.base}</generateSwagger.invoker>
     <build.java.spring.generateSwagger.invoker>${generateSwagger.invoker}</build.java.spring.generateSwagger.invoker>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.model` (alias: `generateSwagger.model`)
-        
+
         Java package for the Spring model code.
-        
+
         Default: ${build.java.spring.generateSwagger.base}.model
     -->
     <generateSwagger.model>${build.java.spring.generateSwagger.base}.model</generateSwagger.model>
     <build.java.spring.generateSwagger.model>${generateSwagger.model}</build.java.spring.generateSwagger.model>
 
-    <!-- 
+    <!--
         `build.java.spring.generateSwagger.spec` (alias: `generateSwagger.spec`)
-        
+
         Path to the Swagger specification file.
-        
+
         Default: ${dir.resources}/swagger/swagger.yaml
     -->
     <generateSwagger.spec>${dir.resources}/swagger/swagger.yaml</generateSwagger.spec>
@@ -962,10 +966,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.spring.postprocessSwagger.skip` (alias: `skipSwaggerPostprocess`)
-        
+
         Whether to skip the postprocessSwagger step, which post-processes the
         Spring Boot code generated in the generateSwagger step.
-        
+
         Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
     -->
     <skipSwaggerPostprocess>${build.java.spring.skip}</skipSwaggerPostprocess>
@@ -973,10 +977,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.java.spring.repackageJar.skip` (alias: `skipJarWithDeps`)
-        
+
         Whether to skip the repackageJar step, which creates a main artifact
         with dependencies with Spring Boot.
-        
+
         Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
     -->
     <skipJarWithDeps>${build.java.spring.skip}</skipJarWithDeps>
@@ -988,9 +992,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.skip` (alias: `skipDocker`)
-        
+
         Whether to skip the Docker build's steps.
-        
+
         Default: true (the Docker build is off)
     -->
     <skipDocker>true</skipDocker>
@@ -998,9 +1002,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.user` (alias: `docker.user`)
-        
+
         The Docker Hub user or organization.
-        
+
         Default: lockss
     -->
     <docker.user>lockss</docker.user>
@@ -1008,9 +1012,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.project` (alias: `docker.project`)
-        
+
         The Docker Hub project.
-        
+
         Default: ${project.artifactId}
     -->
     <docker.project>${project.artifactId}</docker.project>
@@ -1018,9 +1022,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.repository` (alias: `docker.repo`)
-        
+
         The Docker Hub repository.
-        
+
         Default: ${build.docker.user}/${build.docker.project}
     -->
     <docker.repo>${build.docker.user}/${build.docker.project}</docker.repo>
@@ -1028,9 +1032,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.tag` (alias: `docker.tag`)
-        
+
         The Docker image tag (for steps not explicitly labeled as 'latest').
-        
+
         Default: ${project.version}
     -->
     <docker.tag>${project.version}</docker.tag>
@@ -1038,10 +1042,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.dockerBuild.skip` (alias: `skipDockerBuild`)
-        
+
         Whether to skip the dockerBuild step, which builds a Docker image
         and tags it with the current version.
-        
+
         Default: true (the Docker build step is off)
     -->
     <skipDockerBuild>true</skipDockerBuild>
@@ -1049,10 +1053,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.dockerTagLatest.skip` (alias: `skipDockerTagLatest`)
-        
+
         Whether to skip the dockerTagLatest step, which tags the Docker image as
         'latest'.
-        
+
         Default: true (the Docker image is not tagged as latest)
     -->
     <skipDockerTagLatest>true</skipDockerTagLatest>
@@ -1060,10 +1064,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.dockerPush.skip` (alias: `skipDockerPush`)
-        
+
         Whether to skip the dockerPush step, which pushes the Docker image to
         Docker Hub with the current version.
-        
+
         Default: true (the Docker image is not pushed)
     -->
     <skipDockerPush>true</skipDockerPush>
@@ -1071,10 +1075,10 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.docker.dockerPushLatest.skip` (alias: `skipDockerPushLatest`)
-        
+
         Whether to skip the dockerPushLatest step, which pushes the Docker image
         to Docker Hub as 'latest'.
-        
+
         Default: true (the Docker image is not pushed as latest)
     -->
     <skipDockerPushLatest>true</skipDockerPushLatest>
@@ -1090,56 +1094,57 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.maven-antrun-plugin>3.0.0</version.plugin.maven-antrun-plugin>
-    <version.plugin.maven-archetype-plugin>3.2.0</version.plugin.maven-archetype-plugin>
+    <version.plugin.maven-archetype-plugin>3.2.1</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
     <version.plugin.maven-enforcer-plugin>3.0.0-M3</version.plugin.maven-enforcer-plugin>
     <version.plugin.maven-javadoc-plugin>3.3.0</version.plugin.maven-javadoc-plugin>
-    <version.plugin.maven-jar-plugin>3.2.0</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-jar-plugin>3.4.2</version.plugin.maven-jar-plugin>
+    <version.plugin.maven-install-plugin>3.1.2</version.plugin.maven-install-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin><!-- now 3.0.1 -->
     <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
     <version.plugin.maven-resources-plugin>2.6</version.plugin.maven-resources-plugin>
     <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
-    <version.plugin.maven-surefire-plugin>3.0.0-M5</version.plugin.maven-surefire-plugin>
+    <version.plugin.maven-surefire-plugin>3.2.2</version.plugin.maven-surefire-plugin>
     <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
-    <version.plugin.swagger-codegen-maven-plugin>2.4.21</version.plugin.swagger-codegen-maven-plugin>
+    <version.plugin.swagger-codegen-maven-plugin>3.0.52</version.plugin.swagger-codegen-maven-plugin>
 
     <!-- END properties section: plugin versions -->
 
     <!-- BEGIN properties section: Docker image versions -->
 
-    <version.docker.lockss-spring>2.10.0</version.docker.lockss-spring>
+    <version.docker.lockss-spring>2.11.0</version.docker.lockss-spring>
 
     <!-- END properties section: Docker image versions -->
 
     <!-- BEGIN properties section: grouped versions -->
 
-    <version.group.activemq>5.16.3</version.group.activemq>
+    <version.group.activemq>5.18.3</version.group.activemq>
     <version.group.antlr>4.9.3</version.group.antlr><!-- 4.9.3 is the last Java 8 version before 4.10 -->
-    <version.group.bouncycastle>1.72</version.group.bouncycastle>
+    <version.group.bouncycastle>1.76</version.group.bouncycastle>
     <version.group.bouncycastle.variant>jdk18on</version.group.bouncycastle.variant>
     <version.group.derby>10.14.2.0</version.group.derby><!-- 10.14.2.0 is the last Java 8 version before 10.15 -->
     <version.group.flyway>5.2.4</version.group.flyway><!-- now 7.10.0 -->
     <version.group.hadoop>3.3.1</version.group.hadoop>
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
-    <version.group.icu4j>71.1</version.group.icu4j>
-    <version.group.jackson>2.12.7</version.group.jackson>
+    <version.group.icu4j>74.1</version.group.icu4j>
+    <version.group.jackson>2.16.1</version.group.jackson>
     <version.group.jooq>3.14.15</version.group.jooq><!-- 3.14.15 is the last Java 8 version before 3.15 -->
     <version.group.junit4>4.13.2</version.group.junit4>
-    <version.group.junit5-jupiter>5.7.2</version.group.junit5-jupiter>
-    <version.group.junit5-platform>1.7.2</version.group.junit5-platform>
-    <version.group.log4j>2.20.0</version.group.log4j>
-    <version.group.maven>3.6.1</version.group.maven>
+    <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
+    <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
+    <version.group.log4j>2.21.1</version.group.log4j>
+    <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
+    <version.group.mockserver>5.15.0</version.group.mockserver>
     <version.group.pdfbox>1.8.17</version.group.pdfbox>
     <version.group.solr>8.11.2</version.group.solr>
-    <version.group.slf4j>1.7.25</version.group.slf4j>
-    <version.group.spring>4.3.18.RELEASE</version.group.spring><!-- upgradeable -->
-    <version.group.spring-boot>1.5.17.RELEASE</version.group.spring-boot><!-- upgradeable -->
-    <version.group.springfox>2.6.1</version.group.springfox><!-- upgradeable to 2.9.2 -->
+    <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
+    <version.group.spring>6.1.3</version.group.spring>
+    <version.group.spring-boot>3.2.2</version.group.spring-boot>
     <version.group.truezip>7.7.10</version.group.truezip>
     <version.group.xoai>4.2.0</version.group.xoai>
 
@@ -1153,34 +1158,36 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
     <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
-    <version.dependency.commons-cli>1.5.0</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.16.0</version.dependency.commons-codec>
+    <version.dependency.commons-cli>1.6.0</version.dependency.commons-cli>
+    <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.23.0</version.dependency.commons-compress>
+    <version.dependency.commons-compress>1.26.1</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
     <version.dependency.commons-csv>1.10.0</version.dependency.commons-csv>
+    <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- now 3.2 -->
     <version.dependency.commons-fileupload>1.5</version.dependency.commons-fileupload>
-    <version.dependency.commons-io>2.13.0</version.dependency.commons-io>
+    <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
-    <version.dependency.commons-lang3>3.12.0</version.dependency.commons-lang3>
+    <version.dependency.commons-lang3>3.14.0</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
-    <version.dependency.commons-text>1.10.0</version.dependency.commons-text>
-    <version.dependency.commons-validator>1.7</version.dependency.commons-validator>
-    <version.dependency.h2>2.2.220</version.dependency.h2>
+    <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
+    <version.dependency.commons-validator>1.8.0</version.dependency.commons-validator>
+    <version.dependency.h2>2.2.224</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
-    <version.dependency.jackson-databind>${version.group.jackson}.1</version.dependency.jackson-databind>
-    <version.dependency.jackson-datatype-joda>2.8.10</version.dependency.jackson-datatype-joda>
+    <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>2023-05</version.dependency.jonix>
+    <version.dependency.jonix>2023-10</version.dependency.jonix>
     <version.dependency.json-path>2.8.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
+    <version.dependency.jsoup>1.16.2</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
     <version.dependency.postgresql>42.6.0</version.dependency.postgresql>
+    <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
     <version.dependency.xmlunit>1.6</version.dependency.xmlunit>
 
@@ -1190,33 +1197,33 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!--
         `build.releasename`
-        
+
         A special property with the version string matching that of the classic
         LOCKSS daemon (lockss-daemon).
     -->
-    <build.releasename>2.0.72-alpha7</build.releasename>
+    <build.releasename>2.0.81-beta1</build.releasename>
 
-    <version.lockss.lockss-configuration-service>2.8.0</version.lockss.lockss-configuration-service>
-    <version.lockss.lockss-core>2.8.1</version.lockss.lockss-core>
+    <version.lockss.lockss-configuration-service>2.9.0</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.9.0</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-    <version.lockss.lockss-junit4-bundle>1.7.0</version.lockss.lockss-junit4-bundle>
-    <version.lockss.lockss-junit5-bundle>1.7.0</version.lockss.lockss-junit5-bundle>
-    <version.lockss.lockss-metadata-extraction-service>2.7.0</version.lockss.lockss-metadata-extraction-service>
-    <version.lockss.lockss-metadataextractor-common>2.9.0</version.lockss.lockss-metadataextractor-common>
-    <version.lockss.lockss-metadata-service>2.6.0</version.lockss.lockss-metadata-service>
-    <version.lockss.lockss-poller>2.6.0</version.lockss.lockss-poller>
-    <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
+    <version.lockss.lockss-junit4-bundle>1.8.0</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.8.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-metadata-extraction-service>2.8.0</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.10.0</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.7.0</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-poller>2.7.0</version.lockss.lockss-poller>
+    <version.lockss.lockss-plugin-compat>1.6.0</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-plugins-archetype>1.3.1</version.lockss.lockss-plugins-archetype>
-    <version.lockss.lockss-repository-tools>2.12.0</version.lockss.lockss-repository-tools>
-    <version.lockss.lockss-repository-service>2.14.1</version.lockss.lockss-repository-service>
-    <version.lockss.lockss-spring-bundle>2.14.0</version.lockss.lockss-spring-bundle>
-    <version.lockss.lockss-tdb-processor>1.7.0</version.lockss.lockss-tdb-processor>
-    <version.lockss.lockss-tdbxml-maven-plugin>1.8.0</version.lockss.lockss-tdbxml-maven-plugin>
-    <version.lockss.lockss-util-core>1.13.0</version.lockss.lockss-util-core>
-    <version.lockss.lockss-util-entities>1.5.0</version.lockss.lockss-util-entities>
-    <version.lockss.lockss-util-rest>1.5.0</version.lockss.lockss-util-rest>
-    <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
+    <version.lockss.lockss-plugins-archetype>1.4.0</version.lockss.lockss-plugins-archetype>
+    <version.lockss.lockss-repository-tools>2.13.0</version.lockss.lockss-repository-tools>
+    <version.lockss.lockss-repository-service>2.15.0</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.15.0</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-tdb-processor>1.8.0</version.lockss.lockss-tdb-processor>
+    <version.lockss.lockss-tdbxml-maven-plugin>1.9.0</version.lockss.lockss-tdbxml-maven-plugin>
+    <version.lockss.lockss-util-core>1.14.0</version.lockss.lockss-util-core>
+    <version.lockss.lockss-util-entities>1.6.0</version.lockss.lockss-util-entities>
+    <version.lockss.lockss-util-rest>1.6.0</version.lockss.lockss-util-rest>
+    <version.lockss.lockss-plugin-compat>1.6.0</version.lockss.lockss-plugin-compat>
 
     <!-- END properties section: LOCKSS versions -->
 
@@ -1226,7 +1233,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <maven.compiler.target>${build.java.version}</maven.compiler.target>
     <maven.compiler.useIncrementalCompilation>${build.java.incremental}</maven.compiler.useIncrementalCompilation>
     <mainClass>${build.java.mainClass}</mainClass>
-    
+
     <!-- END properties section: Java-related Maven internals -->
 
     <!-- BEGIN properties section: encoding-related Maven internals -->
@@ -1268,13 +1275,13 @@ POSSIBILITY OF SUCH DAMAGE.
   </properties>
 
   <!-- END properties -->
-  
+
   <!-- BEGIN repositories -->
-  
+
   <repositories>
-  
+
     <!-- BEGIN repository lockss-legacy -->
-  
+
     <repository>
       <id>lockss-legacy</id>
       <name>LOCKSS Legacy JARs</name>
@@ -1290,9 +1297,9 @@ POSSIBILITY OF SUCH DAMAGE.
     </repository>
 
     <!-- END repository lockss-legacy -->
-  
+
     <!-- BEGIN repository ossrh-snapshots -->
-  
+
     <repository>
       <id>ossrh-snapshots</id>
       <name>Sonatype OSSRH Snapshots</name>
@@ -1306,19 +1313,19 @@ POSSIBILITY OF SUCH DAMAGE.
         <updatePolicy>${repository.update.ossrh-snapshots}</updatePolicy>
       </snapshots>
     </repository>
-  
+
     <!-- END repository ossrh-snapshots -->
-  
+
   </repositories>
 
   <!-- END repositories -->
-  
+
   <!-- BEGIN pluginRepositories -->
 
    <pluginRepositories>
 
     <!-- BEGIN pluginRepository ossrh-snapshots -->
-  
+
      <pluginRepository>
        <id>ossrh-snapshots</id>
        <name>Sonatype OSSRH Snapshots</name>
@@ -1338,14 +1345,14 @@ POSSIBILITY OF SUCH DAMAGE.
    </pluginRepositories>
 
   <!-- END pluginRepositories -->
-  
+
   <!-- BEGIN build -->
 
   <!--
       OVERVIEW OF THE BUILD
-      
+
       This POM file defines multiple build trails:
-      
+
       - An info build, responsible for gathering and outputting information
         about the build environment. On by default (`build.info.skip` set
         to false).
@@ -1356,7 +1363,7 @@ POSSIBILITY OF SUCH DAMAGE.
         (`build.docker.skip` set to true).
 
       The Java build contains multiple portions:
-      
+
       - An ANTLR portion, responsible for generating parsers from grammars.
         Off by default (`build.antlr.skip` set to true).
       - A database portion, responsible for migrating a database schema with
@@ -1370,14 +1377,14 @@ POSSIBILITY OF SUCH DAMAGE.
         and optionally build the tests, Javadoc and sources artifacts.
 
       PHASE BY PHASE OVERVIEW
-      
+
       Validate phase:
-      
+
       - Check early that the Docker daemon is running, if it is needed later
         (always)
-      
+
       Initialize phase:
-      
+
       - Gather Git properties (unless `build.info.gitProperties.skip` is
         true)
       - Generate the build info file (unless `build.info.buildInfo.skip` is
@@ -1400,11 +1407,11 @@ POSSIBILITY OF SUCH DAMAGE.
         scripts (if `build.java.spring.generateSwagger.skip` is false)
 
       Process-sources phase:
-      
+
       - Build a tags file with Etags (if build.java.buildEtags.skip is false)
 
       Compile phase:
-      
+
       - Build the main Java source tree (unless
         `build.java.compileMain.skip` is true)
 
@@ -1414,11 +1421,11 @@ POSSIBILITY OF SUCH DAMAGE.
         `build.java.compileTests.skip` is true)
 
       Test phase:
-      
+
       - Run JUnit tests with Maven Surefire Plugin (unless `skipTests` is true)
 
       Package phase:
-      
+
       - Build main artifact (unless `build.java.jarMain.skip` is true)
       - Build tests artifact (if `build.java.jarTests.skip` is false)
       - Create a main artifact with dependencies with Spring Boot (if
@@ -1451,7 +1458,7 @@ POSSIBILITY OF SUCH DAMAGE.
       - Send deploy mail (if `build.java.deployMail.skip` is false)
 
       Clean phase of the clean lifecycle:
-      
+
       - Also clean the src/main/generated directory
   -->
   <build>
@@ -1461,11 +1468,73 @@ POSSIBILITY OF SUCH DAMAGE.
           <artifactId>maven-resources-plugin</artifactId>
           <version>${version.plugin.maven-resources-plugin}</version>
         </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-install-plugin</artifactId>
+          <version>${version.plugin.maven-install-plugin}</version>
+        </plugin>
+
+        <!-- BEGIN plugin maven-archetype-plugin -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-archetype-plugin</artifactId>
+          <version>${version.plugin.maven-archetype-plugin}</version>
+        </plugin>
+
+        <!-- END plugin maven-archetype-plugin -->
+
+        <!-- BEGIN plugin maven-jar-plugin -->
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-jar-plugin</artifactId>
+          <version>${version.plugin.maven-jar-plugin}</version>
+          <executions>
+
+            <!-- BEGIN step default-jar -->
+
+            <execution>
+              <id>default-jar</id>
+              <phase>package</phase>
+              <configuration>
+                <skipIfEmpty>true</skipIfEmpty>
+                <archive>
+                  <manifest>
+                    <mainClass>${build.java.mainClass}</mainClass>
+                  </manifest>
+                </archive>
+              </configuration>
+            </execution>
+
+            <!-- END step default-jar -->
+
+            <!-- BEGIN step jarTests -->
+
+            <execution>
+              <id>jarTests</id>
+              <goals>
+                <goal>test-jar</goal>
+              </goals>
+              <configuration>
+                <skip>${build.java.jarTests.skip}</skip>
+                <skipIfEmpty>true</skipIfEmpty>
+              </configuration>
+            </execution>
+
+            <!-- END step jarTests -->
+
+          </executions>
+        </plugin>
+
+        <!-- END plugin maven-jar-plugin -->
+
       </plugins>
     </pluginManagement>
 
     <defaultGoal>package</defaultGoal>
-  
+
     <!-- BEGIN plugins -->
 
     <plugins>
@@ -1499,7 +1568,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
         </executions>
       </plugin>
-      
+
       <!-- END plugin git-commit-id-plugin -->
 
       <!-- BEGIN plugin buildnumber-maven-plugin -->
@@ -1510,9 +1579,9 @@ POSSIBILITY OF SUCH DAMAGE.
 	<version>${version.plugin.buildnumber-maven-plugin}</version>
 	<inherited>true</inherited>
 	<executions>
-	
+
 	  <!-- BEGIN step generateTimestamp -->
-	
+
 	  <execution>
             <id>generateTimestamp</id>
             <phase>initialize</phase>
@@ -1603,7 +1672,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
         </executions>
       </plugin>
-    
+
       <!-- END plugin antlr4-maven-plugin -->
 
       <!-- BEGIN plugin flyway-maven-plugin -->
@@ -1620,7 +1689,7 @@ POSSIBILITY OF SUCH DAMAGE.
           </dependency>
         </dependencies>
         <executions>
-        
+
           <!-- BEGIN step migrateDatabase -->
 
           <execution>
@@ -1658,7 +1727,7 @@ POSSIBILITY OF SUCH DAMAGE.
           </dependency>
         </dependencies>
         <executions>
-        
+
           <!-- BEGIN step generateDatabase -->
 
           <execution>
@@ -1688,7 +1757,7 @@ POSSIBILITY OF SUCH DAMAGE.
               </generator>
             </configuration>
           </execution>
-        
+
           <!-- END step generateDatabase -->
 
         </executions>
@@ -1703,7 +1772,7 @@ POSSIBILITY OF SUCH DAMAGE.
         <artifactId>swagger-codegen-maven-plugin</artifactId>
         <version>${version.plugin.swagger-codegen-maven-plugin}</version>
         <executions>
-        
+
           <!-- BEGIN step generateSwagger -->
 
           <execution>
@@ -1726,6 +1795,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 <modelPackage>${build.java.spring.generateSwagger.model}</modelPackage>
                 <hideGenerationTimestamp>true</hideGenerationTimestamp>
                 <java8>true</java8>
+                <jakarta>true</jakarta>
                 <delegatePattern>true</delegatePattern>
                 <swaggerDocketConfig>true</swaggerDocketConfig>
               </configOptions>
@@ -1765,10 +1835,10 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>compile</goal>
             </goals>
             <configuration>
-              <skipMain>${build.java.compileMain.skip}</skipMain>            
+              <skipMain>${build.java.compileMain.skip}</skipMain>
             </configuration>
           </execution>
-        
+
           <!-- END step compileMain -->
 
           <!-- BEGIN step compileTests -->
@@ -1787,7 +1857,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <skip>${build.java.compileTests.skip}</skip>
             </configuration>
           </execution>
-        
+
           <!-- END step compileTests -->
 
         </executions>
@@ -1820,9 +1890,10 @@ POSSIBILITY OF SUCH DAMAGE.
             <artifactId>junit-vintage-engine</artifactId>
             <version>${version.group.junit5-jupiter}</version>
           </dependency>
+
         </dependencies>
         <executions>
-        
+
           <!-- BEGIN step runTests -->
 
           <execution>
@@ -1837,7 +1908,11 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <runOrder>balanced</runOrder>
-	      <argLine>${jprofiler.agentpath}</argLine>
+              <!-- DLV: Added add-opens to args in this Maven Surefire plugin execution for XStream support -->
+	      <argLine>
+                ${jprofiler.agentpath}
+                --add-opens java.base/java.util=ALL-UNNAMED
+              </argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
                 <include>**/Test*.java</include>
@@ -1862,89 +1937,22 @@ POSSIBILITY OF SUCH DAMAGE.
                 <java.io.tmpdir>${dir.test.temp}</java.io.tmpdir>$>
                 <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
                 <org.lockss.unitTesting>true</org.lockss.unitTesting>
+                <org.lockss.executableTempDir>${dir.executableTemp}</org.lockss.executableTempDir>
                 <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
                 <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
+                <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
               </systemPropertyVariables>
             </configuration>
           </execution>
-        
+
           <!-- END step runTests -->
-        
+
         </executions>
       </plugin>
 
       <!-- END plugin maven-surefire-plugin -->
 
-      <!-- BEGIN plugin maven-archetype-plugin -->
 
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-archetype-plugin</artifactId>
-        <version>${version.plugin.maven-archetype-plugin}</version>
-        <executions>
-
-          <execution>
-            <id>default-jar</id>
-            <phase>NONE</phase><!-- maven-jar-plugin:jarMain supersedes maven-archetype-plugin:default-jar -->
-          </execution>
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-archetype-plugin -->
-
-      <!-- BEGIN plugin maven-jar-plugin -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>${version.plugin.maven-jar-plugin}</version>
-        <executions>
-
-          <!-- BEGIN step jarMain -->
-
-          <execution>
-            <id>default-jar</id>
-            <phase>NONE</phase><!-- jarMain supersedes default-jar -->
-          </execution>
-          <execution>
-            <id>jarMain</id>
-            <phase>package</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.jarMain.skip}</skip><!-- probably doesn't have any effect -->
-              <skipIfEmpty>true</skipIfEmpty>
-              <archive>
-                <manifest>
-                  <mainClass>${build.java.mainClass}</mainClass>
-                </manifest>
-              </archive>
-            </configuration>
-          </execution>
-
-          <!-- END step jarMain -->
-
-          <!-- BEGIN step jarTests -->
-
-          <execution>
-            <id>jarTests</id>
-            <goals>
-              <goal>test-jar</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.jarTests.skip}</skip>
-              <skipIfEmpty>true</skipIfEmpty>
-            </configuration>
-          </execution>
-
-          <!-- END step jarTests -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-jar-plugin -->
 
       <!-- BEGIN plugin spring-boot-maven-plugin -->
 
@@ -1985,9 +1993,9 @@ POSSIBILITY OF SUCH DAMAGE.
         <artifactId>maven-source-plugin</artifactId>
         <version>${version.plugin.maven-source-plugin}</version>
         <executions>
-        
+
           <!-- BEGIN step jarMainSources -->
-          
+
           <execution>
             <id>jarMainSources</id>
             <phase>package</phase>
@@ -1998,11 +2006,11 @@ POSSIBILITY OF SUCH DAMAGE.
               <skipSource>${build.java.jarMainSources.skip}</skipSource>
             </configuration>
           </execution>
-        
+
           <!-- END step jarMainSources -->
-          
+
           <!-- BEGIN step jarTestSources -->
-          
+
           <execution>
             <id>jarTestSources</id>
             <phase>package</phase>
@@ -2013,12 +2021,12 @@ POSSIBILITY OF SUCH DAMAGE.
               <skipSource>${build.java.jarTestSources.skip}</skipSource>
             </configuration>
           </execution>
-        
+
           <!-- END step jarTestSources -->
-          
+
         </executions>
       </plugin>
-        
+
       <!-- END plugin maven-source-plugin -->
 
       <!-- BEGIN plugin maven-javadoc-plugin -->
@@ -2093,7 +2101,7 @@ POSSIBILITY OF SUCH DAMAGE.
               <skip>${build.java.signArtifacts.skip}</skip>
             </configuration>
           </execution>
-          
+
           <!-- END step signArtifacts -->
 
         </executions>
@@ -2127,7 +2135,7 @@ POSSIBILITY OF SUCH DAMAGE.
         <executions>
 
           <!-- BEGIN step deployMavenCentral -->
-        
+
           <execution>
             <id>deployMavenCentral</id>
             <phase>deploy</phase>
@@ -2138,17 +2146,17 @@ POSSIBILITY OF SUCH DAMAGE.
               <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>
               <serverId>ossrh</serverId>
               <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <skipLocalStaging>true</skipLocalStaging>              
+              <skipLocalStaging>true</skipLocalStaging>
               <autoReleaseAfterClose>true</autoReleaseAfterClose>
             </configuration>
           </execution>
-        
+
           <!-- END step deployMavenCentral -->
-        
+
         </executions>
-        
+
       </plugin>
-          
+
       <!-- END plugin nexus-staging-maven-plugin -->
 
       <!-- BEGIN plugin exec-maven-plugin -->
@@ -2158,9 +2166,9 @@ POSSIBILITY OF SUCH DAMAGE.
         <artifactId>exec-maven-plugin</artifactId>
         <version>${version.plugin.exec-maven-plugin}</version>
         <executions>
-        
+
           <!-- BEGIN step postprocessSwagger -->
-        
+
           <execution>
             <id>postprocessSwagger</id>
             <phase>generate-sources</phase>
@@ -2175,7 +2183,7 @@ POSSIBILITY OF SUCH DAMAGE.
           </execution>
 
           <!-- END step postprocessSwagger -->
-        
+
           <!-- BEGIN step symlinkMain -->
 
           <execution>
@@ -2196,9 +2204,9 @@ POSSIBILITY OF SUCH DAMAGE.
           </execution>
 
           <!-- END step symlinkMain -->
-        
+
           <!-- BEGIN step symlinkTests -->
-        
+
           <execution>
             <id>symlinkTests</id>
             <phase>package</phase>
@@ -2217,9 +2225,9 @@ POSSIBILITY OF SUCH DAMAGE.
           </execution>
 
           <!-- END step symlinkTests -->
-        
+
           <!-- BEGIN step symlinkWithDeps -->
-        
+
           <execution>
             <id>symlinkWithDeps</id>
             <phase>package</phase>
@@ -2237,7 +2245,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
 
-          <!-- END step symlinkWithDeps -->        
+          <!-- END step symlinkWithDeps -->
 
         </executions>
       </plugin>
@@ -2343,66 +2351,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin dockerfile-maven-plugin -->
 
-      <!-- BEGIN plugin maven-postman-plugin -->
-
-      <plugin>
-        <groupId>ch.fortysix</groupId>
-        <artifactId>maven-postman-plugin</artifactId>
-        <version>${version.plugin.maven-postman-plugin}</version>
-        <executions>
-        
-          <!-- BEGIN step deployMail -->
-        
-          <execution>
-            <id>deployMail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>send-mail</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.deployMail.skip}</skip>
-              <failonerror>${build.java.deployMail.failOnError}</failonerror>
-              <multipartSupported>false</multipartSupported>
-              <mailcontenttype>text/plain</mailcontenttype>
-              <from>${build.java.deployMail.from}</from>
-              <receivers>
-                <receiver>${build.java.deployMail.to}</receiver>
-              </receivers>
-              <subject>Build deployed: ${project.artifactId} ${project.version} (${git.branch})</subject>
-              <textMessage><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
-Skipped JAR upload: ${build.java.deployMavenCentral.skip}
-Skipped Docker upload: ${build.docker.dockerPush.skip}
-
-GIT CONTEXT:
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (branch: ${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Host name: ${hostname}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></textMessage>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMail -->
-        
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-postman-plugin -->
-
       <!-- BEGIN plugin maven-antrun-plugin -->
 
       <!-- This plugin must appear *after* surefire, as it contains a
@@ -2419,7 +2367,22 @@ Local directory: ${user.dir}
             <groupId>ant-contrib</groupId>
             <artifactId>ant-contrib</artifactId>
             <version>${version.dependency.ant-contrib}</version>
-          </dependency>  
+          </dependency>
+
+          <!-- javax.activation and javax.mail needed for ant mail target -->
+          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+          <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+          </dependency>
+
         </dependencies>
         <executions>
 
@@ -2514,7 +2477,7 @@ Local directory: ${user.dir}
           <!-- END step local-publish-site -->
 
           <!-- BEGIN step checkDocker -->
-          
+
           <execution>
             <id>checkDocker</id>
             <phase>validate</phase>
@@ -2553,7 +2516,7 @@ Local directory: ${user.dir}
           </execution>
 
           <!-- END step checkDocker -->
-          
+
           <!-- BEGIN step buildInfo -->
 
           <execution>
@@ -2614,11 +2577,11 @@ Local directory: ${user.dir}
               </target>
             </configuration>
           </execution>
-          
+
           <!-- END step buildInfo -->
-          
+
           <!-- BEGIN step classpathFiles -->
-          
+
           <execution>
             <id>classpathFiles</id>
             <phase>initialize</phase>
@@ -2644,11 +2607,11 @@ Local directory: ${user.dir}
               </target>
             </configuration>
           </execution>
-          
+
           <!-- END step classpathFiles -->
-          
+
           <!-- BEGIN step buildEtags -->
-          
+
           <execution>
             <id>buildEtags</id>
             <phase>process-sources</phase>
@@ -2672,7 +2635,53 @@ Local directory: ${user.dir}
           </execution>
 
           <!-- END step buildEtags -->
-          
+
+          <!-- BEGIN step deployMail -->
+
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <target>
+                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
+                  <from address="${build.java.deployMail.from}"/>
+                  <to address="${build.java.deployMail.to}"/>
+                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Skipped JAR upload: ${build.java.deployMavenCentral.skip}
+Skipped Docker upload: ${build.docker.dockerPush.skip}
+
+GIT CONTEXT:
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (branch: ${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></message>
+                </mail>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
+
         </executions>
       </plugin>
 
@@ -2710,35 +2719,57 @@ Local directory: ${user.dir}
 
         </executions>
       </plugin>
-        
+
       <!-- END plugin maven-clean-plugin -->
 
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.7.1.1</version>
+        <version>4.8.1.0</version>
         <dependencies>
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.7.2</version>
+            <version>4.8.1</version>
           </dependency>
         </dependencies>
       </plugin>
 
+      <!-- Enforce Java 17 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>${version.plugin.maven-enforcer-plugin}</version>
+        <executions>
+          <execution>
+            <id>enforce-java</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <requireJavaVersion>
+                  <version>[17.0,18.0)</version>
+                </requireJavaVersion>
+                <requireProfileIdsExist/>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
-  
+
     <!-- END plugins -->
   </build>
-  
+
   <!-- END build -->
 
   <!-- BEGIN profiles -->
 
   <profiles>
-  
+
     <!-- BEGIN profile doSnapshot -->
-  
+
     <profile>
       <id>doSnapshot</id>
 
@@ -2753,19 +2784,19 @@ Local directory: ${user.dir}
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
       </properties>
-      
+
       <build>
         <defaultGoal>deploy</defaultGoal>
-        
+
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-enforcer-plugin</artifactId>
             <version>${version.plugin.maven-enforcer-plugin}</version>
             <executions>
-            
+
               <!-- BEGIN step doSnapshot.checkPrerequisites -->
-            
+
               <execution>
                 <id>doSnapshot.checkPrerequisites</id>
                 <phase>validate</phase>
@@ -2785,7 +2816,7 @@ Local directory: ${user.dir}
               <!-- END step doSnapshot.checkPrerequisites -->
 
               <!-- BEGIN step doSnapshot.checkPrerequisitesInitialize -->
-            
+
               <execution>
                 <id>doSnapshot.checkPrerequisitesInitialize</id>
                 <phase>initialize</phase>
@@ -2810,13 +2841,13 @@ Local directory: ${user.dir}
           </plugin>
         </plugins>
       </build>
-    
+
     </profile>
-  
+
     <!-- END profile doSnapshot -->
-  
+
     <!-- BEGIN profile doRelease -->
-  
+
     <profile>
       <id>doRelease</id>
 
@@ -2831,7 +2862,7 @@ Local directory: ${user.dir}
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
       </properties>
-      
+
       <build>
         <defaultGoal>deploy</defaultGoal>
         <plugins>
@@ -2840,9 +2871,9 @@ Local directory: ${user.dir}
             <artifactId>maven-enforcer-plugin</artifactId>
             <version>${version.plugin.maven-enforcer-plugin}</version>
             <executions>
-            
+
               <!-- BEGIN step doRelease.checkPrerequisites -->
-            
+
               <execution>
                 <id>doRelease.checkPrerequisites</id>
                 <phase>validate</phase>
@@ -2865,7 +2896,7 @@ Local directory: ${user.dir}
               <!-- END step doRelease.checkPrerequisites -->
 
               <!-- BEGIN step doRelease.checkPrerequisitesInitialize -->
-            
+
               <execution>
                 <id>doRelease.checkPrerequisitesInitialize</id>
                 <phase>initialize</phase>
@@ -2890,16 +2921,16 @@ Local directory: ${user.dir}
           </plugin>
         </plugins>
       </build>
-    
+
     </profile>
-  
+
     <!-- END profile doRelease -->
-  
+
     <!-- BEGIN profile doJavadoc -->
-  
+
     <profile>
       <id>doJavadoc</id>
-      
+
       <properties>
         <skipInfo>true</skipInfo><!-- build.info.skip -->
         <skipTests>true</skipTests><!-- build.java.runTests.skip -->
@@ -2912,20 +2943,20 @@ Local directory: ${user.dir}
         <skipDeployMail>true</skipDeployMail><!-- build.java.deployMail.skip -->
         <skipDocker>true</skipDocker><!-- build.docker.skip -->
       </properties>
-      
+
       <build>
         <defaultGoal>package</defaultGoal>
       </build>
-      
+
     </profile>
-      
+
     <!-- END profile doJavadoc -->
 
     <!-- BEGIN profile doRestApiDocs -->
-  
+
     <profile>
       <id>doRestApiDocs</id>
-      
+
       <properties>
         <build.info.skip>true</build.info.skip>
         <build.java.skip>true</build.java.skip>
@@ -2934,9 +2965,9 @@ Local directory: ${user.dir}
 
       <build>
         <defaultGoal>generate-sources</defaultGoal>
-      
+
         <plugins>
-        
+
           <!-- To create a pretty REST API diagram from src/main/resources/swagger/swagger.yaml -->
           <plugin>
             <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
@@ -2957,20 +2988,20 @@ Local directory: ${user.dir}
               </execution>
             </executions>
           </plugin>
-    
+
         </plugins>
-        
+
       </build>
-      
+
     </profile>
-      
+
     <!-- END profile doRestApiDocs -->
 
     <!-- BEGIN profile doDockerBuild -->
 
     <profile>
       <id>doDockerBuild</id>
-      
+
       <properties>
         <skipCompileTests>true</skipCompileTests>
         <skipTests>true</skipTests>
@@ -2986,25 +3017,25 @@ Local directory: ${user.dir}
         <skipDockerBuild>false</skipDockerBuild>
         <skipDockerPush>false</skipDockerPush>
      </properties>
-      
+
       <build>
         <defaultGoal>package</defaultGoal>
       </build>
 
     </profile>
-  
+
     <!-- END profile doDockerBuild -->
-  
+
     <!-- BEGIN profile doPythonClient -->
-  
+
     <profile>
       <id>doPythonClient</id>
-      
+
       <properties>
         <skipInfo>true</skipInfo>
         <skipJava>true</skipJava>
         <skipDocker>true</skipDocker>
-        
+
         <build.python.project>${gitProjectId}-python</build.python.project>
         <build.python.url>https://${gitHost}/${gitGroupId}/${build.python.project}</build.python.url>
         <dir.generated.python>${dir.generated}/python</dir.generated.python>
@@ -3012,9 +3043,9 @@ Local directory: ${user.dir}
 
       <build>
         <defaultGoal>generate-sources</defaultGoal>
-      
+
         <plugins>
-        
+
           <!-- BEGIN plugin build-helper-maven-plugin -->
 
           <plugin>
@@ -3085,7 +3116,7 @@ Local directory: ${user.dir}
                   <language>python</language>
                   <output>${dir.generated.python}</output>
                   <configOptions>
-                    <projectName>${build.python.project}</projectName>                  
+                    <projectName>${build.python.project}</projectName>
                     <packageName>${build.python.package}</packageName>
                     <packageVersion>${build.python.version}</packageVersion>
                     <packageUrl>${build.python.url}</packageUrl>
@@ -3097,26 +3128,26 @@ Local directory: ${user.dir}
 
             </executions>
           </plugin>
-    
+
           <!-- END plugin swagger-codegen-maven-plugin -->
 
         </plugins>
-        
+
       </build>
-      
+
     </profile>
-      
+
     <!-- END profile doPythonClient -->
-  
+
     <!-- BEGIN profile travis-maven-central -->
 
-    <!-- 
-    
+    <!--
+
         travis-maven-central profile
-        
+
         Assumes that the code has been cleaned, built and tested successfully,
         and is only concerned with doing the Maven Central/OSSRH deploy.
-    
+
     -->
     <profile>
       <id>travis-maven-central</id>
@@ -3130,24 +3161,24 @@ Local directory: ${user.dir}
         <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
         <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
       </properties>
-      
+
       <build>
         <defaultGoal>deploy</defaultGoal>
       </build>
 
     </profile>
-  
+
     <!-- END profile travis-maven-central -->
-  
+
     <!-- BEGIN profile travis-docker-hub -->
-  
-    <!-- 
-    
+
+    <!--
+
         travis-docker-hub profile
-        
+
         Assumes that the code has been cleaned, built and tested successfully,
         and is only concerned with doing the Docker Hub deploy.
-    
+
     -->
     <profile>
       <id>travis-docker-hub</id>
@@ -3170,46 +3201,79 @@ Local directory: ${user.dir}
       </build>
 
     </profile>
-  
+
     <!-- END profile travis-docker-hub -->
-  
+
     <!-- BEGIN profile useReleaseVersions -->
-  
+
     <profile>
       <id>useReleaseVersions</id>
 
         <properties>
-        
-          <build.releasename>2.0.72-alpha7</build.releasename>
-      
-          <version.lockss.lockss-configuration-service>2.8.0</version.lockss.lockss-configuration-service>
-          <version.lockss.lockss-core>2.8.1</version.lockss.lockss-core>
-          <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-          <version.lockss.lockss-junit4-bundle>1.7.0</version.lockss.lockss-junit4-bundle>
-          <version.lockss.lockss-junit5-bundle>1.7.0</version.lockss.lockss-junit5-bundle>
-          <version.lockss.lockss-metadata-extraction-service>2.7.0</version.lockss.lockss-metadata-extraction-service>
-          <version.lockss.lockss-metadataextractor-common>2.9.0</version.lockss.lockss-metadataextractor-common>
-          <version.lockss.lockss-metadata-service>2.6.0</version.lockss.lockss-metadata-service>
-          <version.lockss.lockss-poller>2.6.0</version.lockss.lockss-poller>
-          <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
-          <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-          <version.lockss.lockss-plugins-archetype>1.3.1</version.lockss.lockss-plugins-archetype>
-          <version.lockss.lockss-repository-tools>2.12.0</version.lockss.lockss-repository-tools>
-          <version.lockss.lockss-repository-service>2.14.1</version.lockss.lockss-repository-service>
-          <version.lockss.lockss-spring-bundle>2.14.0</version.lockss.lockss-spring-bundle>
-          <version.lockss.lockss-tdb-processor>1.7.0</version.lockss.lockss-tdb-processor>
-          <version.lockss.lockss-tdbxml-maven-plugin>1.8.0</version.lockss.lockss-tdbxml-maven-plugin>
-          <version.lockss.lockss-util-core>1.13.0</version.lockss.lockss-util-core>
-          <version.lockss.lockss-util-entities>1.5.0</version.lockss.lockss-util-entities>
-          <version.lockss.lockss-util-rest>1.5.0</version.lockss.lockss-util-rest>
-          <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
+
+	  <build.releasename>2.0.72-alpha7</build.releasename>
+
+	  <version.lockss.lockss-configuration-service>2.8.0</version.lockss.lockss-configuration-service>
+	  <version.lockss.lockss-core>2.8.1</version.lockss.lockss-core>
+	  <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
+	  <version.lockss.lockss-junit4-bundle>1.7.0</version.lockss.lockss-junit4-bundle>
+	  <version.lockss.lockss-junit5-bundle>1.7.0</version.lockss.lockss-junit5-bundle>
+	  <version.lockss.lockss-metadata-extraction-service>2.7.0</version.lockss.lockss-metadata-extraction-service>
+	  <version.lockss.lockss-metadataextractor-common>2.9.0</version.lockss.lockss-metadataextractor-common>
+	  <version.lockss.lockss-metadata-service>2.6.0</version.lockss.lockss-metadata-service>
+	  <version.lockss.lockss-poller>2.6.0</version.lockss.lockss-poller>
+	  <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
+	  <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
+	  <version.lockss.lockss-plugins-archetype>1.3.1</version.lockss.lockss-plugins-archetype>
+	  <version.lockss.lockss-repository-tools>2.12.0</version.lockss.lockss-repository-tools>
+	  <version.lockss.lockss-repository-service>2.14.1</version.lockss.lockss-repository-service>
+	  <version.lockss.lockss-spring-bundle>2.14.0</version.lockss.lockss-spring-bundle>
+	  <version.lockss.lockss-tdb-processor>1.7.0</version.lockss.lockss-tdb-processor>
+	  <version.lockss.lockss-tdbxml-maven-plugin>1.8.0</version.lockss.lockss-tdbxml-maven-plugin>
+	  <version.lockss.lockss-util-core>1.13.0</version.lockss.lockss-util-core>
+	  <version.lockss.lockss-util-entities>1.5.0</version.lockss.lockss-util-entities>
+	  <version.lockss.lockss-util-rest>1.5.0</version.lockss.lockss-util-rest>
+	  <version.lockss.lockss-plugin-compat>1.5.1</version.lockss.lockss-plugin-compat>
 
         </properties>
 
     </profile>
-  
+
     <!-- END profile useReleaseVersions -->
-  
+
+    <!-- profile "fast" speeds things up when recompiling after making
+         just code changes, by skipping all the unnecessary steps.  Do
+         not use this after "clean" or after making swagger changes, -->
+
+    <profile>
+      <id>fast</id>
+      <properties>
+        <skipTestPlugins>true</skipTestPlugins>
+        <skipEtags>true</skipEtags>
+        <maven.resources.skip>true</maven.resources.skip>
+        <skipBuildInfo>true</skipBuildInfo>
+        <skipClasspathFiles>true</skipClasspathFiles>
+        <skipAntlr>true</skipAntlr>
+        <skipGenAntlr>true</skipGenAntlr>
+        <skipBuildTdb>true</skipBuildTdb>
+      </properties>
+    </profile>
+
+    <!-- profile "incremental" enables incremental compilation,
+         causing only those classes that have changed to be
+         recompiled.  Do not use if changes to one class require
+         recompiling unchanged classes.  -->
+
+    <profile>
+      <id>incremental</id>
+      <!-- It's a mystery why maven thinks setting
+           useIncrementalCompilation> to false is the right way to
+           cause it to do incremental compilation. -->
+      <properties>
+	<maven.compiler.useIncrementalCompilation>false</maven.compiler.useIncrementalCompilation>
+      </properties>
+    </profile>
+
     <!-- Empty profile just to avoid annoying
            WARNING The requested profile "skip-hdfs-tests" could not be
            activated because it does not exist
@@ -3220,7 +3284,7 @@ Local directory: ${user.dir}
     </profile>
 
   </profiles>
-  
+
   <!-- END profiles -->
 
 </project>
