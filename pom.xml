@@ -1171,7 +1171,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
-    <version.dependency.commons-lang3>3.14.0</version.dependency.commons-lang3>
+    <version.dependency.commons-lang3>3.16.0</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
     <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
