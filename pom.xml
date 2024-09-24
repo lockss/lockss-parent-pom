@@ -3233,7 +3233,7 @@ Local directory: ${user.dir}
       <version.lockss.lockss-util-core>1.14.0</version.lockss.lockss-util-core>
       <version.lockss.lockss-util-entities>1.6.0</version.lockss.lockss-util-entities>
       <version.lockss.lockss-util-rest>1.6.0</version.lockss.lockss-util-rest>
-      <version.lockss.lockss-plugin-compat>1.6.0</version.lockss.lockss-plugin-compat>>
+      <version.lockss.lockss-plugin-compat>1.6.0</version.lockss.lockss-plugin-compat>
 
         </properties>
 
