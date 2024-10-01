@@ -1115,7 +1115,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: Docker image versions -->
 
-    <version.docker.lockss-spring>2.11.0-SNAPSHOT</version.docker.lockss-spring>
+    <version.docker.lockss-spring>2.12.0-SNAPSHOT</version.docker.lockss-spring>
 
     <!-- END properties section: Docker image versions -->
 
