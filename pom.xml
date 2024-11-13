@@ -1913,9 +1913,14 @@ POSSIBILITY OF SUCH DAMAGE.
             <configuration>
               <runOrder>balanced</runOrder>
               <!-- DLV: Added add-opens to args in this Maven Surefire plugin execution for XStream support -->
+              <!---Xshare:off avoids "OpenJDK 64-Bit Server VM warning:
+                   Sharing is only supported for boot loader classes
+                   because bootstrap classpath has been appended" warnings
+                   running tests -->
 	      <argLine>
                 ${jprofiler.agentpath}
                 --add-opens java.base/java.util=ALL-UNNAMED
+                -Xshare:off
               </argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
               <includes>
