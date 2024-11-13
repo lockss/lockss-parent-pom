@@ -1666,7 +1666,8 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>antlr4</goal>
             </goals>
             <configuration>
-              <skip>${build.java.antlr.generateAntlr.skip}</skip>
+<!--               anflr4 plugin doesn't currently have a skip param -->
+<!--               <skip>${build.java.antlr.generateAntlr.skip}</skip> -->
               <outputDirectory>${dir.generated.java}</outputDirectory>
             </configuration>
           </execution>
