@@ -1137,7 +1137,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.10.2</version.group.junit5-jupiter><!-- because that's what Surefire 3.4.0 uses -->
     <version.group.junit5-platform>1.10.2</version.group.junit5-platform><!-- because that's what Surefire 3.4.0 uses -->
-    <version.group.log4j>2.23.1</version.group.log4j>
+    <version.group.log4j>2.24.1</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.mockserver>5.15.0</version.group.mockserver>
