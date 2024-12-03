@@ -1136,7 +1136,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.junit4>4.13.2</version.group.junit4>
     <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
     <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
-    <version.group.log4j>2.21.1</version.group.log4j>
+    <version.group.log4j>2.24.1</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.mockserver>5.15.0</version.group.mockserver>
@@ -1162,7 +1162,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
     <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.26.1</version.dependency.commons-compress>
+    <version.dependency.commons-compress>1.25.0</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
     <version.dependency.commons-csv>1.10.0</version.dependency.commons-csv>
     <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
@@ -1171,7 +1171,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
     <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
-    <version.dependency.commons-lang3>3.16.0</version.dependency.commons-lang3>
+    <version.dependency.commons-lang3>3.14.0</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
     <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
