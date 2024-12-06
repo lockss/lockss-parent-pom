@@ -1206,15 +1206,15 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.lockss.lockss-configuration-service>2.9.2</version.lockss.lockss-configuration-service>
     <version.lockss.lockss-core>2.9.2</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-    <version.lockss.lockss-junit4-bundle>1.8.0</version.lockss.lockss-junit4-bundle>
-    <version.lockss.lockss-junit5-bundle>1.8.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-junit4-bundle>1.8.1</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.8.1</version.lockss.lockss-junit5-bundle>
     <version.lockss.lockss-metadata-extraction-service>2.8.2</version.lockss.lockss-metadata-extraction-service>
     <version.lockss.lockss-metadataextractor-common>2.10.2</version.lockss.lockss-metadataextractor-common>
     <version.lockss.lockss-metadata-service>2.7.2</version.lockss.lockss-metadata-service>
     <version.lockss.lockss-poller>2.7.2</version.lockss.lockss-poller>
     <version.lockss.lockss-plugin-compat>1.6.1</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-plugins-archetype>1.4.1</version.lockss.lockss-plugins-archetype>
+    <version.lockss.lockss-plugins-archetype>1.4.2</version.lockss.lockss-plugins-archetype>
     <version.lockss.lockss-repository-tools>2.13.1</version.lockss.lockss-repository-tools>
     <version.lockss.lockss-repository-service>2.15.2</version.lockss.lockss-repository-service>
     <version.lockss.lockss-spring-bundle>2.15.2</version.lockss.lockss-spring-bundle>
@@ -3215,8 +3215,8 @@ Local directory: ${user.dir}
     <version.lockss.lockss-configuration-service>2.9.1</version.lockss.lockss-configuration-service>
     <version.lockss.lockss-core>2.9.1</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-    <version.lockss.lockss-junit4-bundle>1.8.0</version.lockss.lockss-junit4-bundle>
-    <version.lockss.lockss-junit5-bundle>1.8.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-junit4-bundle>1.8.1</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.8.1</version.lockss.lockss-junit5-bundle>
     <version.lockss.lockss-metadata-extraction-service>2.8.1</version.lockss.lockss-metadata-extraction-service>
     <version.lockss.lockss-metadataextractor-common>2.10.1</version.lockss.lockss-metadataextractor-common>
     <version.lockss.lockss-metadata-service>2.7.1</version.lockss.lockss-metadata-service>
