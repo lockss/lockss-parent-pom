@@ -1188,7 +1188,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
     <version.dependency.jsoup>1.18.3</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
-    <version.dependency.postgresql>42.7.4</version.dependency.postgresql>
+    <version.dependency.postgresql>42.7.5</version.dependency.postgresql>
     <version.dependency.spotbugs>${version.group.spotbugs}</version.dependency.spotbugs>
     <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
