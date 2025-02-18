@@ -1159,7 +1159,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
-    <version.dependency.commons-beanutils>1.10.0</version.dependency.commons-beanutils>
+    <version.dependency.commons-beanutils>1.10.1</version.dependency.commons-beanutils>
     <version.dependency.commons-cli>1.9.0</version.dependency.commons-cli>
     <version.dependency.commons-codec>1.17.2</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
