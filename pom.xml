@@ -1183,7 +1183,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>2024-07</version.dependency.jonix>
+    <version.dependency.jonix>2025-04</version.dependency.jonix>
     <version.dependency.json-path>2.9.0</version.dependency.json-path>
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
     <version.dependency.jsoup>1.18.3</version.dependency.jsoup>
