@@ -433,10 +433,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
         The root Java package of this project.
 
+        Default: org.lockss.laaws.${build.java.projectAbbr}
+    -->
+    <javaPackage>org.lockss.laaws.${build.java.projectAbbr}</javaPackage>
+    <build.java.package>${javaPackage}</build.java.package>
+
+    <!--
+        `build.java.projectAbbr` (alias: `javaProjectAbbr`)
+
+        The single-word abbreviation of this project.
+
         Default: UNDEFINED!!!
     -->
-    <javaPackage>UNDEFINED!!!</javaPackage>
-    <build.java.package>${javaPackage}</build.java.package>
+    <projectAbbr>UNDEFINED!!!</projectAbbr>
+    <build.java.projectAbbr>${projectAbbr}</build.java.projectAbbr>
 
     <!--
         `build.java.logLevel` (alias: `loglevel`)
@@ -963,6 +973,47 @@ POSSIBILITY OF SUCH DAMAGE.
     -->
     <generateSwagger.spec>${dir.resources}/swagger/swagger.yaml</generateSwagger.spec>
     <build.java.spring.generateSwagger.spec>${generateSwagger.spec}</build.java.spring.generateSwagger.spec>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.api` (alias: `generateSwaggerPython.api`)
+
+        Python package for the API code.
+
+        Default: ${build.java.spring.generateSwaggerPython.base}.api
+    -->
+    <generateSwaggerPython.api>${build.java.spring.generateSwaggerPython.base}.api</generateSwaggerPython.api>
+    <build.java.spring.generateSwaggerPython.api>${generateSwaggerPython.api}</build.java.spring.generateSwaggerPython.api>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.base` (alias: `generateSwaggerPython.base`)
+
+        Base Python package.
+
+        Default: lockss.pyclient.${build.java.projectAbbr}
+    -->
+    <generateSwaggerPython.base>lockss.pyclient.${build.java.projectAbbr}</generateSwaggerPython.base>
+    <build.java.spring.generateSwaggerPython.base>${generateSwaggerPython.base}</build.java.spring.generateSwaggerPython.base>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.model` (alias: `generateSwaggerPython.model`)
+
+        Python package for the model code.
+
+        Default: ${build.java.spring.generateSwaggerPython.base}.model
+    -->
+    <generateSwaggerPython.model>${build.java.spring.generateSwaggerPython.base}.model</generateSwaggerPython.model>
+    <build.java.spring.generateSwaggerPython.model>${generateSwaggerPython.model}</build.java.spring.generateSwaggerPython.model>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.skip` (alias: `skipSwaggerPython`)
+
+        Whether to skip the generateSwaggerPython step, which generates Python
+        client code from a Swagger specification.
+
+        Default: true
+    -->
+    <skipSwaggerPython>true</skipSwaggerPython>
+    <build.java.spring.generateSwaggerPython.skip>${skipSwaggerPython}</build.java.spring.generateSwaggerPython.skip>
 
     <!--
         `build.java.spring.postprocessSwagger.skip` (alias: `skipSwaggerPostprocess`)
@@ -1809,7 +1860,39 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <!-- END step generateSwagger -->
 
+          <!-- BEGIN step generateSwaggerPython -->
+
+          <execution>
+            <id>generateSwaggerPython</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
+              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+              <language>python</language>
+              <output>${project.build.directory}/swagger_client</output>
+              <configOptions>
+<!--                <sourceFolder>src/generated/java</sourceFolder>-->
+                <packageName>${build.java.spring.generateSwaggerPython.base}</packageName>
+                <apiPackage>${build.java.spring.generateSwaggerPython.api}</apiPackage>
+                <modelPackage>${build.java.spring.generateSwaggerPython.model}</modelPackage>
+<!--                <configPackage>${build.java.spring.generateSwagger.config}</configPackage>-->
+<!--                <invokerPackage>${build.java.spring.generateSwagger.invoker}</invokerPackage>-->
+<!--                <hideGenerationTimestamp>true</hideGenerationTimestamp>-->
+<!--                <java8>true</java8>-->
+<!--                <jakarta>true</jakarta>-->
+<!--                <delegatePattern>true</delegatePattern>-->
+<!--                <swaggerDocketConfig>true</swaggerDocketConfig>-->
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerPython -->
+
         </executions>
+
       </plugin>
 
       <!-- END plugin swagger-codegen-maven-plugin -->
