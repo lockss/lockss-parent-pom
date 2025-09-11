@@ -934,17 +934,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.spring.generateSwagger.config>${generateSwagger.config}</build.java.spring.generateSwagger.config>
 
     <!--
-        `build.java.spring.generateSwagger.groupId`
-
-        The groupId for swagger-codegen-maven-plugin. Currently most of our API
-        specifications are Swagger 2, so the default is io.swagger; set to
-        io.swagger.codegen.v3 for an OpenAPI 3 specification.
-
-        Default: io.swagger (set to io.swagger.codegen.v3 for OpenAPI 3)
-    -->
-    <build.java.spring.generateSwagger.groupId>io.swagger.codegen.v3</build.java.spring.generateSwagger.groupId>
-
-    <!--
         `build.java.spring.generateSwagger.invoker` (alias: `generateSwagger.invoker`)
 
         Java package for the Spring invoker code.
@@ -1824,7 +1813,7 @@ POSSIBILITY OF SUCH DAMAGE.
       <!-- BEGIN plugin swagger-codegen-maven-plugin -->
 
       <plugin>
-        <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+        <groupId>io.swagger.codegen.v3</groupId>
         <artifactId>swagger-codegen-maven-plugin</artifactId>
         <version>${version.plugin.swagger-codegen-maven-plugin}</version>
         <executions>
@@ -1872,19 +1861,11 @@ POSSIBILITY OF SUCH DAMAGE.
               <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
               <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
               <language>python</language>
-              <output>${project.build.directory}/swagger_client</output>
+              <output>${project.build.directory}/swagger_codegen_python</output>
               <configOptions>
-<!--                <sourceFolder>src/generated/java</sourceFolder>-->
                 <packageName>${build.java.spring.generateSwaggerPython.base}</packageName>
                 <apiPackage>${build.java.spring.generateSwaggerPython.api}</apiPackage>
                 <modelPackage>${build.java.spring.generateSwaggerPython.model}</modelPackage>
-<!--                <configPackage>${build.java.spring.generateSwagger.config}</configPackage>-->
-<!--                <invokerPackage>${build.java.spring.generateSwagger.invoker}</invokerPackage>-->
-<!--                <hideGenerationTimestamp>true</hideGenerationTimestamp>-->
-<!--                <java8>true</java8>-->
-<!--                <jakarta>true</jakarta>-->
-<!--                <delegatePattern>true</delegatePattern>-->
-<!--                <swaggerDocketConfig>true</swaggerDocketConfig>-->
               </configOptions>
             </configuration>
           </execution>
@@ -3063,7 +3044,7 @@ Local directory: ${user.dir}
 
           <!-- To create a pretty REST API diagram from src/main/resources/swagger/swagger.yaml -->
           <plugin>
-            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>${version.plugin.swagger-codegen-maven-plugin}</version>
             <executions>
@@ -3191,7 +3172,7 @@ Local directory: ${user.dir}
           <!-- BEGIN plugin swagger-codegen-maven-plugin -->
 
           <plugin>
-            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>${version.plugin.swagger-codegen-maven-plugin}</version>
             <executions>
