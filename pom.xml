@@ -1810,131 +1810,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin jooq-codegen-maven -->
 
-      <!-- BEGIN plugin swagger-codegen-maven-plugin -->
-
-      <plugin>
-        <groupId>io.swagger.codegen.v3</groupId>
-        <artifactId>swagger-codegen-maven-plugin</artifactId>
-        <version>${version.plugin.swagger-codegen-maven-plugin}</version>
-        <executions>
-
-          <!-- BEGIN step generateSwagger -->
-
-          <execution>
-            <id>generateSwagger</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.spring.generateSwagger.skip}</skip>
-              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
-              <language>spring</language>
-              <output>${project.basedir}</output>
-              <configOptions>
-                <sourceFolder>src/generated/java</sourceFolder><!-- goes with $output -->
-                <basePackage>${build.java.spring.generateSwagger.base}</basePackage>
-                <apiPackage>${build.java.spring.generateSwagger.api}</apiPackage>
-                <configPackage>${build.java.spring.generateSwagger.config}</configPackage>
-                <invokerPackage>${build.java.spring.generateSwagger.invoker}</invokerPackage>
-                <modelPackage>${build.java.spring.generateSwagger.model}</modelPackage>
-                <hideGenerationTimestamp>true</hideGenerationTimestamp>
-                <java8>true</java8>
-                <jakarta>true</jakarta>
-                <delegatePattern>true</delegatePattern>
-                <swaggerDocketConfig>true</swaggerDocketConfig>
-              </configOptions>
-            </configuration>
-          </execution>
-
-          <!-- END step generateSwagger -->
-
-          <!-- BEGIN step generateSwaggerPython -->
-
-          <execution>
-            <id>generateSwaggerPython</id>
-            <phase>generate-sources</phase>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
-              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
-              <language>python</language>
-              <output>${project.build.directory}/swagger_codegen_python</output>
-              <configOptions>
-                <packageName>${build.java.spring.generateSwaggerPython.base}</packageName>
-                <apiPackage>${build.java.spring.generateSwaggerPython.api}</apiPackage>
-                <modelPackage>${build.java.spring.generateSwaggerPython.model}</modelPackage>
-              </configOptions>
-            </configuration>
-          </execution>
-
-          <!-- END step generateSwaggerPython -->
-
-        </executions>
-
-      </plugin>
-
-      <!-- END plugin swagger-codegen-maven-plugin -->
-
-      <!-- BEGIN plugin maven-compiler-plugin -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>${version.plugin.maven-compiler-plugin}</version>
-        <configuration>
-          <compilerArgs>
-            <arg>-XDenableSunApiLintControl</arg>
-          </compilerArgs>
-        </configuration>
-        <executions>
-
-          <!-- BEGIN step compileMain -->
-
-          <execution>
-            <id>default-compile</id>
-            <phase>NONE</phase><!-- compileMain supersedes default-compile -->
-          </execution>
-          <execution>
-            <id>compileMain</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-            <configuration>
-              <skipMain>${build.java.compileMain.skip}</skipMain>
-            </configuration>
-          </execution>
-
-          <!-- END step compileMain -->
-
-          <!-- BEGIN step compileTests -->
-
-          <execution>
-            <id>default-testCompile</id>
-            <phase>NONE</phase><!-- compileTests supersedes default-testCompile -->
-          </execution>
-          <execution>
-            <id>compileTests</id>
-            <phase>test-compile</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.compileTests.skip}</skip>
-            </configuration>
-          </execution>
-
-          <!-- END step compileTests -->
-
-        </executions>
-
-      </plugin>
-
-      <!-- END plugin maven-compiler-plugin -->
-
       <!-- BEGIN plugin maven-surefire-plugin -->
 
       <plugin>
@@ -2026,7 +1901,491 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin maven-surefire-plugin -->
 
+      <!-- BEGIN plugin maven-antrun-plugin -->
 
+      <!-- This plugin must appear *after* surefire, as it contains a
+           test phase execution that should run after the tests.
+           (There is no post-test phase so we have to rely on plugin
+           ordering. -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${version.plugin.maven-antrun-plugin}</version>
+        <dependencies>
+          <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>${version.dependency.ant-contrib}</version>
+          </dependency>
+
+          <!-- javax.activation and javax.mail needed for ant mail target -->
+          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+          <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+          </dependency>
+
+        </dependencies>
+        <executions>
+
+          <!-- Create a subdir of java.io.tmpdir to use for tests -->
+	  <execution>
+            <id>pre-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.runTests.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <isfalse value="${build.java.runTests.keepTempFiles}" />
+                  <then>
+                    <tempfile property="dir.test.temp"
+                              destDir="${dir.temporary}"
+                              prefix="testtmp"/>
+                    <echo level="info">Creating test temp dir: ${dir.test.temp}</echo>
+                    <mkdir dir="${dir.test.temp}" />
+                    <property name="build.delTestTempDir.skip" value="false" />
+                  </then>
+                  <else>
+                    <property name="dir.test.temp" value="${dir.temporary}" />
+                    <property name="build.delTestTempDir.skip" value="true" />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Delete the subdir of java.io.tmpdir used for tests -->
+	  <execution>
+            <id>post-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.delTestTempDir.skip}</skip>
+              <target>
+                <echo level="info">Deleting test temp dir: ${dir.test.temp}</echo>
+                <delete dir="${dir.test.temp}" />
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- BEGIN step local-publish-site -->
+
+	  <!-- Copy the site documentation to a subdirectory of
+	       ${dir.publishSite} (which must be set, e.g., in a profile in
+	       a user's settings.xml).  Done only if dir.publishSite has a
+	       value, and if javadoc is being generated.  This is done in
+	       the verify phase as it must follow some package phase antrun
+	       executions in the lockss-core child pom -->
+
+	  <execution>
+            <id>local-publish-site</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+	      <!-- Even though the ant target itself is conditionalized,
+	           skip is needed to completely suppress the antrun
+	           invocation in FuncStateManager -->
+              <skip>${build.localPublishSite.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <available file="target/site"/>
+                    <isset property="dir.publishSite" />
+                    <or>
+                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
+                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <copy todir="${dir.publishSite}/${project.artifactId}" >
+                      <fileset dir="target/site" />
+                    </copy>
+                  </then>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step local-publish-site -->
+
+          <!-- BEGIN step checkDocker -->
+
+          <execution>
+            <id>checkDocker</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.docker.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <isfalse value="${build.docker.skip}" />
+                    <or>
+                      <isfalse value="${build.docker.dockerBuild.skip}" />
+                      <isfalse value="${build.docker.dockerTagLatest.skip}" />
+                      <isfalse value="${build.docker.dockerPush.skip}" />
+                      <isfalse value="${build.docker.dockerPushLatest.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <echo level="info" message="Checking that Docker daemon is running..." />
+                    <exec executable="docker"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="info" />
+                    </exec>
+                  </then>
+                  <else>
+                    <echo level="info" message="Not checking that Docker daemon is running." />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step checkDocker -->
+
+          <!-- BEGIN step buildInfo -->
+
+          <execution>
+            <id>buildInfo</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.info.buildInfo.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property environment="env" />
+                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
+                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
+                  <isset property="env.HOSTNAME" />
+                </condition>
+		<mkdir dir="${dir.buildInfo}"/>
+                <propertyfile comment="Build information" file="${file.buildInfo}">
+                  <entry key="build.name" value="${project.name}" />
+                  <entry key="build.description" value="${project.description}" />
+                  <entry key="build.groupId" value="${project.groupId}" />
+                  <entry key="build.artifactId" value="${project.artifactId}" />
+                  <entry key="build.version" value="${project.version}" />
+                  <entry key="build.packaging" value="${project.packaging}" />
+                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
+                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
+                  <entry key="build.parent.version" value="${project.parent.version}" />
+                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
+                  <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
+                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
+                  <entry key="build.releasename" value="${build.releasename}" />
+                  <entry key="build.host" value="${hostname}" />
+                  <entry key="build.user.name" value="${user.name}" />
+                  <entry key="build.os.name" value="${os.name}" />
+                  <entry key="build.os.arch" value="${os.arch}" />
+                  <entry key="build.os.version" value="${os.version}" />
+                  <entry key="build.java.version" value="${java.version}" />
+                  <entry key="build.java.class.version" value="${java.class.version}" />
+                  <entry key="build.java.vendor" value="${java.vendor}" />
+                  <entry key="build.java.home" value="${java.home}" />
+                  <entry key="build.java.specification.version" value="${java.specification.version}" />
+                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
+                  <entry key="build.java.specification.name" value="${java.specification.name}" />
+                  <entry key="build.java.vm.version" value="${java.vm.version}" />
+                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
+                  <entry key="build.java.vm.name" value="${java.vm.name}" />
+                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
+                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
+                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
+                  <entry key="build.git.origin" value="${git.remote.origin.url}" />
+                  <entry key="build.git.branch" value="${git.branch}" />
+                  <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
+                  <entry key="build.git.dirty" value="${git.dirty}" />
+                  <entry key="build.maven.timestamp" value="${maven.build.timestamp}" />
+                  <entry key="build.maven.build.version" value="${maven.build.version}" />
+                </propertyfile>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step buildInfo -->
+
+          <!-- BEGIN step classpathFiles -->
+
+          <execution>
+            <id>classpathFiles</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.info.classpathFiles.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property name="compile_classpath"
+                          refid="maven.compile.classpath" />
+                <echo message="${compile_classpath}"
+                      file="${file.classpath.compile}"/>
+                <property name="test_classpath"
+                          refid="maven.test.classpath" />
+                <echo message="${test_classpath}"
+                      file="${file.classpath.test}"/>
+                <property name="runtime_classpath"
+                          refid="maven.runtime.classpath" />
+                <echo message="${runtime_classpath}"
+                      file="${file.classpath.runtime}"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step classpathFiles -->
+
+          <!-- BEGIN step generateSwaggerPythonPatch -->
+
+          <execution>
+            <id>generateSwaggerPythonPatch</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
+              <target>
+		<exec executable="yq"
+		      failonerror="true"
+		      failifexecutionfails="true"
+		      input="${build.java.spring.generateSwagger.spec}"
+		      output="${build.java.spring.generateSwagger.spec}.python">
+		  <arg value="-y" />
+                  <arg value='( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { required: [.required[] | select($schema.properties[.].nullable != true)] })' />
+		</exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step buildEtags -->
+
+          <!-- BEGIN step buildEtags -->
+
+          <execution>
+            <id>buildEtags</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.buildEtags.skip}</skip>
+              <target>
+		<apply executable="etags"
+		       dir="${basedir}"
+		       relative="true"
+		       parallel="true">
+		  <arg value="-S" />
+		  <!--        <arg value="-o"/> -->
+		  <!--        <arg file="${etags.filename}"/> -->
+		  <fileset dir="${basedir}" includes="src/**/*.java"/>
+		</apply>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step buildEtags -->
+
+          <!-- BEGIN step deployMail -->
+
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <target>
+                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
+                  <from address="${build.java.deployMail.from}"/>
+                  <to address="${build.java.deployMail.to}"/>
+                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Skipped JAR upload: ${build.java.deployMavenCentral.skip}
+Skipped Docker upload: ${build.docker.dockerPush.skip}
+
+GIT CONTEXT:
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (branch: ${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></message>
+                </mail>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-antrun-plugin -->
+
+      <!-- BEGIN plugin swagger-codegen-maven-plugin -->
+
+      <plugin>
+        <groupId>io.swagger.codegen.v3</groupId>
+        <artifactId>swagger-codegen-maven-plugin</artifactId>
+        <version>${version.plugin.swagger-codegen-maven-plugin}</version>
+        <executions>
+
+          <!-- BEGIN step generateSwagger -->
+
+          <execution>
+            <id>generateSwagger</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwagger.skip}</skip>
+              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+              <language>spring</language>
+              <output>${project.basedir}</output>
+              <configOptions>
+                <sourceFolder>src/generated/java</sourceFolder><!-- goes with $output -->
+                <basePackage>${build.java.spring.generateSwagger.base}</basePackage>
+                <apiPackage>${build.java.spring.generateSwagger.api}</apiPackage>
+                <configPackage>${build.java.spring.generateSwagger.config}</configPackage>
+                <invokerPackage>${build.java.spring.generateSwagger.invoker}</invokerPackage>
+                <modelPackage>${build.java.spring.generateSwagger.model}</modelPackage>
+                <hideGenerationTimestamp>true</hideGenerationTimestamp>
+                <java8>true</java8>
+                <jakarta>true</jakarta>
+                <delegatePattern>true</delegatePattern>
+                <swaggerDocketConfig>true</swaggerDocketConfig>
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwagger -->
+
+          <!-- BEGIN step generateSwaggerPython -->
+
+          <execution>
+            <id>generateSwaggerPython</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
+              <inputSpec>${build.java.spring.generateSwagger.spec}.python</inputSpec>
+              <language>python</language>
+              <output>${project.build.directory}/swagger_codegen_python</output>
+              <configOptions>
+                <packageName>${build.java.spring.generateSwaggerPython.base}</packageName>
+                <apiPackage>${build.java.spring.generateSwaggerPython.api}</apiPackage>
+                <modelPackage>${build.java.spring.generateSwaggerPython.model}</modelPackage>
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerPython -->
+
+        </executions>
+
+      </plugin>
+
+      <!-- END plugin swagger-codegen-maven-plugin -->
+
+      <!-- BEGIN plugin maven-compiler-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>${version.plugin.maven-compiler-plugin}</version>
+        <configuration>
+          <compilerArgs>
+            <arg>-XDenableSunApiLintControl</arg>
+          </compilerArgs>
+        </configuration>
+        <executions>
+
+          <!-- BEGIN step compileMain -->
+
+          <execution>
+            <id>default-compile</id>
+            <phase>NONE</phase><!-- compileMain supersedes default-compile -->
+          </execution>
+          <execution>
+            <id>compileMain</id>
+            <phase>compile</phase>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <skipMain>${build.java.compileMain.skip}</skipMain>
+            </configuration>
+          </execution>
+
+          <!-- END step compileMain -->
+
+          <!-- BEGIN step compileTests -->
+
+          <execution>
+            <id>default-testCompile</id>
+            <phase>NONE</phase><!-- compileTests supersedes default-testCompile -->
+          </execution>
+          <execution>
+            <id>compileTests</id>
+            <phase>test-compile</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.compileTests.skip}</skip>
+            </configuration>
+          </execution>
+
+          <!-- END step compileTests -->
+
+        </executions>
+
+      </plugin>
+
+      <!-- END plugin maven-compiler-plugin -->
 
       <!-- BEGIN plugin spring-boot-maven-plugin -->
 
@@ -2424,342 +2783,6 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <!-- END plugin dockerfile-maven-plugin -->
-
-      <!-- BEGIN plugin maven-antrun-plugin -->
-
-      <!-- This plugin must appear *after* surefire, as it contains a
-           test phase execution that should run after the tests.
-           (There is no post-test phase so we have to rely on plugin
-           ordering. -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>${version.plugin.maven-antrun-plugin}</version>
-        <dependencies>
-          <dependency>
-            <groupId>ant-contrib</groupId>
-            <artifactId>ant-contrib</artifactId>
-            <version>${version.dependency.ant-contrib}</version>
-          </dependency>
-
-          <!-- javax.activation and javax.mail needed for ant mail target -->
-          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
-          <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-          </dependency>
-          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
-          <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
-          </dependency>
-
-        </dependencies>
-        <executions>
-
-          <!-- Create a subdir of java.io.tmpdir to use for tests -->
-	  <execution>
-            <id>pre-test</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.runTests.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <isfalse value="${build.java.runTests.keepTempFiles}" />
-                  <then>
-                    <tempfile property="dir.test.temp"
-                              destDir="${dir.temporary}"
-                              prefix="testtmp"/>
-                    <echo level="info">Creating test temp dir: ${dir.test.temp}</echo>
-                    <mkdir dir="${dir.test.temp}" />
-                    <property name="build.delTestTempDir.skip" value="false" />
-                  </then>
-                  <else>
-                    <property name="dir.test.temp" value="${dir.temporary}" />
-                    <property name="build.delTestTempDir.skip" value="true" />
-                  </else>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- Delete the subdir of java.io.tmpdir used for tests -->
-	  <execution>
-            <id>post-test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.delTestTempDir.skip}</skip>
-              <target>
-                <echo level="info">Deleting test temp dir: ${dir.test.temp}</echo>
-                <delete dir="${dir.test.temp}" />
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- BEGIN step local-publish-site -->
-
-	  <!-- Copy the site documentation to a subdirectory of
-	       ${dir.publishSite} (which must be set, e.g., in a profile in
-	       a user's settings.xml).  Done only if dir.publishSite has a
-	       value, and if javadoc is being generated.  This is done in
-	       the verify phase as it must follow some package phase antrun
-	       executions in the lockss-core child pom -->
-
-	  <execution>
-            <id>local-publish-site</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-	      <!-- Even though the ant target itself is conditionalized,
-	           skip is needed to completely suppress the antrun
-	           invocation in FuncStateManager -->
-              <skip>${build.localPublishSite.skip}</skip>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <and>
-                    <available file="target/site"/>
-                    <isset property="dir.publishSite" />
-                    <or>
-                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
-                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
-                    </or>
-                  </and>
-                  <then>
-                    <copy todir="${dir.publishSite}/${project.artifactId}" >
-                      <fileset dir="target/site" />
-                    </copy>
-                  </then>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step local-publish-site -->
-
-          <!-- BEGIN step checkDocker -->
-
-          <execution>
-            <id>checkDocker</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.docker.skip}</skip>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <and>
-                    <isfalse value="${build.docker.skip}" />
-                    <or>
-                      <isfalse value="${build.docker.dockerBuild.skip}" />
-                      <isfalse value="${build.docker.dockerTagLatest.skip}" />
-                      <isfalse value="${build.docker.dockerPush.skip}" />
-                      <isfalse value="${build.docker.dockerPushLatest.skip}" />
-                    </or>
-                  </and>
-                  <then>
-                    <echo level="info" message="Checking that Docker daemon is running..." />
-                    <exec executable="docker"
-                          output="/dev/null"
-                          failonerror="true"
-                          failifexecutionfails="true">
-                      <arg value="info" />
-                    </exec>
-                  </then>
-                  <else>
-                    <echo level="info" message="Not checking that Docker daemon is running." />
-                  </else>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step checkDocker -->
-
-          <!-- BEGIN step buildInfo -->
-
-          <execution>
-            <id>buildInfo</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.info.buildInfo.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <property environment="env" />
-                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
-                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
-                  <isset property="env.HOSTNAME" />
-                </condition>
-		<mkdir dir="${dir.buildInfo}"/>
-                <propertyfile comment="Build information" file="${file.buildInfo}">
-                  <entry key="build.name" value="${project.name}" />
-                  <entry key="build.description" value="${project.description}" />
-                  <entry key="build.groupId" value="${project.groupId}" />
-                  <entry key="build.artifactId" value="${project.artifactId}" />
-                  <entry key="build.version" value="${project.version}" />
-                  <entry key="build.packaging" value="${project.packaging}" />
-                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
-                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
-                  <entry key="build.parent.version" value="${project.parent.version}" />
-                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
-                  <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
-                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
-                  <entry key="build.releasename" value="${build.releasename}" />
-                  <entry key="build.host" value="${hostname}" />
-                  <entry key="build.user.name" value="${user.name}" />
-                  <entry key="build.os.name" value="${os.name}" />
-                  <entry key="build.os.arch" value="${os.arch}" />
-                  <entry key="build.os.version" value="${os.version}" />
-                  <entry key="build.java.version" value="${java.version}" />
-                  <entry key="build.java.class.version" value="${java.class.version}" />
-                  <entry key="build.java.vendor" value="${java.vendor}" />
-                  <entry key="build.java.home" value="${java.home}" />
-                  <entry key="build.java.specification.version" value="${java.specification.version}" />
-                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
-                  <entry key="build.java.specification.name" value="${java.specification.name}" />
-                  <entry key="build.java.vm.version" value="${java.vm.version}" />
-                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
-                  <entry key="build.java.vm.name" value="${java.vm.name}" />
-                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
-                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
-                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
-                  <entry key="build.git.origin" value="${git.remote.origin.url}" />
-                  <entry key="build.git.branch" value="${git.branch}" />
-                  <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
-                  <entry key="build.git.dirty" value="${git.dirty}" />
-                  <entry key="build.maven.timestamp" value="${maven.build.timestamp}" />
-                  <entry key="build.maven.build.version" value="${maven.build.version}" />
-                </propertyfile>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step buildInfo -->
-
-          <!-- BEGIN step classpathFiles -->
-
-          <execution>
-            <id>classpathFiles</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.info.classpathFiles.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <property name="compile_classpath"
-                          refid="maven.compile.classpath" />
-                <echo message="${compile_classpath}"
-                      file="${file.classpath.compile}"/>
-                <property name="test_classpath"
-                          refid="maven.test.classpath" />
-                <echo message="${test_classpath}"
-                      file="${file.classpath.test}"/>
-                <property name="runtime_classpath"
-                          refid="maven.runtime.classpath" />
-                <echo message="${runtime_classpath}"
-                      file="${file.classpath.runtime}"/>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step classpathFiles -->
-
-          <!-- BEGIN step buildEtags -->
-
-          <execution>
-            <id>buildEtags</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.buildEtags.skip}</skip>
-              <target>
-		<apply executable="etags"
-		       dir="${basedir}"
-		       relative="true"
-		       parallel="true">
-		  <arg value="-S" />
-		  <!--        <arg value="-o"/> -->
-		  <!--        <arg file="${etags.filename}"/> -->
-		  <fileset dir="${basedir}" includes="src/**/*.java"/>
-		</apply>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step buildEtags -->
-
-          <!-- BEGIN step deployMail -->
-
-          <execution>
-            <id>deployMail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.deployMail.skip}</skip>
-              <failonerror>${build.java.deployMail.failOnError}</failonerror>
-              <target>
-                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
-                  <from address="${build.java.deployMail.from}"/>
-                  <to address="${build.java.deployMail.to}"/>
-                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
-Skipped JAR upload: ${build.java.deployMavenCentral.skip}
-Skipped Docker upload: ${build.docker.dockerPush.skip}
-
-GIT CONTEXT:
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (branch: ${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Host name: ${hostname}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></message>
-                </mail>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMail -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-antrun-plugin -->
 
       <!-- BEGIN plugin maven-clean-plugin -->
 
