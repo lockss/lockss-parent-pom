@@ -2160,6 +2160,31 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <!-- END step classpathFiles -->
 
+          <!-- BEGIN step generateSwaggerSpringPatch -->
+
+          <execution>
+            <id>generateSwaggerSpringPatch</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwagger.skip}</skip>
+              <target>
+		<exec executable="yq"
+		      failonerror="true"
+		      failifexecutionfails="true"
+		      input="${build.java.spring.generateSwagger.spec}"
+		      output="${build.java.spring.generateSwagger.spec}.spring">
+		  <arg value="-y" />
+                  <arg value='( .paths[][].responses | select(has("default")) ) |= ( . * { "1234": .default } | del(.default) )' />
+		</exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerSpringPatch -->
+
           <!-- BEGIN step generateSwaggerPythonPatch -->
 
           <execution>
@@ -2183,7 +2208,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </configuration>
           </execution>
 
-          <!-- END step buildEtags -->
+          <!-- END step generateSwaggerPythonPatch -->
 
           <!-- BEGIN step buildEtags -->
 
@@ -2280,7 +2305,7 @@ Local directory: ${user.dir}
             </goals>
             <configuration>
               <skip>${build.java.spring.generateSwagger.skip}</skip>
-              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+              <inputSpec>${build.java.spring.generateSwagger.spec}.spring</inputSpec>
               <language>spring</language>
               <output>${project.basedir}</output>
               <configOptions>
