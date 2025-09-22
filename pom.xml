@@ -2026,6 +2026,69 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <!-- END step local-publish-site -->
 
+          <!-- BEGIN step checkYq -->
+
+          <execution>
+            <id>checkYq</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <isfalse value="${build.java.spring.skip}" />
+                    <or>
+                      <isfalse value="${build.java.spring.generateSwagger.skip}" />
+                      <isfalse value="${build.java.spring.generateSwaggerPython.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <echo level="info" message="Checking that jq is present..." />
+                    <exec executable="sh"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="-c" />
+                      <arg value="command -v jq" />
+                    </exec>
+                    <echo level="info" message="Checking that yq is present..." />
+                    <exec executable="sh"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="-c" />
+                      <arg value="command -v yq" />
+                    </exec>
+                    <echo level="info" message="Checking that yq is version 4.x..." />
+                    <exec executable="sh"
+                          outputproperty="yq-version-string"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="-c" />
+                      <arg value="yq --version" />
+                    </exec>
+                    <condition property="yq-is-version-4">
+                      <matches pattern="version v?4\.\d+(\.\d+)?$"
+                               string="${yq-version-string}" />
+                    </condition>
+                    <fail unless="yq-is-version-4"
+                          message="Version of yq must be 4.x; got: ${yq-version-string}" />
+                    <echo level="info" message="Success: jq is present and yq version 4.x is present" />
+                  </then>
+                  <else>
+                    <echo level="info" message="Not checking that jq is present and yq version 4.x is present" />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step checkYq -->
+
           <!-- BEGIN step checkDocker -->
 
           <execution>
@@ -2176,7 +2239,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		      failifexecutionfails="true"
 		      input="${build.java.spring.generateSwagger.spec}"
 		      output="${build.java.spring.generateSwagger.spec}.spring">
-		  <arg value="-y" />
+		  <arg value="--output-format=yaml" />
                   <arg value='( .paths[][].responses | select(has("default")) ) |= ( . * { "1234": .default } | del(.default) )' />
 		</exec>
               </target>
@@ -2201,7 +2264,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		      failifexecutionfails="true"
 		      input="${build.java.spring.generateSwagger.spec}"
 		      output="${build.java.spring.generateSwagger.spec}.python">
-		  <arg value="-y" />
+		  <arg value="--output-format=yaml" />
                   <arg value='( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { required: [.required[] | select($schema.properties[.].nullable != true)] })' />
 		</exec>
               </target>
