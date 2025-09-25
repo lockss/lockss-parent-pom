@@ -2047,14 +2047,6 @@ POSSIBILITY OF SUCH DAMAGE.
                     </or>
                   </and>
                   <then>
-                    <echo level="info" message="Checking that jq is present..." />
-                    <exec executable="sh"
-                          output="/dev/null"
-                          failonerror="true"
-                          failifexecutionfails="true">
-                      <arg value="-c" />
-                      <arg value="command -v jq" />
-                    </exec>
                     <echo level="info" message="Checking that yq is present..." />
                     <exec executable="sh"
                           output="/dev/null"
@@ -2077,10 +2069,10 @@ POSSIBILITY OF SUCH DAMAGE.
                     </condition>
                     <fail unless="yq-is-version-4"
                           message="Version of yq must be 4.x; got: ${yq-version-string}" />
-                    <echo level="info" message="Success: jq is present and yq version 4.x is present" />
+                    <echo level="info" message="Success: yq version 4.x is present" />
                   </then>
                   <else>
-                    <echo level="info" message="Not checking that jq is present and yq version 4.x is present" />
+                    <echo level="info" message="Not checking that yq version 4.x is present" />
                   </else>
                 </if>
               </target>
