@@ -125,19 +125,19 @@ POSSIBILITY OF SUCH DAMAGE.
     <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
 
-  <distributionManagement>
+<!--  <distributionManagement>-->
 
     <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
+<!--    <snapshotRepository>-->
+<!--      <id>ossrh</id>-->
+<!--      <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--    </snapshotRepository>-->
+<!--    <repository>-->
+<!--      <id>ossrh</id>-->
+<!--      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
+<!--    </repository>-->
 
-  </distributionManagement>
+<!--  </distributionManagement>-->
 
   <!-- BEGIN properties -->
 
@@ -1130,6 +1130,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <version.plugin.build-helper-maven-plugin>3.2.0</version.plugin.build-helper-maven-plugin>
     <version.plugin.buildnumber-maven-plugin>1.4</version.plugin.buildnumber-maven-plugin>
+    <version.plugin.central-publishing-maven-plugin>0.9.0</version.plugin.central-publishing-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
@@ -2637,38 +2638,58 @@ Local directory: ${user.dir}
 
       <!-- END plugin maven-deploy-plugin -->
 
+      <!-- BEGIN plugin central-publishing-maven-plugin -->
+
+      <!-- See https://central.sonatype.org/publish/publish-portal-maven/ -->
+
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>${version.plugin.central-publishing-maven-plugin}</version>
+        <extensions>true</extensions>
+        <configuration>
+          <publishingServerId>central</publishingServerId>
+          <autoPublish>true</autoPublish>
+          <!-- default <checksums> is "all"" which is what we want -->
+          <!-- default <centralBaseUrl> is "https://central.sonatype.com" which is what we want -->
+          <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots/</centralSnapshotsUrl>
+        </configuration>
+      </plugin>
+
+      <!-- END plugin central-publishing-maven-plugin -->
+
       <!-- BEGIN plugin nexus-staging-maven-plugin -->
 
       <!--  See https://central.sonatype.org/pages/apache-maven.html#distribution-management-and-authentication  -->
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${version.plugin.nexus-staging-maven-plugin}</version>
-        <extensions>true</extensions>
-        <executions>
+<!--      <plugin>-->
+<!--        <groupId>org.sonatype.plugins</groupId>-->
+<!--        <artifactId>nexus-staging-maven-plugin</artifactId>-->
+<!--        <version>${version.plugin.nexus-staging-maven-plugin}</version>-->
+<!--        <extensions>true</extensions>-->
+<!--        <executions>-->
 
           <!-- BEGIN step deployMavenCentral -->
 
-          <execution>
-            <id>deployMavenCentral</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-            <configuration>
-              <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <skipLocalStaging>true</skipLocalStaging>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </execution>
+<!--          <execution>-->
+<!--            <id>deployMavenCentral</id>-->
+<!--            <phase>deploy</phase>-->
+<!--            <goals>-->
+<!--              <goal>deploy</goal>-->
+<!--            </goals>-->
+<!--            <configuration>-->
+<!--              <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>-->
+<!--              <serverId>ossrh</serverId>-->
+<!--              <nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
+<!--              <skipLocalStaging>true</skipLocalStaging>-->
+<!--              <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
+<!--            </configuration>-->
+<!--          </execution>-->
 
           <!-- END step deployMavenCentral -->
 
-        </executions>
+<!--        </executions>-->
 
-      </plugin>
+<!--      </plugin>-->
 
       <!-- END plugin nexus-staging-maven-plugin -->
 
