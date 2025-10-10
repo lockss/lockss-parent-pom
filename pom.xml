@@ -125,20 +125,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
 
-<!--  <distributionManagement>-->
-
-    <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-<!--    <snapshotRepository>-->
-<!--      <id>ossrh</id>-->
-<!--      <url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
-<!--    </snapshotRepository>-->
-<!--    <repository>-->
-<!--      <id>ossrh</id>-->
-<!--      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-<!--    </repository>-->
-
-<!--  </distributionManagement>-->
-
   <!-- BEGIN properties -->
 
   <properties>
@@ -661,15 +647,17 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.signArtifacts.skip>${skipGpg}</build.java.signArtifacts.skip>
 
     <!--
-        `build.java.deployMavenCentral.skip` (alias: `skipMavenCentral`)
+        `build.java.uploadArtifacts.skip` (alias: `skipArtifactUpload`)
 
-        Whether to skip the deployMavenCentral step, which pushes artifacts to
+        Whether to skip the artifact upload step, which pushes artifacts to
         Maven Central.
+        
+        Formerly known as `build.java.deployMavenCentral.skip`/`skipMavenCentral`.
 
         Default: true (the artifacts are not pushed)
     -->
-    <skipMavenCentral>true</skipMavenCentral>
-    <build.java.deployMavenCentral.skip>${skipMavenCentral}</build.java.deployMavenCentral.skip>
+    <skipArtifactUpload>true</skipArtifactUpload>
+    <build.java.uploadArtifacts.skip>${skipArtifactUpload}</build.java.uploadArtifacts.skip>
 
     <!--
         `build.java.deployMail.skip` (alias: `skipDeployMail`)
@@ -1149,7 +1137,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-resources-plugin>2.6</version.plugin.maven-resources-plugin>
     <version.plugin.maven-source-plugin>3.3.1</version.plugin.maven-source-plugin>
     <version.plugin.maven-surefire-plugin>3.4.0</version.plugin.maven-surefire-plugin>
-    <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
     <version.plugin.spotbugs-maven-plugin>${version.group.spotbugs}.0</version.plugin.spotbugs-maven-plugin>
     <version.plugin.swagger-codegen-maven-plugin>3.0.52</version.plugin.swagger-codegen-maven-plugin>
 
@@ -1495,7 +1482,7 @@ POSSIBILITY OF SUCH DAMAGE.
       Deploy phase:
 
       - Push artifacts to Maven repository (if
-        `build.java.deployMavenCentral.skip` is false)
+        `build.java.uploadArtifacts.skip` is false)
       - Push Docker image to Docker Hub (if `build.docker.dockerPush.skip` is
         false)
       - Push Docker image to Docker Hub as latest (if
@@ -2312,7 +2299,7 @@ POSSIBILITY OF SUCH DAMAGE.
 BUILD CONTEXT:
 Project: ${project.groupId}:${project.artifactId}:${project.version}
 Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
-Skipped JAR upload: ${build.java.deployMavenCentral.skip}
+Skipped artifact upload: ${build.java.uploadArtifacts.skip}
 Skipped Docker upload: ${build.docker.dockerPush.skip}
 
 GIT CONTEXT:
@@ -2625,8 +2612,8 @@ Local directory: ${user.dir}
 
       <!-- BEGIN plugin maven-deploy-plugin -->
 
-      <!-- See https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
-      <!-- See nexus-staging-maven-plugin -->
+      <!-- See https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html but may be obsolete -->
+      <!-- See central-publishing-maven-plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -2648,6 +2635,7 @@ Local directory: ${user.dir}
         <version>${version.plugin.central-publishing-maven-plugin}</version>
         <extensions>true</extensions>
         <configuration>
+          <skipPublishing>${build.java.uploadArtifacts.skip}</skipPublishing>
           <publishingServerId>central</publishingServerId>
           <autoPublish>true</autoPublish>
           <!-- default <checksums> is "all"" which is what we want -->
@@ -2657,41 +2645,6 @@ Local directory: ${user.dir}
       </plugin>
 
       <!-- END plugin central-publishing-maven-plugin -->
-
-      <!-- BEGIN plugin nexus-staging-maven-plugin -->
-
-      <!--  See https://central.sonatype.org/pages/apache-maven.html#distribution-management-and-authentication  -->
-<!--      <plugin>-->
-<!--        <groupId>org.sonatype.plugins</groupId>-->
-<!--        <artifactId>nexus-staging-maven-plugin</artifactId>-->
-<!--        <version>${version.plugin.nexus-staging-maven-plugin}</version>-->
-<!--        <extensions>true</extensions>-->
-<!--        <executions>-->
-
-          <!-- BEGIN step deployMavenCentral -->
-
-<!--          <execution>-->
-<!--            <id>deployMavenCentral</id>-->
-<!--            <phase>deploy</phase>-->
-<!--            <goals>-->
-<!--              <goal>deploy</goal>-->
-<!--            </goals>-->
-<!--            <configuration>-->
-<!--              <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>-->
-<!--              <serverId>ossrh</serverId>-->
-<!--              <nexusUrl>https://oss.sonatype.org/</nexusUrl>-->
-<!--              <skipLocalStaging>true</skipLocalStaging>-->
-<!--              <autoReleaseAfterClose>true</autoReleaseAfterClose>-->
-<!--            </configuration>-->
-<!--          </execution>-->
-
-          <!-- END step deployMavenCentral -->
-
-<!--        </executions>-->
-
-<!--      </plugin>-->
-
-      <!-- END plugin nexus-staging-maven-plugin -->
 
       <!-- BEGIN plugin exec-maven-plugin -->
 
@@ -2977,7 +2930,7 @@ Local directory: ${user.dir}
         <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
         <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
         <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>false</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
@@ -3055,7 +3008,7 @@ Local directory: ${user.dir}
         <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
         <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
         <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>false</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
@@ -3137,7 +3090,7 @@ Local directory: ${user.dir}
         <skipJarWithDeps>true</skipJarWithDeps><!-- build.java.repackageJar.skip -->
         <skipJavadoc>false</skipJavadoc><!-- build.java.javadoc.skip -->
         <skipGpg>true</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>true</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>true</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDeployMail>true</skipDeployMail><!-- build.java.deployMail.skip -->
         <skipDocker>true</skipDocker><!-- build.docker.skip -->
       </properties>
@@ -3209,7 +3162,7 @@ Local directory: ${user.dir}
         <skipMainJavadoc>true</skipMainJavadoc>
         <skipTestJavadoc>true</skipTestJavadoc>
         <skipGpg>true</skipGpg>
-        <skipMavenCentral>true</skipMavenCentral>
+        <skipArtifactUpload>true</skipArtifactUpload>
         <skipDeployMail>false</skipDeployMail>
         <skipDocker>false</skipDocker>
         <skipDockerBuild>false</skipDockerBuild>
@@ -3357,7 +3310,7 @@ Local directory: ${user.dir}
         <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
         <build.docker.skip>true</build.docker.skip>
         <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.uploadArtifacts.skip>false</build.java.uploadArtifacts.skip>
       </properties>
 
       <build>
@@ -3388,7 +3341,7 @@ Local directory: ${user.dir}
         <build.java.jarTestJavadoc.skip>true</build.java.jarTestJavadoc.skip>
         <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
         <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.uploadArtifacts.skip>false</build.java.uploadArtifacts.skip>
         <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
         <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
         <!-- FIXME what of tagLatest, pushLatest? -->
