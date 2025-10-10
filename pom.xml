@@ -1219,7 +1219,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jsoup>1.20.1</version.dependency.jsoup>
     <version.dependency.marc4j>2.9.6</version.dependency.marc4j>
     <version.dependency.mysql-connector-j>9.3.0</version.dependency.mysql-connector-j>
-    <version.dependency.postgresql>42.7.5</version.dependency.postgresql>
+    <version.dependency.postgresql>42.7.7</version.dependency.postgresql>
     <version.dependency.spotbugs>${version.group.spotbugs}</version.dependency.spotbugs>
     <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
