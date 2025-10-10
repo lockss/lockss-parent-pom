@@ -656,7 +656,9 @@ POSSIBILITY OF SUCH DAMAGE.
 
         Default: true (the artifacts are not pushed)
     -->
-    <skipArtifactUpload>true</skipArtifactUpload>
+    <skipMavenCentral>true</skipMavenCentral><!-- DEPRECATED -->
+    <build.java.deployMavenCentral.skip>${skipMavenCentral}</build.java.deployMavenCentral.skip><!-- DEPRECATED -->
+    <skipArtifactUpload>${build.java.deployMavenCentral.skip}</skipArtifactUpload>
     <build.java.uploadArtifacts.skip>${skipArtifactUpload}</build.java.uploadArtifacts.skip>
 
     <!--
