@@ -14,7 +14,7 @@
     *   Apache Commons Collections 4.5.0 (Collections4)
     *   Apache Commons Compress 1.27.1
     *   Apache Commons CSV 1.14.0
-    *   Apache Commons DBCP2 2.13.0
+    *   Apache Commons DBCP 2.13.0 (DBCP2)
     *   Apache Commons IO 2.19.0
     *   Apache Commons JXPath 1.4.0
     *   Apache Commons Lang 3.17.0 (Lang3)
