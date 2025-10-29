@@ -2248,7 +2248,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		      input="${build.java.spring.generateSwagger.spec}"
 		      output="${build.java.spring.generateSwagger.spec}.python">
 		  <arg value="--output-format=yaml" />
-                  <arg value='( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { required: [.required[] | select($schema.properties[.].nullable != true)] })' />
+                  <arg value='( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | select($schema.properties[.].nullable != true)] })' />
 		</exec>
               </target>
             </configuration>
