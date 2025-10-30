@@ -2249,7 +2249,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		      output="${build.java.spring.generateSwagger.spec}.python">
 		  <arg value="--input-format=yaml" />
 		  <arg value="--output-format=yaml" />
-                  <arg value='( ( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | select($schema.properties[.].nullable != true)] }) ) | ( ( .paths[][].responses[].content | select(length > 0 and has("application/json") | not) | parent | parent | .[].content | select(has("application/json")) ) |= ( . * { "application/json;q=0.9": .["application/json"] } | del(.["application/json"]) ) )' />
+                  <arg value='( ( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | . as $key | select($schema.properties[$key].nullable != true)] }) ) | ( ( .paths[][].responses[].content | select(length > 0 and has("application/json") | not) | parent | parent | .[].content | select(has("application/json")) ) |= ( . * { "application/json;q=0.9": .["application/json"] } | del(.["application/json"]) ) )' />
 		</exec>
               </target>
             </configuration>
