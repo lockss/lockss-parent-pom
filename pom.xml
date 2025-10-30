@@ -2046,24 +2046,23 @@ POSSIBILITY OF SUCH DAMAGE.
                       <arg value="-c" />
                       <arg value="command -v yq" />
                     </exec>
-                    <echo level="info" message="Checking that yq is version 4.x..." />
-                    <exec executable="sh"
+                    <echo level="info" message="Checking that yq is version 4.48 or greater..." />
+                    <exec executable="yq"
                           outputproperty="yq-version-string"
                           failonerror="true"
                           failifexecutionfails="true">
-                      <arg value="-c" />
-                      <arg value="yq --version" />
+                      <arg value="--version" />
                     </exec>
-                    <condition property="yq-is-version-4">
-                      <matches pattern="version v?4\.\d+(\.\d+)?$"
+                    <condition property="yq-is-version-4-48-or-greater">
+                      <matches pattern="version v?4\.(4[89]|[5-9]\d|\d{3,})(\.\d+)?$"
                                string="${yq-version-string}" />
                     </condition>
-                    <fail unless="yq-is-version-4"
-                          message="Version of yq must be 4.x; got: ${yq-version-string}" />
-                    <echo level="info" message="Success: yq version 4.x is present" />
+                    <fail unless="yq-is-version-4-48-or-greater"
+                          message="Version of yq must be 4.48 or greater; got: ${yq-version-string}" />
+                    <echo level="info" message="Success: yq version 4.48 or greater is present" />
                   </then>
                   <else>
-                    <echo level="info" message="Not checking that yq version 4.x is present" />
+                    <echo level="info" message="Not checking that yq version 4.48 or greater is present" />
                   </else>
                 </if>
               </target>
@@ -2222,6 +2221,7 @@ POSSIBILITY OF SUCH DAMAGE.
 		      failifexecutionfails="true"
 		      input="${build.java.spring.generateSwagger.spec}"
 		      output="${build.java.spring.generateSwagger.spec}.spring">
+		  <arg value="--input-format=yaml" />
 		  <arg value="--output-format=yaml" />
                   <arg value='( .paths[][].responses | select(has("default")) ) |= ( . * { "1234": .default } | del(.default) )' />
 		</exec>
@@ -2247,8 +2247,9 @@ POSSIBILITY OF SUCH DAMAGE.
 		      failifexecutionfails="true"
 		      input="${build.java.spring.generateSwagger.spec}"
 		      output="${build.java.spring.generateSwagger.spec}.python">
+		  <arg value="--input-format=yaml" />
 		  <arg value="--output-format=yaml" />
-                  <arg value='( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | select($schema.properties[.].nullable != true)] })' />
+                  <arg value='( ( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | select($schema.properties[.].nullable != true)] }) ) | ( ( .paths[][].responses[].content | select(length > 0 and has("application/json") | not) | parent | parent | .[].content | select(has("application/json")) ) |= ( . * { "application/json;q=0.9": .["application/json"] } | del(.["application/json"]) ) )' />
 		</exec>
               </target>
             </configuration>

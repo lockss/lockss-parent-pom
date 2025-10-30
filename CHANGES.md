@@ -6,6 +6,8 @@
 
     *   Switched from `nexus-staging-maven-plugin` to `central-publishing-maven-plugin`.
 
+    *   Defined `yq`-based transformations of the Swagger specification for `swagger-codegen`'s `spring` and `python` generators. (Requires `yq` 4.48 or greater.)
+
 *   **Dependencies**
 
     *   Apache Commons BeanUtils 1.11.0
@@ -39,7 +41,7 @@
     *   PostgreSQL JDBC Driver 42.7.7
     *   SLF4J 1.7.36
     *   SpotBugs 4.9.3 (SpotBugs Maven Plugin 4.9.3.0)
-    *   Other dependency updates (not listed here)
+    *   Other dependency updates not listed here.
 
 ## 1.12.1
 
