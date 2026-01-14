@@ -522,6 +522,16 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.runTests.forkCount>${testForkCount}</build.java.runTests.forkCount>
 
     <!--
+        `build.java.runTests.jvmArgs` (alias: `testJvmArgs`)
+
+        Additional args to JVMs running tests (e.g., to set heap size).
+
+        Default: "" (empty string)
+    -->
+    <testJvmArgs></testJvmArgs>
+    <build.java.runTests.jvmArgs>${testJvmArgs}</build.java.runTests.jvmArgs>
+
+    <!--
         `build.java.runTests.keepTempFiles` (alias: `keeptempfiles`)
 
         Whether to keep temp files after tests run.
@@ -1850,6 +1860,7 @@ POSSIBILITY OF SUCH DAMAGE.
                    running tests -->
 	      <argLine>
                 ${jprofiler.agentpath}
+                ${build.java.runTests.jvmArgs}
                 --add-opens java.base/java.util=ALL-UNNAMED
                 -Xshare:off
               </argLine>
