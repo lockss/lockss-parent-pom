@@ -1220,7 +1220,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-text>1.15.0</version.dependency.commons-text>
     <version.dependency.commons-validator>1.10.1</version.dependency.commons-validator>
     <version.dependency.guava>33.6.0-jre</version.dependency.guava>
-    <version.dependency.h2>2.3.232</version.dependency.h2>
+    <version.dependency.h2>2.4.240</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
