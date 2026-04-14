@@ -1218,7 +1218,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
     <version.dependency.commons-text>1.13.1</version.dependency.commons-text>
-    <version.dependency.commons-validator>1.9.0</version.dependency.commons-validator>
+    <version.dependency.commons-validator>1.10.1</version.dependency.commons-validator>
     <version.dependency.h2>2.3.232</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
