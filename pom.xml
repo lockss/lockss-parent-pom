@@ -1132,7 +1132,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.buildnumber-maven-plugin>1.4</version.plugin.buildnumber-maven-plugin>
     <version.plugin.central-publishing-maven-plugin>0.9.0</version.plugin.central-publishing-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
-    <version.plugin.exec-maven-plugin>3.6.3</version.plugin.exec-maven-plugin>
+    <version.plugin.exec-maven-plugin>3.6.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
     <version.plugin.maven-antrun-plugin>3.2.0</version.plugin.maven-antrun-plugin>
@@ -1219,6 +1219,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
     <version.dependency.commons-text>1.15.0</version.dependency.commons-text>
     <version.dependency.commons-validator>1.10.1</version.dependency.commons-validator>
+    <version.dependency.guava>33.6.0-jre</version.dependency.guava>
     <version.dependency.h2>2.3.232</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
