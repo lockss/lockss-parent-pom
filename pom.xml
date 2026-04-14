@@ -1134,6 +1134,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
+    <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
     <version.plugin.maven-antrun-plugin>3.0.0</version.plugin.maven-antrun-plugin>
     <version.plugin.maven-archetype-plugin>3.3.0</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.4.0</version.plugin.maven-clean-plugin>
@@ -1151,7 +1152,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.maven-surefire-plugin>3.4.0</version.plugin.maven-surefire-plugin><!-- reminder: see also version.group.junit5-jupiter, version.group.junit5-platform -->
     <version.plugin.spotbugs-maven-plugin>${version.group.spotbugs}.0</version.plugin.spotbugs-maven-plugin>
     <version.plugin.swagger-codegen-maven-plugin>3.0.52</version.plugin.swagger-codegen-maven-plugin>
-    <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
 
     <!-- END properties section: plugin versions -->
 
