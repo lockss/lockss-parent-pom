@@ -1135,7 +1135,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
-    <version.plugin.maven-antrun-plugin>3.0.0</version.plugin.maven-antrun-plugin>
+    <version.plugin.maven-antrun-plugin>3.2.0</version.plugin.maven-antrun-plugin>
     <version.plugin.maven-archetype-plugin>3.3.0</version.plugin.maven-archetype-plugin>
     <version.plugin.maven-clean-plugin>3.4.0</version.plugin.maven-clean-plugin>
     <version.plugin.maven-compiler-plugin>3.13.0</version.plugin.maven-compiler-plugin>
