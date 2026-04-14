@@ -1132,7 +1132,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.plugin.buildnumber-maven-plugin>1.4</version.plugin.buildnumber-maven-plugin>
     <version.plugin.central-publishing-maven-plugin>0.9.0</version.plugin.central-publishing-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
-    <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
+    <version.plugin.exec-maven-plugin>3.6.3</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
     <version.plugin.maven-antrun-plugin>3.2.0</version.plugin.maven-antrun-plugin>
