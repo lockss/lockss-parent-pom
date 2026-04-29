@@ -1173,21 +1173,21 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
     <version.group.icu4j>76.1</version.group.icu4j>
-    <version.group.jackson>2.16.1</version.group.jackson>
+    <version.group.jackson>2.21.2</version.group.jackson>
     <version.group.jooq>3.14.15</version.group.jooq><!-- 3.14.15 is the last Java 8 version before 3.15 -->
     <version.group.junit4>4.13.2</version.group.junit4>
-    <version.group.junit5-jupiter>5.10.2</version.group.junit5-jupiter><!-- because that's what Surefire 3.4.0 uses -->
-    <version.group.junit5-platform>1.10.2</version.group.junit5-platform><!-- because that's what Surefire 3.4.0 uses -->
+    <version.group.junit5-jupiter>6.0.3</version.group.junit5-jupiter>
+    <version.group.junit5-platform>6.0.3</version.group.junit5-platform>
     <version.group.log4j>2.25.4</version.group.log4j><!-- reminder: see also version.group.slf4j -->
     <version.group.maven>3.9.9</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.mockserver>5.15.0</version.group.mockserver>
     <version.group.pdfbox>1.8.17</version.group.pdfbox>
     <version.group.solr>8.11.2</version.group.solr>
-    <version.group.slf4j>1.7.36</version.group.slf4j><!-- version used by log4j-slf4j-impl 2.23.1 -->
+    <version.group.slf4j>1.7.36</version.group.slf4j><!-- log4j-slf4j-impl requires SLF4J 1.7.x; upgrading to SLF4J 2.x requires log4j-slf4j2-impl which is incompatible with L4JLoggerContextSelector -->
     <version.group.spotbugs>4.9.3</version.group.spotbugs>
-    <version.group.spring>6.2.18</version.group.spring>
-    <version.group.spring-boot>3.5.14</version.group.spring-boot>
+    <version.group.spring>7.0.7</version.group.spring>
+    <version.group.spring-boot>4.0.6</version.group.spring-boot>
     <version.group.truezip>7.7.10</version.group.truezip>
     <version.group.xoai>4.2.0</version.group.xoai>
 
@@ -1195,7 +1195,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <!-- BEGIN properties section: dependency versions -->
 
-    <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding><!-- FIXME -->
+    <lockss.log4j.slf4j.binding>log4j-slf4j-impl</lockss.log4j.slf4j.binding><!-- Cannot use log4j-slf4j2-impl until L4JLoggerContextSelector is ported to SLF4J 2.x -->
 
     <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
@@ -1233,7 +1233,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.mysql-connector-j>9.3.0</version.dependency.mysql-connector-j>
     <version.dependency.postgresql>42.7.7</version.dependency.postgresql>
     <version.dependency.spotbugs>${version.group.spotbugs}</version.dependency.spotbugs>
-    <version.dependency.springdoc>2.8.17</version.dependency.springdoc>
+    <version.dependency.springdoc>3.0.3</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
     <version.dependency.xmlunit>1.6</version.dependency.xmlunit>
 
@@ -1344,7 +1344,11 @@ POSSIBILITY OF SUCH DAMAGE.
     <!-- END repository lockss-legacy -->
 
     <!-- BEGIN repository ossrh-snapshots -->
-
+    <!-- Disabled: Sonatype legacy OSSRH (oss.sonatype.org) has been
+         decommissioned and returns 402/404. All SNAPSHOT dependencies
+         in this build are resolved from the local reactor. Re-enable
+         with a working URL if an external SNAPSHOT repo is needed. -->
+    <!--
     <repository>
       <id>ossrh-snapshots</id>
       <name>Sonatype OSSRH Snapshots</name>
@@ -1358,7 +1362,7 @@ POSSIBILITY OF SUCH DAMAGE.
         <updatePolicy>${repository.update.ossrh-snapshots}</updatePolicy>
       </snapshots>
     </repository>
-
+    -->
     <!-- END repository ossrh-snapshots -->
 
   </repositories>
@@ -1370,7 +1374,8 @@ POSSIBILITY OF SUCH DAMAGE.
    <pluginRepositories>
 
     <!-- BEGIN pluginRepository ossrh-snapshots -->
-
+    <!-- Disabled: see comment in repositories section above. -->
+    <!--
      <pluginRepository>
        <id>ossrh-snapshots</id>
        <name>Sonatype OSSRH Snapshots</name>
@@ -1384,7 +1389,7 @@ POSSIBILITY OF SUCH DAMAGE.
          <updatePolicy>${pluginRepository.update.ossrh-snapshots}</updatePolicy>
        </snapshots>
      </pluginRepository>
-
+    -->
     <!-- END pluginRepository ossrh-snapshots -->
 
    </pluginRepositories>
@@ -1508,7 +1513,15 @@ POSSIBILITY OF SUCH DAMAGE.
   -->
   <dependencyManagement>
     <dependencies>
-      <!-- Pin httpclient5 to 5.5.2 for Spring Boot 3.5.x compat (needs TlsSocketStrategy from 5.4+) -->
+      <!-- Jackson BOM for consistent versioning (2.21+ split annotations version) -->
+      <dependency>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
+        <version>${version.group.jackson}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Pin httpclient5 for Spring Boot compat -->
       <dependency>
         <groupId>org.apache.httpcomponents.client5</groupId>
         <artifactId>httpclient5</artifactId>
@@ -1842,9 +1855,29 @@ POSSIBILITY OF SUCH DAMAGE.
             <version>${version.group.junit5-jupiter}</version>
           </dependency>
           <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+          <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
             <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${version.group.junit5-platform}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-engine</artifactId>
+            <version>${version.group.junit5-platform}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-commons</artifactId>
+            <version>${version.group.junit5-platform}</version>
           </dependency>
 
         </dependencies>
@@ -1880,6 +1913,7 @@ POSSIBILITY OF SUCH DAMAGE.
                 --add-opens java.base/sun.nio.ch=ALL-UNNAMED
                 --add-opens java.base/java.util.concurrent=ALL-UNNAMED
                 --enable-native-access=ALL-UNNAMED
+                --sun-misc-unsafe-memory-access=allow
                 -Xshare:off
               </argLine>
               <skipTests>${build.java.runTests.skip}</skipTests>
@@ -2442,6 +2476,16 @@ Local directory: ${user.dir}
           <compilerArgs>
             <arg>-XDenableSunApiLintControl</arg>
           </compilerArgs>
+          <annotationProcessors>
+            <annotationProcessor>org.apache.logging.log4j.core.config.plugins.processor.PluginProcessor</annotationProcessor>
+          </annotationProcessors>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.apache.logging.log4j</groupId>
+              <artifactId>log4j-core</artifactId>
+              <version>${version.group.log4j}</version>
+            </path>
+          </annotationProcessorPaths>
         </configuration>
         <executions>
 
