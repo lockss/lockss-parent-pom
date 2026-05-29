@@ -3180,9 +3180,9 @@ Local directory: ${user.dir}
         <skipGpg>true</skipGpg>
         <skipArtifactUpload>true</skipArtifactUpload>
         <skipDeployMail>false</skipDeployMail>
-        <skipDocker>false</skipDocker>
-        <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerPush>false</skipDockerPush>
+<!--         <skipDocker>false</skipDocker> -->
+<!--         <skipDockerBuild>false</skipDockerBuild> -->
+<!--         <skipDockerPush>false</skipDockerPush> -->
      </properties>
 
       <build>
