@@ -1086,9 +1086,9 @@ POSSIBILITY OF SUCH DAMAGE.
         Whether to skip the dockerBuild step, which builds a Docker image
         and tags it with the current version.
 
-        Default: skipDocker
+        Default: build.docker.skip
     -->
-    <skipDockerBuild>${skipDocker}</skipDockerBuild>
+    <skipDockerBuild>${build.docker.skip}</skipDockerBuild>
     <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
 
     <!--
@@ -1108,9 +1108,9 @@ POSSIBILITY OF SUCH DAMAGE.
         Whether to skip the dockerPush step, which pushes the Docker image to
         Docker Hub with the current version.
 
-        Default: skipDocker
+        Default: build.docker.skip
     -->
-    <skipDockerPush>${skipDocker}</skipDockerPush>
+    <skipDockerPush>${build.docker.skip}</skipDockerPush>
     <build.docker.dockerPush.skip>${skipDockerPush}</build.docker.dockerPush.skip>
 
     <!--
