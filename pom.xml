@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-Copyright (c) 2000-2024, Board of Trustees of Leland Stanford Jr. University
+Copyright (c) 2000-2025, Board of Trustees of Leland Stanford Jr. University
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
@@ -37,7 +37,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
   <groupId>org.lockss</groupId>
   <artifactId>lockss-parent-pom</artifactId>
-  <version>1.17.2</version>
+  <version>1.18.0</version>
   <packaging>pom</packaging>
 
   <name>lockss-parent-pom</name>
@@ -124,20 +124,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <developerConnection>scm:git:ssh://${gitHost}/${gitGroupId}/${gitProjectId}.git</developerConnection>
     <url>https://${gitHost}/${gitGroupId}/${gitProjectId}</url>
   </scm>
-
-  <distributionManagement>
-
-    <!--  To deploy to Maven Central; see http://central.sonatype.org/pages/apache-maven.html  -->
-    <snapshotRepository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-    <repository>
-      <id>ossrh</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-
-  </distributionManagement>
 
   <!-- BEGIN properties -->
 
@@ -433,10 +419,20 @@ POSSIBILITY OF SUCH DAMAGE.
 
         The root Java package of this project.
 
+        Default: org.lockss.laaws.${build.java.projectAbbr}
+    -->
+    <javaPackage>org.lockss.laaws.${build.java.projectAbbr}</javaPackage>
+    <build.java.package>${javaPackage}</build.java.package>
+
+    <!--
+        `build.java.projectAbbr` (alias: `javaProjectAbbr`)
+
+        The single-word abbreviation of this project.
+
         Default: UNDEFINED!!!
     -->
-    <javaPackage>UNDEFINED!!!</javaPackage>
-    <build.java.package>${javaPackage}</build.java.package>
+    <projectAbbr>UNDEFINED!!!</projectAbbr>
+    <build.java.projectAbbr>${projectAbbr}</build.java.projectAbbr>
 
     <!--
         `build.java.logLevel` (alias: `loglevel`)
@@ -524,6 +520,16 @@ POSSIBILITY OF SUCH DAMAGE.
     -->
     <testForkCount>1.0C</testForkCount>
     <build.java.runTests.forkCount>${testForkCount}</build.java.runTests.forkCount>
+
+    <!--
+        `build.java.runTests.jvmArgs` (alias: `testJvmArgs`)
+
+        Additional args to JVMs running tests (e.g., to set heap size).
+
+        Default: "" (empty string)
+    -->
+    <testJvmArgs></testJvmArgs>
+    <build.java.runTests.jvmArgs>${testJvmArgs}</build.java.runTests.jvmArgs>
 
     <!--
         `build.java.runTests.keepTempFiles` (alias: `keeptempfiles`)
@@ -651,15 +657,19 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.signArtifacts.skip>${skipGpg}</build.java.signArtifacts.skip>
 
     <!--
-        `build.java.deployMavenCentral.skip` (alias: `skipMavenCentral`)
+        `build.java.uploadArtifacts.skip` (alias: `skipArtifactUpload`)
 
-        Whether to skip the deployMavenCentral step, which pushes artifacts to
+        Whether to skip the artifact upload step, which pushes artifacts to
         Maven Central.
+        
+        Formerly known as `build.java.deployMavenCentral.skip`/`skipMavenCentral`.
 
         Default: true (the artifacts are not pushed)
     -->
-    <skipMavenCentral>true</skipMavenCentral>
-    <build.java.deployMavenCentral.skip>${skipMavenCentral}</build.java.deployMavenCentral.skip>
+    <skipMavenCentral>true</skipMavenCentral><!-- DEPRECATED -->
+    <build.java.deployMavenCentral.skip>${skipMavenCentral}</build.java.deployMavenCentral.skip><!-- DEPRECATED -->
+    <skipArtifactUpload>${build.java.deployMavenCentral.skip}</skipArtifactUpload>
+    <build.java.uploadArtifacts.skip>${skipArtifactUpload}</build.java.uploadArtifacts.skip>
 
     <!--
         `build.java.deployMail.skip` (alias: `skipDeployMail`)
@@ -924,17 +934,6 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.spring.generateSwagger.config>${generateSwagger.config}</build.java.spring.generateSwagger.config>
 
     <!--
-        `build.java.spring.generateSwagger.groupId`
-
-        The groupId for swagger-codegen-maven-plugin. Currently most of our API
-        specifications are Swagger 2, so the default is io.swagger; set to
-        io.swagger.codegen.v3 for an OpenAPI 3 specification.
-
-        Default: io.swagger (set to io.swagger.codegen.v3 for OpenAPI 3)
-    -->
-    <build.java.spring.generateSwagger.groupId>io.swagger.codegen.v3</build.java.spring.generateSwagger.groupId>
-
-    <!--
         `build.java.spring.generateSwagger.invoker` (alias: `generateSwagger.invoker`)
 
         Java package for the Spring invoker code.
@@ -965,6 +964,47 @@ POSSIBILITY OF SUCH DAMAGE.
     <build.java.spring.generateSwagger.spec>${generateSwagger.spec}</build.java.spring.generateSwagger.spec>
 
     <!--
+        `build.java.spring.generateSwaggerPython.api` (alias: `generateSwaggerPython.api`)
+
+        Python package for the API code.
+
+        Default: ${build.java.spring.generateSwaggerPython.base}.api
+    -->
+    <generateSwaggerPython.api>${build.java.spring.generateSwaggerPython.base}.api</generateSwaggerPython.api>
+    <build.java.spring.generateSwaggerPython.api>${generateSwaggerPython.api}</build.java.spring.generateSwaggerPython.api>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.base` (alias: `generateSwaggerPython.base`)
+
+        Base Python package.
+
+        Default: lockss.pyclient.${build.java.projectAbbr}
+    -->
+    <generateSwaggerPython.base>lockss.pyclient.${build.java.projectAbbr}</generateSwaggerPython.base>
+    <build.java.spring.generateSwaggerPython.base>${generateSwaggerPython.base}</build.java.spring.generateSwaggerPython.base>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.model` (alias: `generateSwaggerPython.model`)
+
+        Python package for the model code.
+
+        Default: ${build.java.spring.generateSwaggerPython.base}.model
+    -->
+    <generateSwaggerPython.model>${build.java.spring.generateSwaggerPython.base}.model</generateSwaggerPython.model>
+    <build.java.spring.generateSwaggerPython.model>${generateSwaggerPython.model}</build.java.spring.generateSwaggerPython.model>
+
+    <!--
+        `build.java.spring.generateSwaggerPython.skip` (alias: `skipSwaggerPython`)
+
+        Whether to skip the generateSwaggerPython step, which generates Python
+        client code from a Swagger specification.
+
+        Default: true
+    -->
+    <skipSwaggerPython>true</skipSwaggerPython>
+    <build.java.spring.generateSwaggerPython.skip>${skipSwaggerPython}</build.java.spring.generateSwaggerPython.skip>
+
+    <!--
         `build.java.spring.postprocessSwagger.skip` (alias: `skipSwaggerPostprocess`)
 
         Whether to skip the postprocessSwagger step, which post-processes the
@@ -972,7 +1012,7 @@ POSSIBILITY OF SUCH DAMAGE.
 
         Default: ${build.java.spring.skip} (on when the Spring portion of the Java build is on)
     -->
-    <skipSwaggerPostprocess>${build.java.spring.skip}</skipSwaggerPostprocess>
+    <skipSwaggerPostprocess>${build.java.spring.generateSwagger.skip}</skipSwaggerPostprocess>
     <build.java.spring.postprocessSwagger.skip>${skipSwaggerPostprocess}</build.java.spring.postprocessSwagger.skip>
 
     <!--
@@ -1046,9 +1086,9 @@ POSSIBILITY OF SUCH DAMAGE.
         Whether to skip the dockerBuild step, which builds a Docker image
         and tags it with the current version.
 
-        Default: true (the Docker build step is off)
+        Default: build.docker.skip
     -->
-    <skipDockerBuild>true</skipDockerBuild>
+    <skipDockerBuild>${build.docker.skip}</skipDockerBuild>
     <build.docker.dockerBuild.skip>${skipDockerBuild}</build.docker.dockerBuild.skip>
 
     <!--
@@ -1068,9 +1108,9 @@ POSSIBILITY OF SUCH DAMAGE.
         Whether to skip the dockerPush step, which pushes the Docker image to
         Docker Hub with the current version.
 
-        Default: true (the Docker image is not pushed)
+        Default: build.docker.skip
     -->
-    <skipDockerPush>true</skipDockerPush>
+    <skipDockerPush>${build.docker.skip}</skipDockerPush>
     <build.docker.dockerPush.skip>${skipDockerPush}</build.docker.dockerPush.skip>
 
     <!--
@@ -1090,32 +1130,34 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <version.plugin.build-helper-maven-plugin>3.2.0</version.plugin.build-helper-maven-plugin>
     <version.plugin.buildnumber-maven-plugin>1.4</version.plugin.buildnumber-maven-plugin>
+    <version.plugin.central-publishing-maven-plugin>0.9.0</version.plugin.central-publishing-maven-plugin>
     <version.plugin.dockerfile-maven-plugin>1.4.13</version.plugin.dockerfile-maven-plugin>
     <version.plugin.exec-maven-plugin>3.0.0</version.plugin.exec-maven-plugin>
     <version.plugin.git-commit-id-plugin>4.0.5</version.plugin.git-commit-id-plugin>
     <version.plugin.maven-antrun-plugin>3.0.0</version.plugin.maven-antrun-plugin>
-    <version.plugin.maven-archetype-plugin>3.2.1</version.plugin.maven-archetype-plugin>
-    <version.plugin.maven-clean-plugin>3.1.0</version.plugin.maven-clean-plugin>
-    <version.plugin.maven-compiler-plugin>3.8.1</version.plugin.maven-compiler-plugin>
+    <version.plugin.maven-archetype-plugin>3.3.0</version.plugin.maven-archetype-plugin>
+    <version.plugin.maven-clean-plugin>3.4.0</version.plugin.maven-clean-plugin>
+    <version.plugin.maven-compiler-plugin>3.13.0</version.plugin.maven-compiler-plugin>
     <version.plugin.maven-deploy-plugin>2.8.2</version.plugin.maven-deploy-plugin>
-    <version.plugin.maven-enforcer-plugin>3.0.0-M3</version.plugin.maven-enforcer-plugin>
-    <version.plugin.maven-javadoc-plugin>3.3.0</version.plugin.maven-javadoc-plugin>
+    <version.plugin.maven-enforcer-plugin>3.5.0</version.plugin.maven-enforcer-plugin>
+    <version.plugin.maven-javadoc-plugin>3.10.1</version.plugin.maven-javadoc-plugin>
     <version.plugin.maven-jar-plugin>3.4.2</version.plugin.maven-jar-plugin>
-    <version.plugin.maven-install-plugin>3.1.2</version.plugin.maven-install-plugin>
+    <version.plugin.maven-install-plugin>3.1.3</version.plugin.maven-install-plugin>
     <version.plugin.maven-gpg-plugin>1.6</version.plugin.maven-gpg-plugin><!-- now 3.0.1 -->
     <version.plugin.maven-plugin-plugin>${version.group.maven}</version.plugin.maven-plugin-plugin>
     <version.plugin.maven-postman-plugin>0.1.6</version.plugin.maven-postman-plugin>
     <version.plugin.maven-resources-plugin>2.6</version.plugin.maven-resources-plugin>
-    <version.plugin.maven-source-plugin>3.2.1</version.plugin.maven-source-plugin>
-    <version.plugin.maven-surefire-plugin>3.2.2</version.plugin.maven-surefire-plugin>
-    <version.plugin.nexus-staging-maven-plugin>1.6.8</version.plugin.nexus-staging-maven-plugin>
+    <version.plugin.maven-source-plugin>3.3.1</version.plugin.maven-source-plugin>
+    <version.plugin.maven-surefire-plugin>3.4.0</version.plugin.maven-surefire-plugin>
+    <version.plugin.spotbugs-maven-plugin>${version.group.spotbugs}.0</version.plugin.spotbugs-maven-plugin>
     <version.plugin.swagger-codegen-maven-plugin>3.0.52</version.plugin.swagger-codegen-maven-plugin>
+    <version.plugin.lombok-plugin>1.18.42</version.plugin.lombok-plugin>
 
     <!-- END properties section: plugin versions -->
 
     <!-- BEGIN properties section: Docker image versions -->
 
-    <version.docker.lockss-spring>2.11.0</version.docker.lockss-spring>
+    <version.docker.lockss-spring>2.12.1</version.docker.lockss-spring>
 
     <!-- END properties section: Docker image versions -->
 
@@ -1123,26 +1165,27 @@ POSSIBILITY OF SUCH DAMAGE.
 
     <version.group.activemq>5.18.3</version.group.activemq>
     <version.group.antlr>4.9.3</version.group.antlr><!-- 4.9.3 is the last Java 8 version before 4.10 -->
-    <version.group.bouncycastle>1.76</version.group.bouncycastle>
+    <version.group.bouncycastle>1.80</version.group.bouncycastle>
     <version.group.bouncycastle.variant>jdk18on</version.group.bouncycastle.variant>
     <version.group.derby>10.14.2.0</version.group.derby><!-- 10.14.2.0 is the last Java 8 version before 10.15 -->
     <version.group.flyway>5.2.4</version.group.flyway><!-- now 7.10.0 -->
     <version.group.hadoop>3.3.1</version.group.hadoop>
     <version.group.hamcrest>1.3</version.group.hamcrest><!-- upgradeable to 2.1 -->
     <version.group.httpclient>4.5.3</version.group.httpclient><!-- upgradeable to 4.5.6 -->
-    <version.group.icu4j>74.1</version.group.icu4j>
+    <version.group.icu4j>76.1</version.group.icu4j>
     <version.group.jackson>2.16.1</version.group.jackson>
     <version.group.jooq>3.14.15</version.group.jooq><!-- 3.14.15 is the last Java 8 version before 3.15 -->
     <version.group.junit4>4.13.2</version.group.junit4>
-    <version.group.junit5-jupiter>5.9.3</version.group.junit5-jupiter><!-- because that's what Surefire 3.2.2 uses -->
-    <version.group.junit5-platform>1.9.3</version.group.junit5-platform>
-    <version.group.log4j>2.24.1</version.group.log4j>
+    <version.group.junit5-jupiter>5.10.2</version.group.junit5-jupiter><!-- because that's what Surefire 3.4.0 uses -->
+    <version.group.junit5-platform>1.10.2</version.group.junit5-platform><!-- because that's what Surefire 3.4.0 uses -->
+    <version.group.log4j>2.25.4</version.group.log4j>
     <version.group.maven>3.9.0</version.group.maven>
     <version.group.mapstruct-jdk8>1.2.0.Final</version.group.mapstruct-jdk8>
     <version.group.mockserver>5.15.0</version.group.mockserver>
     <version.group.pdfbox>1.8.17</version.group.pdfbox>
     <version.group.solr>8.11.2</version.group.solr>
-    <version.group.slf4j>1.7.25</version.group.slf4j><!-- version used by log4j-slf4j-impl -->
+    <version.group.slf4j>1.7.36</version.group.slf4j><!-- version used by log4j-slf4j-impl 2.23.1 -->
+    <version.group.spotbugs>4.9.3</version.group.spotbugs>
     <version.group.spring>6.1.3</version.group.spring>
     <version.group.spring-boot>3.2.2</version.group.spring-boot>
     <version.group.truezip>7.7.10</version.group.truezip>
@@ -1157,36 +1200,39 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.activation>1.1.1</version.dependency.activation><!-- javax.activation:activation -->
     <version.dependency.ant-contrib>20020829</version.dependency.ant-contrib>
     <version.dependency.castor>0.9.4.2</version.dependency.castor>
-    <version.dependency.commons-beanutils>1.9.4</version.dependency.commons-beanutils>
-    <version.dependency.commons-cli>1.6.0</version.dependency.commons-cli>
-    <version.dependency.commons-codec>1.16.1</version.dependency.commons-codec>
+    <version.dependency.commons-beanutils>1.11.0</version.dependency.commons-beanutils>
+    <version.dependency.commons-cli>1.9.0</version.dependency.commons-cli>
+    <version.dependency.commons-codec>1.18.0</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
-    <version.dependency.commons-collections4>4.4</version.dependency.commons-collections4>
-    <version.dependency.commons-compress>1.25.0</version.dependency.commons-compress>
+    <version.dependency.commons-collections4>4.5.0</version.dependency.commons-collections4>
+    <version.dependency.commons-compress>1.27.1</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
-    <version.dependency.commons-csv>1.10.0</version.dependency.commons-csv>
-    <version.dependency.commons-dbcp2>2.12.0</version.dependency.commons-dbcp2>
+    <version.dependency.commons-csv>1.14.0</version.dependency.commons-csv>
+    <version.dependency.commons-dbcp2>2.13.0</version.dependency.commons-dbcp2>
     <version.dependency.commons-digester>1.8.1</version.dependency.commons-digester><!-- now 3.2 -->
     <version.dependency.commons-fileupload>1.5</version.dependency.commons-fileupload>
-    <version.dependency.commons-io>2.15.1</version.dependency.commons-io>
-    <version.dependency.commons-jxpath>1.3</version.dependency.commons-jxpath>
+    <version.dependency.commons-io>2.19.0</version.dependency.commons-io>
+    <version.dependency.commons-jxpath>1.4.0</version.dependency.commons-jxpath>
     <version.dependency.commons-lang>2.6</version.dependency.commons-lang>
-    <version.dependency.commons-lang3>3.16.0</version.dependency.commons-lang3>
+    <version.dependency.commons-lang3>3.17.0</version.dependency.commons-lang3>
     <version.dependency.commons-logging>1.2</version.dependency.commons-logging>
     <version.dependency.commons-primitives>1.0</version.dependency.commons-primitives>
-    <version.dependency.commons-text>1.11.0</version.dependency.commons-text>
-    <version.dependency.commons-validator>1.8.0</version.dependency.commons-validator>
-    <version.dependency.h2>2.2.224</version.dependency.h2>
+    <version.dependency.commons-text>1.13.1</version.dependency.commons-text>
+    <version.dependency.commons-validator>1.9.0</version.dependency.commons-validator>
+    <version.dependency.h2>2.3.232</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>2023-10</version.dependency.jonix>
-    <version.dependency.json-path>2.8.0</version.dependency.json-path>
+    <version.dependency.jonix>2025-04</version.dependency.jonix>
+    <version.dependency.json-path>2.9.0</version.dependency.json-path>
+    <version.dependency.json-smart>2.5.0</version.dependency.json-smart><!-- the version needed by json-path -->
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
-    <version.dependency.jsoup>1.16.2</version.dependency.jsoup>
-    <version.dependency.marc4j>2.9.5</version.dependency.marc4j>
-    <version.dependency.postgresql>42.6.0</version.dependency.postgresql>
+    <version.dependency.jsoup>1.20.1</version.dependency.jsoup>
+    <version.dependency.marc4j>2.9.6</version.dependency.marc4j>
+    <version.dependency.mysql-connector-j>9.3.0</version.dependency.mysql-connector-j>
+    <version.dependency.postgresql>42.7.7</version.dependency.postgresql>
+    <version.dependency.spotbugs>${version.group.spotbugs}</version.dependency.spotbugs>
     <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
     <version.dependency.xmlunit>1.6</version.dependency.xmlunit>
@@ -1201,28 +1247,29 @@ POSSIBILITY OF SUCH DAMAGE.
         A special property with the version string matching that of the classic
         LOCKSS daemon (lockss-daemon).
     -->
-    <build.releasename>2.0.84-beta1</build.releasename>
+    <build.releasename>2.0.91-beta2</build.releasename>
 
-    <version.lockss.lockss-configuration-service>2.9.2</version.lockss.lockss-configuration-service>
-    <version.lockss.lockss-core>2.9.2</version.lockss.lockss-core>
+    <version.lockss.lockss-configuration-service>2.10.0</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.10.0</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
-    <version.lockss.lockss-junit4-bundle>1.8.1</version.lockss.lockss-junit4-bundle>
-    <version.lockss.lockss-junit5-bundle>1.8.1</version.lockss.lockss-junit5-bundle>
-    <version.lockss.lockss-metadata-extraction-service>2.8.2</version.lockss.lockss-metadata-extraction-service>
-    <version.lockss.lockss-metadataextractor-common>2.10.2</version.lockss.lockss-metadataextractor-common>
-    <version.lockss.lockss-metadata-service>2.7.2</version.lockss.lockss-metadata-service>
-    <version.lockss.lockss-poller>2.7.2</version.lockss.lockss-poller>
-    <version.lockss.lockss-plugin-compat>1.6.1</version.lockss.lockss-plugin-compat>
+    <version.lockss.lockss-junit4-bundle>1.9.0</version.lockss.lockss-junit4-bundle>
+    <version.lockss.lockss-junit5-bundle>1.9.0</version.lockss.lockss-junit5-bundle>
+    <version.lockss.lockss-metadata-extraction-service>2.9.0</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.11.0</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.8.0</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-poller>2.8.0</version.lockss.lockss-poller>
+    <version.lockss.lockss-plugin-compat>1.7.0</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-plugins-archetype>1.4.2</version.lockss.lockss-plugins-archetype>
-    <version.lockss.lockss-repository-tools>2.13.1</version.lockss.lockss-repository-tools>
-    <version.lockss.lockss-repository-service>2.15.2</version.lockss.lockss-repository-service>
-    <version.lockss.lockss-spring-bundle>2.15.2</version.lockss.lockss-spring-bundle>
-    <version.lockss.lockss-tdb-processor>1.8.0</version.lockss.lockss-tdb-processor>
-    <version.lockss.lockss-tdbxml-maven-plugin>1.9.0</version.lockss.lockss-tdbxml-maven-plugin>
-    <version.lockss.lockss-util-core>1.14.1</version.lockss.lockss-util-core>
-    <version.lockss.lockss-util-entities>1.6.1</version.lockss.lockss-util-entities>
-    <version.lockss.lockss-util-rest>1.6.1</version.lockss.lockss-util-rest>
+    <version.lockss.lockss-plugins-archetype>1.5.0</version.lockss.lockss-plugins-archetype>
+    <version.lockss.lockss-repository-tools>2.14.0</version.lockss.lockss-repository-tools>
+    <version.lockss.lockss-repository-service>2.16.0</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.16.0</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-tdb-processor>1.9.0</version.lockss.lockss-tdb-processor>
+    <version.lockss.lockss-tdbxml-maven-plugin>1.10.0</version.lockss.lockss-tdbxml-maven-plugin>
+    <version.lockss.lockss-util-core>1.15.0</version.lockss.lockss-util-core>
+    <version.lockss.lockss-util-entities>1.7.0</version.lockss.lockss-util-entities>
+    <version.lockss.lockss-util-rest>1.7.0</version.lockss.lockss-util-rest>
+    <version.lockss.lockss-plugin-compat>1.7.0</version.lockss.lockss-plugin-compat>
 
     <!-- END properties section: LOCKSS versions -->
 
@@ -1449,7 +1496,7 @@ POSSIBILITY OF SUCH DAMAGE.
       Deploy phase:
 
       - Push artifacts to Maven repository (if
-        `build.java.deployMavenCentral.skip` is false)
+        `build.java.uploadArtifacts.skip` is false)
       - Push Docker image to Docker Hub (if `build.docker.dockerPush.skip` is
         false)
       - Push Docker image to Docker Hub as latest (if
@@ -1662,7 +1709,8 @@ POSSIBILITY OF SUCH DAMAGE.
               <goal>antlr4</goal>
             </goals>
             <configuration>
-              <skip>${build.java.antlr.generateAntlr.skip}</skip>
+<!--               anflr4 plugin doesn't currently have a skip param -->
+<!--               <skip>${build.java.antlr.generateAntlr.skip}</skip> -->
               <outputDirectory>${dir.generated.java}</outputDirectory>
             </configuration>
           </execution>
@@ -1764,10 +1812,544 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin jooq-codegen-maven -->
 
+      <!-- BEGIN plugin maven-surefire-plugin -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>${version.plugin.maven-surefire-plugin}</version>
+        <dependencies>
+<!--
+          <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-surefire-provider</artifactId>
+            <version>1.3.2</version>
+          </dependency>
+-->
+          <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+          <dependency>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+            <version>${version.group.junit5-jupiter}</version>
+          </dependency>
+
+        </dependencies>
+        <executions>
+
+          <!-- BEGIN step runTests -->
+
+          <execution>
+            <id>default-test</id>
+            <phase>NONE</phase><!-- runTests supersedes default-test -->
+          </execution>
+          <execution>
+            <id>runTests</id>
+            <phase>test</phase>
+            <goals>
+              <goal>test</goal>
+            </goals>
+            <configuration>
+              <runOrder>balanced</runOrder>
+              <!-- DLV: Added add-opens to args in this Maven Surefire plugin execution for XStream support -->
+              <!---Xshare:off avoids "OpenJDK 64-Bit Server VM warning:
+                   Sharing is only supported for boot loader classes
+                   because bootstrap classpath has been appended" warnings
+                   running tests -->
+	      <argLine>
+                ${jprofiler.agentpath}
+                ${build.java.runTests.jvmArgs}
+                --add-opens java.base/java.util=ALL-UNNAMED
+                -Xshare:off
+              </argLine>
+              <skipTests>${build.java.runTests.skip}</skipTests>
+              <includes>
+                <include>**/Test*.java</include>
+                <include>**/Func*.java</include>
+              </includes>
+              <excludes>
+                <!-- SOAP tests waiting for Jetty upgrade -->
+                <exclude>**/ws/*/Func*.java</exclude>
+                <!-- Default excludes -->
+                <exclude>**/*$*</exclude>
+              </excludes>
+              <redirectTestOutputToFile>${build.java.runTests.redirectTestOutputToFile}</redirectTestOutputToFile>
+              <forkCount>${build.java.runTests.forkCount}</forkCount>
+              <reuseForks>false</reuseForks>
+              <trimStackTrace>${build.java.runTests.trimStackTrace}</trimStackTrace>
+              <systemPropertyVariables>
+                <!-- Tests may generate many SecureRandom instances which may
+                     block for a long time reading entropy from /dev/random. See
+                     https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6202721
+                     for an explanation of the extra "./" -->
+                <java.security.egd>file:/dev/./urandom</java.security.egd>
+                <java.io.tmpdir>${dir.test.temp}</java.io.tmpdir>$>
+                <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
+                <org.lockss.unitTesting>true</org.lockss.unitTesting>
+                <org.lockss.executableTempDir>${dir.executableTemp}</org.lockss.executableTempDir>
+                <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
+                <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
+                <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
+              </systemPropertyVariables>
+            </configuration>
+          </execution>
+
+          <!-- END step runTests -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-surefire-plugin -->
+
+      <!-- BEGIN plugin maven-antrun-plugin -->
+
+      <!-- This plugin must appear *after* surefire, as it contains a
+           test phase execution that should run after the tests.
+           (There is no post-test phase so we have to rely on plugin
+           ordering. -->
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-antrun-plugin</artifactId>
+        <version>${version.plugin.maven-antrun-plugin}</version>
+        <dependencies>
+          <dependency>
+            <groupId>ant-contrib</groupId>
+            <artifactId>ant-contrib</artifactId>
+            <version>${version.dependency.ant-contrib}</version>
+          </dependency>
+
+          <!-- javax.activation and javax.mail needed for ant mail target -->
+          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
+          <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1.1</version>
+          </dependency>
+          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
+          <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.5.0-b01</version>
+          </dependency>
+
+        </dependencies>
+        <executions>
+
+          <!-- Create a subdir of java.io.tmpdir to use for tests -->
+	  <execution>
+            <id>pre-test</id>
+            <phase>generate-test-resources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.runTests.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <isfalse value="${build.java.runTests.keepTempFiles}" />
+                  <then>
+                    <tempfile property="dir.test.temp"
+                              destDir="${dir.temporary}"
+                              prefix="testtmp"/>
+                    <echo level="info">Creating test temp dir: ${dir.test.temp}</echo>
+                    <mkdir dir="${dir.test.temp}" />
+                    <property name="build.delTestTempDir.skip" value="false" />
+                  </then>
+                  <else>
+                    <property name="dir.test.temp" value="${dir.temporary}" />
+                    <property name="build.delTestTempDir.skip" value="true" />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- Delete the subdir of java.io.tmpdir used for tests -->
+	  <execution>
+            <id>post-test</id>
+            <phase>test</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.delTestTempDir.skip}</skip>
+              <target>
+                <echo level="info">Deleting test temp dir: ${dir.test.temp}</echo>
+                <delete dir="${dir.test.temp}" />
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- BEGIN step local-publish-site -->
+
+	  <!-- Copy the site documentation to a subdirectory of
+	       ${dir.publishSite} (which must be set, e.g., in a profile in
+	       a user's settings.xml).  Done only if dir.publishSite has a
+	       value, and if javadoc is being generated.  This is done in
+	       the verify phase as it must follow some package phase antrun
+	       executions in the lockss-core child pom -->
+
+	  <execution>
+            <id>local-publish-site</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+	      <!-- Even though the ant target itself is conditionalized,
+	           skip is needed to completely suppress the antrun
+	           invocation in FuncStateManager -->
+              <skip>${build.localPublishSite.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <available file="target/site"/>
+                    <isset property="dir.publishSite" />
+                    <or>
+                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
+                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <copy todir="${dir.publishSite}/${project.artifactId}" >
+                      <fileset dir="target/site" />
+                    </copy>
+                  </then>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step local-publish-site -->
+
+          <!-- BEGIN step checkYq -->
+
+          <execution>
+            <id>checkYq</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <isfalse value="${build.java.spring.skip}" />
+                    <or>
+                      <isfalse value="${build.java.spring.generateSwagger.skip}" />
+                      <isfalse value="${build.java.spring.generateSwaggerPython.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <echo level="info" message="Checking that yq is present..." />
+                    <exec executable="sh"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="-c" />
+                      <arg value="command -v yq" />
+                    </exec>
+                    <echo level="info" message="Checking that yq is version 4.48 or greater..." />
+                    <exec executable="yq"
+                          outputproperty="yq-version-string"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="--version" />
+                    </exec>
+                    <condition property="yq-is-version-4-48-or-greater">
+                      <matches pattern="version v?4\.(4[89]|[5-9]\d|\d{3,})(\.\d+)?$"
+                               string="${yq-version-string}" />
+                    </condition>
+                    <fail unless="yq-is-version-4-48-or-greater"
+                          message="Version of yq must be 4.48 or greater; got: ${yq-version-string}" />
+                    <echo level="info" message="Success: yq version 4.48 or greater is present" />
+                  </then>
+                  <else>
+                    <echo level="info" message="Not checking that yq version 4.48 or greater is present" />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step checkYq -->
+
+          <!-- BEGIN step checkDocker -->
+
+          <execution>
+            <id>checkDocker</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.docker.skip}</skip>
+              <target>
+                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
+                <if>
+                  <and>
+                    <isfalse value="${build.docker.skip}" />
+                    <or>
+                      <isfalse value="${build.docker.dockerBuild.skip}" />
+                      <isfalse value="${build.docker.dockerTagLatest.skip}" />
+                      <isfalse value="${build.docker.dockerPush.skip}" />
+                      <isfalse value="${build.docker.dockerPushLatest.skip}" />
+                    </or>
+                  </and>
+                  <then>
+                    <echo level="info" message="Checking that Docker daemon is running..." />
+                    <exec executable="docker"
+                          output="/dev/null"
+                          failonerror="true"
+                          failifexecutionfails="true">
+                      <arg value="info" />
+                    </exec>
+                  </then>
+                  <else>
+                    <echo level="info" message="Not checking that Docker daemon is running." />
+                  </else>
+                </if>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step checkDocker -->
+
+          <!-- BEGIN step buildInfo -->
+
+          <execution>
+            <id>buildInfo</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.info.buildInfo.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property environment="env" />
+                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
+                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
+                  <isset property="env.HOSTNAME" />
+                </condition>
+		<mkdir dir="${dir.buildInfo}"/>
+                <propertyfile comment="Build information" file="${file.buildInfo}">
+                  <entry key="build.name" value="${project.name}" />
+                  <entry key="build.description" value="${project.description}" />
+                  <entry key="build.groupId" value="${project.groupId}" />
+                  <entry key="build.artifactId" value="${project.artifactId}" />
+                  <entry key="build.version" value="${project.version}" />
+                  <entry key="build.packaging" value="${project.packaging}" />
+                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
+                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
+                  <entry key="build.parent.version" value="${project.parent.version}" />
+                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
+                  <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
+                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
+                  <entry key="build.releasename" value="${build.releasename}" />
+                  <entry key="build.host" value="${hostname}" />
+                  <entry key="build.user.name" value="${user.name}" />
+                  <entry key="build.os.name" value="${os.name}" />
+                  <entry key="build.os.arch" value="${os.arch}" />
+                  <entry key="build.os.version" value="${os.version}" />
+                  <entry key="build.java.version" value="${java.version}" />
+                  <entry key="build.java.class.version" value="${java.class.version}" />
+                  <entry key="build.java.vendor" value="${java.vendor}" />
+                  <entry key="build.java.home" value="${java.home}" />
+                  <entry key="build.java.specification.version" value="${java.specification.version}" />
+                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
+                  <entry key="build.java.specification.name" value="${java.specification.name}" />
+                  <entry key="build.java.vm.version" value="${java.vm.version}" />
+                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
+                  <entry key="build.java.vm.name" value="${java.vm.name}" />
+                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
+                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
+                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
+                  <entry key="build.git.origin" value="${git.remote.origin.url}" />
+                  <entry key="build.git.branch" value="${git.branch}" />
+                  <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
+                  <entry key="build.git.dirty" value="${git.dirty}" />
+                  <entry key="build.maven.timestamp" value="${maven.build.timestamp}" />
+                  <entry key="build.maven.build.version" value="${maven.build.version}" />
+                </propertyfile>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step buildInfo -->
+
+          <!-- BEGIN step classpathFiles -->
+
+          <execution>
+            <id>classpathFiles</id>
+            <phase>initialize</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.info.classpathFiles.skip}</skip>
+              <exportAntProperties>true</exportAntProperties>
+              <target>
+                <property name="compile_classpath"
+                          refid="maven.compile.classpath" />
+                <echo message="${compile_classpath}"
+                      file="${file.classpath.compile}"/>
+                <property name="test_classpath"
+                          refid="maven.test.classpath" />
+                <echo message="${test_classpath}"
+                      file="${file.classpath.test}"/>
+                <property name="runtime_classpath"
+                          refid="maven.runtime.classpath" />
+                <echo message="${runtime_classpath}"
+                      file="${file.classpath.runtime}"/>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step classpathFiles -->
+
+          <!-- BEGIN step generateSwaggerSpringPatch -->
+
+          <execution>
+            <id>generateSwaggerSpringPatch</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwagger.skip}</skip>
+              <target>
+		<exec executable="yq"
+		      failonerror="true"
+		      failifexecutionfails="true"
+		      input="${build.java.spring.generateSwagger.spec}"
+		      output="${build.java.spring.generateSwagger.spec}.spring">
+		  <arg value="--input-format=yaml" />
+		  <arg value="--output-format=yaml" />
+                  <arg value='( .paths[][].responses | select(has("default")) ) |= ( . * { "1234": .default } | del(.default) )' />
+		</exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerSpringPatch -->
+
+          <!-- BEGIN step generateSwaggerPythonPatch -->
+
+          <execution>
+            <id>generateSwaggerPythonPatch</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
+              <target>
+		<exec executable="yq"
+		      failonerror="true"
+		      failifexecutionfails="true"
+		      input="${build.java.spring.generateSwagger.spec}"
+		      output="${build.java.spring.generateSwagger.spec}.python">
+		  <arg value="--input-format=yaml" />
+		  <arg value="--output-format=yaml" />
+                  <arg value='( ( .components.schemas[] | select(has("required") and has("properties")) ) |= ( . as $schema | . * { "required": [.required[] | . as $key | select($schema.properties[$key].nullable != true)] }) ) | ( ( .paths[][].responses[].content | select(length > 0 and has("application/json") | not) | parent | parent | .[].content | select(has("application/json")) ) |= ( . * { "application/json;q=0.9": .["application/json"] } | del(.["application/json"]) ) )' />
+		</exec>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerPythonPatch -->
+
+          <!-- BEGIN step buildEtags -->
+
+          <execution>
+            <id>buildEtags</id>
+            <phase>process-sources</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.buildEtags.skip}</skip>
+              <target>
+		<apply executable="etags"
+		       dir="${basedir}"
+		       relative="true"
+		       parallel="true">
+		  <arg value="-S" />
+		  <!--        <arg value="-o"/> -->
+		  <!--        <arg file="${etags.filename}"/> -->
+		  <fileset dir="${basedir}" includes="src/**/*.java"/>
+		</apply>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step buildEtags -->
+
+          <!-- BEGIN step deployMail -->
+
+          <execution>
+            <id>deployMail</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.deployMail.skip}</skip>
+              <failonerror>${build.java.deployMail.failOnError}</failonerror>
+              <target>
+                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
+                  <from address="${build.java.deployMail.from}"/>
+                  <to address="${build.java.deployMail.to}"/>
+                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
+
+BUILD CONTEXT:
+Project: ${project.groupId}:${project.artifactId}:${project.version}
+Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
+Skipped artifact upload: ${build.java.uploadArtifacts.skip}
+Skipped Docker upload: ${build.docker.dockerPush.skip}
+
+GIT CONTEXT:
+Git user: ${git.build.user.name} <${git.build.user.email}>
+Git repository: ${git.remote.origin.url} (branch: ${git.branch})
+Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
+
+JAVA CONTEXT:
+Java: ${java.version} (${java.vendor})
+JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
+Maven: ${maven.build.version}
+
+SYSTEM CONTEXT:
+OS: ${os.name} ${os.version} ${os.arch}
+Host name: ${hostname}
+Local user: ${user.name}
+Local directory: ${user.dir}
+]]></message>
+                </mail>
+              </target>
+            </configuration>
+          </execution>
+
+          <!-- END step deployMail -->
+
+        </executions>
+      </plugin>
+
+      <!-- END plugin maven-antrun-plugin -->
+
       <!-- BEGIN plugin swagger-codegen-maven-plugin -->
 
       <plugin>
-        <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+        <groupId>io.swagger.codegen.v3</groupId>
         <artifactId>swagger-codegen-maven-plugin</artifactId>
         <version>${version.plugin.swagger-codegen-maven-plugin}</version>
         <executions>
@@ -1782,7 +2364,7 @@ POSSIBILITY OF SUCH DAMAGE.
             </goals>
             <configuration>
               <skip>${build.java.spring.generateSwagger.skip}</skip>
-              <inputSpec>${build.java.spring.generateSwagger.spec}</inputSpec>
+              <inputSpec>${build.java.spring.generateSwagger.spec}.spring</inputSpec>
               <language>spring</language>
               <output>${project.basedir}</output>
               <configOptions>
@@ -1803,7 +2385,31 @@ POSSIBILITY OF SUCH DAMAGE.
 
           <!-- END step generateSwagger -->
 
+          <!-- BEGIN step generateSwaggerPython -->
+
+          <execution>
+            <id>generateSwaggerPython</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>generate</goal>
+            </goals>
+            <configuration>
+              <skip>${build.java.spring.generateSwaggerPython.skip}</skip>
+              <inputSpec>${build.java.spring.generateSwagger.spec}.python</inputSpec>
+              <language>python</language>
+              <output>${project.build.directory}/swagger_codegen_python</output>
+              <configOptions>
+                <packageName>${build.java.spring.generateSwaggerPython.base}</packageName>
+                <apiPackage>${build.java.spring.generateSwaggerPython.api}</apiPackage>
+                <modelPackage>${build.java.spring.generateSwaggerPython.model}</modelPackage>
+              </configOptions>
+            </configuration>
+          </execution>
+
+          <!-- END step generateSwaggerPython -->
+
         </executions>
+
       </plugin>
 
       <!-- END plugin swagger-codegen-maven-plugin -->
@@ -1864,94 +2470,6 @@ POSSIBILITY OF SUCH DAMAGE.
       </plugin>
 
       <!-- END plugin maven-compiler-plugin -->
-
-      <!-- BEGIN plugin maven-surefire-plugin -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>${version.plugin.maven-surefire-plugin}</version>
-        <dependencies>
-<!--
-          <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-surefire-provider</artifactId>
-            <version>1.3.2</version>
-          </dependency>
--->
-          <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-            <version>${version.group.junit5-jupiter}</version>
-          </dependency>
-          <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>${version.group.junit5-jupiter}</version>
-          </dependency>
-
-        </dependencies>
-        <executions>
-
-          <!-- BEGIN step runTests -->
-
-          <execution>
-            <id>default-test</id>
-            <phase>NONE</phase><!-- runTests supersedes default-test -->
-          </execution>
-          <execution>
-            <id>runTests</id>
-            <phase>test</phase>
-            <goals>
-              <goal>test</goal>
-            </goals>
-            <configuration>
-              <runOrder>balanced</runOrder>
-              <!-- DLV: Added add-opens to args in this Maven Surefire plugin execution for XStream support -->
-	      <argLine>
-                ${jprofiler.agentpath}
-                --add-opens java.base/java.util=ALL-UNNAMED
-              </argLine>
-              <skipTests>${build.java.runTests.skip}</skipTests>
-              <includes>
-                <include>**/Test*.java</include>
-                <include>**/Func*.java</include>
-              </includes>
-              <excludes>
-                <!-- SOAP tests waiting for Jetty upgrade -->
-                <exclude>**/ws/*/Func*.java</exclude>
-                <!-- Default excludes -->
-                <exclude>**/*$*</exclude>
-              </excludes>
-              <redirectTestOutputToFile>${build.java.runTests.redirectTestOutputToFile}</redirectTestOutputToFile>
-              <forkCount>${build.java.runTests.forkCount}</forkCount>
-              <reuseForks>false</reuseForks>
-              <trimStackTrace>${build.java.runTests.trimStackTrace}</trimStackTrace>
-              <systemPropertyVariables>
-                <!-- Tests may generate many SecureRandom instances which may
-                     block for a long time reading entropy from /dev/random. See
-                     https://bugs.java.com/bugdatabase/view_bug.do?bug_id=6202721
-                     for an explanation of the extra "./" -->
-                <java.security.egd>file:/dev/./urandom</java.security.egd>
-                <java.io.tmpdir>${dir.test.temp}</java.io.tmpdir>$>
-                <org.lockss.keepTempFiles>${build.java.runTests.keepTempFiles}</org.lockss.keepTempFiles>
-                <org.lockss.unitTesting>true</org.lockss.unitTesting>
-                <org.lockss.executableTempDir>${dir.executableTemp}</org.lockss.executableTempDir>
-                <org.lockss.defaultLogLevel>${build.java.logLevel}</org.lockss.defaultLogLevel>
-                <org.lockss.defaultRootLogLevel>${build.java.rootLogLevel}</org.lockss.defaultRootLogLevel>
-                <java.net.preferIPv4Stack>true</java.net.preferIPv4Stack>
-              </systemPropertyVariables>
-            </configuration>
-          </execution>
-
-          <!-- END step runTests -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-surefire-plugin -->
-
-
 
       <!-- BEGIN plugin spring-boot-maven-plugin -->
 
@@ -2110,8 +2628,8 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- BEGIN plugin maven-deploy-plugin -->
 
-      <!-- See https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html -->
-      <!-- See nexus-staging-maven-plugin -->
+      <!-- See https://books.sonatype.com/nexus-book/2.9/reference/staging-sect-deployment.html but may be obsolete -->
+      <!-- See central-publishing-maven-plugin -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -2123,40 +2641,26 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin maven-deploy-plugin -->
 
-      <!-- BEGIN plugin nexus-staging-maven-plugin -->
+      <!-- BEGIN plugin central-publishing-maven-plugin -->
 
-      <!--  See https://central.sonatype.org/pages/apache-maven.html#distribution-management-and-authentication  -->
+      <!-- See https://central.sonatype.org/publish/publish-portal-maven/ -->
+
       <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${version.plugin.nexus-staging-maven-plugin}</version>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>${version.plugin.central-publishing-maven-plugin}</version>
         <extensions>true</extensions>
-        <executions>
-
-          <!-- BEGIN step deployMavenCentral -->
-
-          <execution>
-            <id>deployMavenCentral</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>deploy</goal>
-            </goals>
-            <configuration>
-              <skipNexusStagingDeployMojo>${build.java.deployMavenCentral.skip}</skipNexusStagingDeployMojo>
-              <serverId>ossrh</serverId>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <skipLocalStaging>true</skipLocalStaging>
-              <autoReleaseAfterClose>true</autoReleaseAfterClose>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMavenCentral -->
-
-        </executions>
-
+        <configuration>
+          <skipPublishing>${build.java.uploadArtifacts.skip}</skipPublishing>
+          <publishingServerId>central</publishingServerId>
+          <autoPublish>true</autoPublish>
+          <!-- default <checksums> is "all"" which is what we want -->
+          <!-- default <centralBaseUrl> is "https://central.sonatype.com" which is what we want -->
+          <centralSnapshotsUrl>https://central.sonatype.com/repository/maven-snapshots/</centralSnapshotsUrl>
+        </configuration>
       </plugin>
 
-      <!-- END plugin nexus-staging-maven-plugin -->
+      <!-- END plugin central-publishing-maven-plugin -->
 
       <!-- BEGIN plugin exec-maven-plugin -->
 
@@ -2350,342 +2854,6 @@ POSSIBILITY OF SUCH DAMAGE.
 
       <!-- END plugin dockerfile-maven-plugin -->
 
-      <!-- BEGIN plugin maven-antrun-plugin -->
-
-      <!-- This plugin must appear *after* surefire, as it contains a
-           test phase execution that should run after the tests.
-           (There is no post-test phase so we have to rely on plugin
-           ordering. -->
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-antrun-plugin</artifactId>
-        <version>${version.plugin.maven-antrun-plugin}</version>
-        <dependencies>
-          <dependency>
-            <groupId>ant-contrib</groupId>
-            <artifactId>ant-contrib</artifactId>
-            <version>${version.dependency.ant-contrib}</version>
-          </dependency>
-
-          <!-- javax.activation and javax.mail needed for ant mail target -->
-          <!-- https://mvnrepository.com/artifact/javax.activation/activation -->
-          <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1.1</version>
-          </dependency>
-          <!-- https://mvnrepository.com/artifact/javax.mail/mail -->
-          <dependency>
-            <groupId>javax.mail</groupId>
-            <artifactId>mail</artifactId>
-            <version>1.5.0-b01</version>
-          </dependency>
-
-        </dependencies>
-        <executions>
-
-          <!-- Create a subdir of java.io.tmpdir to use for tests -->
-	  <execution>
-            <id>pre-test</id>
-            <phase>generate-test-resources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.runTests.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <isfalse value="${build.java.runTests.keepTempFiles}" />
-                  <then>
-                    <tempfile property="dir.test.temp"
-                              destDir="${dir.temporary}"
-                              prefix="testtmp"/>
-                    <echo level="info">Creating test temp dir: ${dir.test.temp}</echo>
-                    <mkdir dir="${dir.test.temp}" />
-                    <property name="build.delTestTempDir.skip" value="false" />
-                  </then>
-                  <else>
-                    <property name="dir.test.temp" value="${dir.temporary}" />
-                    <property name="build.delTestTempDir.skip" value="true" />
-                  </else>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- Delete the subdir of java.io.tmpdir used for tests -->
-	  <execution>
-            <id>post-test</id>
-            <phase>test</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.delTestTempDir.skip}</skip>
-              <target>
-                <echo level="info">Deleting test temp dir: ${dir.test.temp}</echo>
-                <delete dir="${dir.test.temp}" />
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- BEGIN step local-publish-site -->
-
-	  <!-- Copy the site documentation to a subdirectory of
-	       ${dir.publishSite} (which must be set, e.g., in a profile in
-	       a user's settings.xml).  Done only if dir.publishSite has a
-	       value, and if javadoc is being generated.  This is done in
-	       the verify phase as it must follow some package phase antrun
-	       executions in the lockss-core child pom -->
-
-	  <execution>
-            <id>local-publish-site</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-	      <!-- Even though the ant target itself is conditionalized,
-	           skip is needed to completely suppress the antrun
-	           invocation in FuncStateManager -->
-              <skip>${build.localPublishSite.skip}</skip>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <and>
-                    <available file="target/site"/>
-                    <isset property="dir.publishSite" />
-                    <or>
-                      <isfalse value="${build.java.jarMainJavadoc.skip}" />
-                      <isfalse value="${build.java.jarTestJavadoc.skip}" />
-                    </or>
-                  </and>
-                  <then>
-                    <copy todir="${dir.publishSite}/${project.artifactId}" >
-                      <fileset dir="target/site" />
-                    </copy>
-                  </then>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step local-publish-site -->
-
-          <!-- BEGIN step checkDocker -->
-
-          <execution>
-            <id>checkDocker</id>
-            <phase>validate</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.docker.skip}</skip>
-              <target>
-                <taskdef resource="net/sf/antcontrib/antcontrib.properties" />
-                <if>
-                  <and>
-                    <isfalse value="${build.docker.skip}" />
-                    <or>
-                      <isfalse value="${build.docker.dockerBuild.skip}" />
-                      <isfalse value="${build.docker.dockerTagLatest.skip}" />
-                      <isfalse value="${build.docker.dockerPush.skip}" />
-                      <isfalse value="${build.docker.dockerPushLatest.skip}" />
-                    </or>
-                  </and>
-                  <then>
-                    <echo level="info" message="Checking that Docker daemon is running..." />
-                    <exec executable="docker"
-                          output="/dev/null"
-                          failonerror="true"
-                          failifexecutionfails="true">
-                      <arg value="info" />
-                    </exec>
-                  </then>
-                  <else>
-                    <echo level="info" message="Not checking that Docker daemon is running." />
-                  </else>
-                </if>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step checkDocker -->
-
-          <!-- BEGIN step buildInfo -->
-
-          <execution>
-            <id>buildInfo</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.info.buildInfo.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <property environment="env" />
-                <exec executable="hostname" outputproperty="hostname0" failifexecutionfails="false" />
-                <condition property="hostname" value="${env.HOSTNAME}" else="${hostname0}">
-                  <isset property="env.HOSTNAME" />
-                </condition>
-		<mkdir dir="${dir.buildInfo}"/>
-                <propertyfile comment="Build information" file="${file.buildInfo}">
-                  <entry key="build.name" value="${project.name}" />
-                  <entry key="build.description" value="${project.description}" />
-                  <entry key="build.groupId" value="${project.groupId}" />
-                  <entry key="build.artifactId" value="${project.artifactId}" />
-                  <entry key="build.version" value="${project.version}" />
-                  <entry key="build.packaging" value="${project.packaging}" />
-                  <entry key="build.parent.groupId" value="${project.parent.groupId}" />
-                  <entry key="build.parent.artifactId" value="${project.parent.artifactId}" />
-                  <entry key="build.parent.version" value="${project.parent.version}" />
-                  <entry key="build.parent.packaging" value="${project.parent.packaging}" />
-                  <entry key="build.timestamp" type="date" pattern="${build.info.buildInfo.antTimestamp}" value="now" />
-                  <entry key="build.rawtimestamp" value="${build.rawtimestamp}" />
-                  <entry key="build.releasename" value="${build.releasename}" />
-                  <entry key="build.host" value="${hostname}" />
-                  <entry key="build.user.name" value="${user.name}" />
-                  <entry key="build.os.name" value="${os.name}" />
-                  <entry key="build.os.arch" value="${os.arch}" />
-                  <entry key="build.os.version" value="${os.version}" />
-                  <entry key="build.java.version" value="${java.version}" />
-                  <entry key="build.java.class.version" value="${java.class.version}" />
-                  <entry key="build.java.vendor" value="${java.vendor}" />
-                  <entry key="build.java.home" value="${java.home}" />
-                  <entry key="build.java.specification.version" value="${java.specification.version}" />
-                  <entry key="build.java.specification.vendor" value="${java.specification.vendor}" />
-                  <entry key="build.java.specification.name" value="${java.specification.name}" />
-                  <entry key="build.java.vm.version" value="${java.vm.version}" />
-                  <entry key="build.java.vm.vendor" value="${java.vm.vendor}" />
-                  <entry key="build.java.vm.name" value="${java.vm.name}" />
-                  <entry key="build.java.vm.specification.version" value="${java.vm.specification.version}" />
-                  <entry key="build.java.vm.specification.vendor" value="${java.vm.specification.vendor}" />
-                  <entry key="build.java.vm.specification.name" value="${java.vm.specification.name}" />
-                  <entry key="build.git.origin" value="${git.remote.origin.url}" />
-                  <entry key="build.git.branch" value="${git.branch}" />
-                  <entry key="build.git.commit" value="${git.commit.id.abbrev}" />
-                  <entry key="build.git.dirty" value="${git.dirty}" />
-                  <entry key="build.maven.timestamp" value="${maven.build.timestamp}" />
-                  <entry key="build.maven.build.version" value="${maven.build.version}" />
-                </propertyfile>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step buildInfo -->
-
-          <!-- BEGIN step classpathFiles -->
-
-          <execution>
-            <id>classpathFiles</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.info.classpathFiles.skip}</skip>
-              <exportAntProperties>true</exportAntProperties>
-              <target>
-                <property name="compile_classpath"
-                          refid="maven.compile.classpath" />
-                <echo message="${compile_classpath}"
-                      file="${file.classpath.compile}"/>
-                <property name="test_classpath"
-                          refid="maven.test.classpath" />
-                <echo message="${test_classpath}"
-                      file="${file.classpath.test}"/>
-                <property name="runtime_classpath"
-                          refid="maven.runtime.classpath" />
-                <echo message="${runtime_classpath}"
-                      file="${file.classpath.runtime}"/>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step classpathFiles -->
-
-          <!-- BEGIN step buildEtags -->
-
-          <execution>
-            <id>buildEtags</id>
-            <phase>process-sources</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.buildEtags.skip}</skip>
-              <target>
-		<apply executable="etags"
-		       dir="${basedir}"
-		       relative="true"
-		       parallel="true">
-		  <arg value="-S" />
-		  <!--        <arg value="-o"/> -->
-		  <!--        <arg file="${etags.filename}"/> -->
-		  <fileset dir="${basedir}" includes="src/**/*.java"/>
-		</apply>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step buildEtags -->
-
-          <!-- BEGIN step deployMail -->
-
-          <execution>
-            <id>deployMail</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>run</goal>
-            </goals>
-            <configuration>
-              <skip>${build.java.deployMail.skip}</skip>
-              <failonerror>${build.java.deployMail.failOnError}</failonerror>
-              <target>
-                <mail subject="Build deployed: ${project.artifactId} ${project.version} (${git.branch})">
-                  <from address="${build.java.deployMail.from}"/>
-                  <to address="${build.java.deployMail.to}"/>
-                  <message><![CDATA[A build of ${project.artifactId} ${project.version} (${git.branch}) was deployed around ${local.build.timestamp}.
-
-BUILD CONTEXT:
-Project: ${project.groupId}:${project.artifactId}:${project.version}
-Build timestamp: ${maven.build.timestamp} (${local.build.timestamp})
-Skipped JAR upload: ${build.java.deployMavenCentral.skip}
-Skipped Docker upload: ${build.docker.dockerPush.skip}
-
-GIT CONTEXT:
-Git user: ${git.build.user.name} <${git.build.user.email}>
-Git repository: ${git.remote.origin.url} (branch: ${git.branch})
-Git commit: ${git.commit.id.abbrev} (dirty: ${git.dirty})
-
-JAVA CONTEXT:
-Java: ${java.version} (${java.vendor})
-JVM: ${java.vm.name} ${java.vm.version} (${java.vm.vendor})
-Maven: ${maven.build.version}
-
-SYSTEM CONTEXT:
-OS: ${os.name} ${os.version} ${os.arch}
-Host name: ${hostname}
-Local user: ${user.name}
-Local directory: ${user.dir}
-]]></message>
-                </mail>
-              </target>
-            </configuration>
-          </execution>
-
-          <!-- END step deployMail -->
-
-        </executions>
-      </plugin>
-
-      <!-- END plugin maven-antrun-plugin -->
-
       <!-- BEGIN plugin maven-clean-plugin -->
 
       <plugin>
@@ -2724,12 +2892,12 @@ Local directory: ${user.dir}
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.8.1.0</version>
+        <version>${version.plugin.spotbugs-maven-plugin}</version>
         <dependencies>
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.8.1</version>
+            <version>${version.dependency.spotbugs}</version>
           </dependency>
         </dependencies>
       </plugin>
@@ -2778,7 +2946,7 @@ Local directory: ${user.dir}
         <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
         <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
         <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>false</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
@@ -2856,7 +3024,7 @@ Local directory: ${user.dir}
         <skipMainJavadoc>false</skipMainJavadoc><!-- build.java.jarMainJavadoc.skip -->
         <skipTestJavadoc>${build.java.jarTests.skip}</skipTestJavadoc><!-- build.java.jarTestJavadoc.skip -->
         <skipGpg>false</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>false</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>false</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDockerBuild>${build.docker.skip}</skipDockerBuild><!-- build.docker.dockerBuild.skip -->
         <skipDockerPush>${build.docker.skip}</skipDockerPush><!-- build.docker.dockerPush.skip -->
         <skipDeployMail>false</skipDeployMail><!-- build.java.deployMail.skip -->
@@ -2938,7 +3106,7 @@ Local directory: ${user.dir}
         <skipJarWithDeps>true</skipJarWithDeps><!-- build.java.repackageJar.skip -->
         <skipJavadoc>false</skipJavadoc><!-- build.java.javadoc.skip -->
         <skipGpg>true</skipGpg><!-- build.java.signArtifacts.skip -->
-        <skipMavenCentral>true</skipMavenCentral><!-- build.java.deployMavenCentral.skip -->
+        <skipArtifactUpload>true</skipArtifactUpload><!-- build.java.uploadArtifacts.skip -->
         <skipDeployMail>true</skipDeployMail><!-- build.java.deployMail.skip -->
         <skipDocker>true</skipDocker><!-- build.docker.skip -->
       </properties>
@@ -2969,7 +3137,7 @@ Local directory: ${user.dir}
 
           <!-- To create a pretty REST API diagram from src/main/resources/swagger/swagger.yaml -->
           <plugin>
-            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>${version.plugin.swagger-codegen-maven-plugin}</version>
             <executions>
@@ -3010,11 +3178,11 @@ Local directory: ${user.dir}
         <skipMainJavadoc>true</skipMainJavadoc>
         <skipTestJavadoc>true</skipTestJavadoc>
         <skipGpg>true</skipGpg>
-        <skipMavenCentral>true</skipMavenCentral>
+        <skipArtifactUpload>true</skipArtifactUpload>
         <skipDeployMail>false</skipDeployMail>
-        <skipDocker>false</skipDocker>
-        <skipDockerBuild>false</skipDockerBuild>
-        <skipDockerPush>false</skipDockerPush>
+<!--         <skipDocker>false</skipDocker> -->
+<!--         <skipDockerBuild>false</skipDockerBuild> -->
+<!--         <skipDockerPush>false</skipDockerPush> -->
      </properties>
 
       <build>
@@ -3097,7 +3265,7 @@ Local directory: ${user.dir}
           <!-- BEGIN plugin swagger-codegen-maven-plugin -->
 
           <plugin>
-            <groupId>${build.java.spring.generateSwagger.groupId}</groupId>
+            <groupId>io.swagger.codegen.v3</groupId>
             <artifactId>swagger-codegen-maven-plugin</artifactId>
             <version>${version.plugin.swagger-codegen-maven-plugin}</version>
             <executions>
@@ -3158,7 +3326,7 @@ Local directory: ${user.dir}
         <build.java.jarTestJavadoc.skip>${build.java.jarTests.skip}</build.java.jarTestJavadoc.skip>
         <build.docker.skip>true</build.docker.skip>
         <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.uploadArtifacts.skip>false</build.java.uploadArtifacts.skip>
       </properties>
 
       <build>
@@ -3189,7 +3357,7 @@ Local directory: ${user.dir}
         <build.java.jarTestJavadoc.skip>true</build.java.jarTestJavadoc.skip>
         <build.docker.dockerBuild.skip>${build.docker.skip}</build.docker.dockerBuild.skip>
         <build.docker.dockerTag.skip>${build.docker.skip}</build.docker.dockerTag.skip>
-        <build.java.deployMavenCentral.skip>false</build.java.deployMavenCentral.skip>
+        <build.java.uploadArtifacts.skip>false</build.java.uploadArtifacts.skip>
         <build.java.signArtifacts.skip>false</build.java.signArtifacts.skip>
         <build.docker.dockerPush.skip>${build.docker.skip}</build.docker.dockerPush.skip>
         <!-- FIXME what of tagLatest, pushLatest? -->
@@ -3210,27 +3378,27 @@ Local directory: ${user.dir}
 
         <properties>
 
-    <build.releasename>2.0.83-beta1</build.releasename>
+	  <build.releasename>2.0.84-beta1</build.releasename>
 
-    <version.lockss.lockss-configuration-service>2.9.1</version.lockss.lockss-configuration-service>
-    <version.lockss.lockss-core>2.9.1</version.lockss.lockss-core>
+    <version.lockss.lockss-configuration-service>2.9.2</version.lockss.lockss-configuration-service>
+    <version.lockss.lockss-core>2.9.2</version.lockss.lockss-core>
     <version.lockss.lockss-core-bundle>${version.lockss.lockss-core}</version.lockss.lockss-core-bundle>
     <version.lockss.lockss-junit4-bundle>1.8.1</version.lockss.lockss-junit4-bundle>
     <version.lockss.lockss-junit5-bundle>1.8.1</version.lockss.lockss-junit5-bundle>
-    <version.lockss.lockss-metadata-extraction-service>2.8.1</version.lockss.lockss-metadata-extraction-service>
-    <version.lockss.lockss-metadataextractor-common>2.10.1</version.lockss.lockss-metadataextractor-common>
-    <version.lockss.lockss-metadata-service>2.7.1</version.lockss.lockss-metadata-service>
-    <version.lockss.lockss-poller>2.7.1</version.lockss.lockss-poller>
+    <version.lockss.lockss-metadata-extraction-service>2.8.2</version.lockss.lockss-metadata-extraction-service>
+    <version.lockss.lockss-metadataextractor-common>2.10.2</version.lockss.lockss-metadataextractor-common>
+    <version.lockss.lockss-metadata-service>2.7.2</version.lockss.lockss-metadata-service>
+    <version.lockss.lockss-poller>2.7.2</version.lockss.lockss-poller>
     <version.lockss.lockss-plugin-compat>1.6.1</version.lockss.lockss-plugin-compat>
     <version.lockss.lockss-plugins>20180327</version.lockss.lockss-plugins>
-    <version.lockss.lockss-plugins-archetype>1.4.1</version.lockss.lockss-plugins-archetype>
+    <version.lockss.lockss-plugins-archetype>1.4.2</version.lockss.lockss-plugins-archetype>
     <version.lockss.lockss-repository-tools>2.13.1</version.lockss.lockss-repository-tools>
-    <version.lockss.lockss-repository-service>2.15.1</version.lockss.lockss-repository-service>
-    <version.lockss.lockss-spring-bundle>2.15.1</version.lockss.lockss-spring-bundle>
+    <version.lockss.lockss-repository-service>2.15.2</version.lockss.lockss-repository-service>
+    <version.lockss.lockss-spring-bundle>2.15.2</version.lockss.lockss-spring-bundle>
     <version.lockss.lockss-tdb-processor>1.8.0</version.lockss.lockss-tdb-processor>
     <version.lockss.lockss-tdbxml-maven-plugin>1.9.0</version.lockss.lockss-tdbxml-maven-plugin>
     <version.lockss.lockss-util-core>1.14.1</version.lockss.lockss-util-core>
-    <version.lockss.lockss-util-entities>1.6.0</version.lockss.lockss-util-entities>
+    <version.lockss.lockss-util-entities>1.6.1</version.lockss.lockss-util-entities>
     <version.lockss.lockss-util-rest>1.6.1</version.lockss.lockss-util-rest>
 
         </properties>
