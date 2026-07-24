@@ -1225,7 +1225,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
-    <version.dependency.jonix>2026-01</version.dependency.jonix>
+    <version.dependency.jonix>2026-04</version.dependency.jonix>
     <version.dependency.json-path>2.9.0</version.dependency.json-path><!-- reminder: see also version.dependency.json-smart -->
     <version.dependency.json-smart>2.5.0</version.dependency.json-smart><!-- the version needed by json-path -->
     <version.dependency.jsonassert>1.5.0</version.dependency.jsonassert>
