@@ -1233,7 +1233,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.marc4j>2.9.6</version.dependency.marc4j>
     <version.dependency.mimepull>1.9.11</version.dependency.mimepull><!-- 1.9.11 is the last Java 8 version before 1.9.12 -->
     <version.dependency.mysql-connector-j>9.7.0</version.dependency.mysql-connector-j>
-    <version.dependency.postgresql>42.7.7</version.dependency.postgresql>
+    <version.dependency.postgresql>42.7.13</version.dependency.postgresql>
     <version.dependency.spotbugs>${version.group.spotbugs}</version.dependency.spotbugs>
     <version.dependency.springdoc>2.3.0</version.dependency.springdoc>
     <version.dependency.webarchive-commons>1.1.8</version.dependency.webarchive-commons>
