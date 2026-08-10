@@ -3173,6 +3173,7 @@ Local directory: ${user.dir}
       <properties>
         <skipDockerBuild>${build.docker.skip}</skipDockerBuild>
         <skipDockerPush>${build.docker.skip}</skipDockerPush>
+        <skipDeployMail>false</skipDeployMail>
       </properties>
 
       <build>
