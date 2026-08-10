@@ -3171,23 +3171,12 @@ Local directory: ${user.dir}
       <id>doDockerBuild</id>
 
       <properties>
-        <skipCompileTests>true</skipCompileTests>
-        <skipTests>true</skipTests>
-        <skipJarTests>true</skipJarTests>
-        <skipMainSources>true</skipMainSources>
-        <skipTestSources>true</skipTestSources>
-        <skipMainJavadoc>true</skipMainJavadoc>
-        <skipTestJavadoc>true</skipTestJavadoc>
-        <skipGpg>true</skipGpg>
-        <skipArtifactUpload>true</skipArtifactUpload>
-        <skipDeployMail>false</skipDeployMail>
-<!--         <skipDocker>false</skipDocker> -->
-<!--         <skipDockerBuild>false</skipDockerBuild> -->
-<!--         <skipDockerPush>false</skipDockerPush> -->
-     </properties>
+        <skipDockerBuild>${build.docker.skip}</skipDockerBuild>
+        <skipDockerPush>${build.docker.skip}</skipDockerPush>
+      </properties>
 
       <build>
-        <defaultGoal>package</defaultGoal>
+        <defaultGoal>deploy</defaultGoal>
       </build>
 
     </profile>
