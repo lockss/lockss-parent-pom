@@ -1203,7 +1203,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.commons-cli>1.11.0</version.dependency.commons-cli>
     <version.dependency.commons-codec>1.22.1</version.dependency.commons-codec>
     <version.dependency.commons-collections>3.2.2</version.dependency.commons-collections>
-    <version.dependency.commons-collections4>4.5.0</version.dependency.commons-collections4>
+    <version.dependency.commons-collections4>4.6.0</version.dependency.commons-collections4>
     <version.dependency.commons-compress>1.28.0</version.dependency.commons-compress>
     <version.dependency.commons-configuration>1.10</version.dependency.commons-configuration><!-- now 2.9.0 -->
     <version.dependency.commons-csv>1.14.1</version.dependency.commons-csv>
