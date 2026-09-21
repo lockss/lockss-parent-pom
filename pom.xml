@@ -1222,6 +1222,7 @@ POSSIBILITY OF SUCH DAMAGE.
     <version.dependency.h2>2.4.240</version.dependency.h2>
     <version.dependency.httpcore>4.4.6</version.dependency.httpcore><!-- upgradeable to 4.4.10 -->
     <version.dependency.jackson-databind>${version.group.jackson}</version.dependency.jackson-databind>
+    <version.dependency.jakarta.ws.rs-api>4.0.0</version.dependency.jakarta.ws.rs-api><!-- jakarta.ws.rs:jakarta.ws.rs-api; the version Apache CXF 4.2.3 resolves -->
     <version.dependency.javax.mail>1.6.2</version.dependency.javax.mail>
     <version.dependency.jbibtex>1.0.20</version.dependency.jbibtex>
     <version.dependency.jonix>2026-04</version.dependency.jonix>
